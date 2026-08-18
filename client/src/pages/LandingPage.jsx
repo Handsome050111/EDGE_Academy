@@ -134,6 +134,58 @@ const LandingPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedModule, setSelectedModule] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [pwaMessage, setPwaMessage] = useState('');
+
+  // PWA Install Prompt Listener
+  useEffect(() => {
+    if (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true
+    ) {
+      setIsInstalled(true);
+    }
+
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+      setPwaMessage('EDGE Academy app installed successfully!');
+      setTimeout(() => setPwaMessage(''), 4000);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const handleInstallPwa = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstalled(true);
+        setDeferredPrompt(null);
+      }
+    } else if (isInstalled) {
+      setPwaMessage('EDGE Academy is already installed on your device.');
+      setTimeout(() => setPwaMessage(''), 4000);
+    } else {
+      setPwaMessage(
+        'To install: In Chrome/Edge, click the Install App icon in the browser address bar (or on iOS tap Share → Add to Home Screen).'
+      );
+      setTimeout(() => setPwaMessage(''), 6000);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -608,6 +660,20 @@ const LandingPage = () => {
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
                 Proprietary operational qualification ecosystem certifying deployment-ready field engineers for high-stakes enterprise IT infrastructure and live data center environments across EMEA.
               </p>
+
+              {/* Install PWA Button */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleInstallPwa}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-950/90 hover:bg-blue-900/80 border border-blue-800/60 hover:border-amber-400/50 text-blue-100 hover:text-white text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
+                >
+                  <svg className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>{isInstalled ? 'App Installed' : 'Install EDGE Academy App'}</span>
+                </button>
+              </div>
             </div>
 
             {/* Column 2: Platform Navigation */}
@@ -688,7 +754,17 @@ const LandingPage = () => {
           {/* Bottom Divider & Sub-footer */}
           <div className="mt-12 pt-8 border-t border-blue-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
             <p>© {new Date().getFullYear()} Technonex EDGE Academy. All rights reserved.</p>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center gap-6">
+              <button
+                type="button"
+                onClick={handleInstallPwa}
+                className="hover:text-amber-400 transition flex items-center gap-1.5 cursor-pointer"
+              >
+                <svg className="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>{isInstalled ? 'App Installed' : 'Install App'}</span>
+              </button>
               <a href="#" className="hover:text-slate-300 transition">Privacy Policy</a>
               <a href="#" className="hover:text-slate-300 transition">Terms of Service</a>
               <a href="#verification" className="hover:text-amber-400 transition font-mono">TNX Credential Registry</a>
@@ -696,6 +772,22 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* PWA Toast Message */}
+      {pwaMessage && (
+        <div className="fixed bottom-6 right-6 z-50 max-w-md bg-[#062452] text-white text-xs font-medium px-5 py-3.5 rounded-2xl shadow-2xl border border-blue-800/80 flex items-center gap-3 animate-in slide-in-from-bottom-3 duration-200">
+          <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="leading-relaxed">{pwaMessage}</span>
+          <button
+            onClick={() => setPwaMessage('')}
+            className="text-blue-300 hover:text-white ml-auto text-base font-bold p-1 cursor-pointer"
+          >
+            &times;
+          </button>
+        </div>
+      )}
 
       {/* Interactive Module Syllabus Modal */}
       {selectedModule && (

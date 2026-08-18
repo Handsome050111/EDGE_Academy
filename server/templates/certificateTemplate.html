@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 297mm;
+      height: 210mm;
+      background: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      color: #0F172A;
+      overflow: hidden;
+      position: relative;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .cert-frame-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .cert-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 297mm;
+      height: 210mm;
+      padding: 15mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 2mm;
+    }
+    .cert-logo-img {
+      height: 36px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+      display: block;
+    }
+    .technonex-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: 1.5px;
+      color: #0A2540;
+      text-transform: uppercase;
+    }
+    .technonex-logo span {
+      color: #0A2540;
+    }
+    .technonex-logo .logo-x {
+      color: #0A2540;
+      position: relative;
+    }
+    .title-section {
+      text-align: center;
+      margin-top: 0px;
+    }
+    .track-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: #0A2540;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      line-height: 1.15;
+    }
+    .ecosystem-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #B58D3D;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+    .recipient-section {
+      text-align: center;
+      margin-top: 2px;
+    }
+    .recipient-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: #0A1C30;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+    }
+    .gold-divider {
+      width: 320px;
+      height: 2px;
+      background: #C59B27;
+      margin: 8px auto 0 auto;
+    }
+    .body-section {
+      text-align: center;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+    .citation-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      line-height: 1.6;
+      color: #334155;
+      font-weight: 400;
+    }
+    .citation-text strong {
+      color: #0F172A;
+      font-weight: 600;
+    }
+    .issued-by {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: #0A2540;
+      margin-top: 6px;
+    }
+    .bottom-section {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 4mm 0 4mm;
+      position: relative;
+    }
+    .signatures-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 32mm;
+    }
+    .signature-block {
+      text-align: left;
+      min-width: 140px;
+    }
+    .signature-img-wrapper {
+      height: 38px;
+      display: flex;
+      align-items: flex-end;
+      border-bottom: 1px solid #CBD5E1;
+      padding-bottom: 2px;
+      margin-bottom: 4px;
+    }
+    .signature-img {
+      max-height: 36px;
+      max-width: 150px;
+      object-fit: contain;
+      display: block;
+    }
+    .signature-script {
+      font-family: 'Dancing Script', cursive;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0A2540;
+      border-bottom: 1px solid #CBD5E1;
+      padding-bottom: 2px;
+      margin-bottom: 4px;
+      min-width: 130px;
+      line-height: 1;
+      font-style: italic;
+    }
+    .signature-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-top: 2px;
+    }
+    .signature-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 9.5px;
+      font-weight: 500;
+      color: #64748B;
+      margin-top: 1px;
+    }
+    .seal-container {
+      position: absolute;
+      bottom: 35px;
+      right: 40px;
+      width: 92px;
+      height: 92px;
+      z-index: 20;
+    }
+    .footer-meta {
+      text-align: center;
+      margin-top: 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: #64748B;
+      letter-spacing: 0.2px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative Vector Frame with Beveled Corner Accents -->
+  <svg class="cert-frame-svg" viewBox="0 0 1122 794" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Outer Chamfered Border -->
+    <path d="M 52,26 L 1070,26 L 1096,52 L 1096,742 L 1070,768 L 52,768 L 26,742 L 26,52 Z" stroke="#0A2540" stroke-width="2.5" />
+    <!-- Inner Chamfered Border -->
+    <path d="M 56,34 L 1066,34 L 1088,56 L 1088,738 L 1066,760 L 56,760 L 34,738 L 34,56 Z" stroke="#0A2540" stroke-width="1" />
+    <!-- Corner Accent Brackets -->
+    <!-- Top Left -->
+    <path d="M 26,52 L 44,52 M 52,26 L 52,44 M 34,56 L 48,48 L 56,34" stroke="#0A2540" stroke-width="1" />
+    <!-- Top Right -->
+    <path d="M 1096,52 L 1078,52 M 1070,26 L 1070,44 M 1088,56 L 1074,48 L 1066,34" stroke="#0A2540" stroke-width="1" />
+    <!-- Bottom Left -->
+    <path d="M 26,742 L 44,742 M 52,768 L 52,750 M 34,738 L 48,746 L 56,760" stroke="#0A2540" stroke-width="1" />
+    <!-- Bottom Right -->
+    <path d="M 1096,742 L 1078,742 M 1070,768 L 1070,750 M 1088,738 L 1074,746 L 1066,760" stroke="#0A2540" stroke-width="1" />
+  </svg>
+
+  <div class="cert-container">
+    <!-- Top Left Official Technonex Logo -->
+    <div class="header-row">
+      {{#if logoBase64}}
+        <img src="{{logoBase64}}" alt="Technonex Logo" class="cert-logo-img" />
+      {{else}}
+        <div class="technonex-logo">
+          TECHNO<span>NE</span><span class="logo-x">X</span>
+        </div>
+      {{/if}}
+    </div>
+
+    <!-- Curriculum Track Title & Subtitle -->
+    <div class="title-section">
+      <h1 class="track-title">{{trackTitle}}</h1>
+      <div class="ecosystem-subtitle">Engineering Development & Growth Ecosystem</div>
+    </div>
+
+    <!-- Recipient Name & Gold Divider -->
+    <div class="recipient-section">
+      <div class="recipient-name">{{recipientName}}</div>
+      <div class="gold-divider"></div>
+    </div>
+
+    <!-- Official Citation Text -->
+    <div class="body-section">
+      <p class="citation-text">
+        This certificate is proudly awarded to <strong>{{recipientName}}</strong> in recognition of successful completion and proficiency demonstrated within the <strong>{{tierDisplay}}</strong> program. This achievement verifies the acquisition of skills and knowledge required for excellence in engineering and development.
+      </p>
+      <div class="issued-by">Issued by Technonex EDGE Academy</div>
+    </div>
+
+    <!-- Signatures & Embossed Medallion -->
+    <div class="bottom-section">
+      <div class="signatures-group">
+        <div class="signature-block">
+          {{#if directorSigBase64}}
+            <div class="signature-img-wrapper">
+              <img src="{{directorSigBase64}}" alt="{{directorName}}" class="signature-img" />
+            </div>
+          {{else}}
+            <div class="signature-script">{{directorName}}</div>
+          {{/if}}
+          <div class="signature-name">{{directorName}}</div>
+          <div class="signature-title">{{directorTitle}}</div>
+        </div>
+
+        <div class="signature-block">
+          {{#if instructorSigBase64}}
+            <div class="signature-img-wrapper">
+              <img src="{{instructorSigBase64}}" alt="{{instructorName}}" class="signature-img" />
+            </div>
+          {{else}}
+            <div class="signature-script">{{instructorName}}</div>
+          {{/if}}
+          <div class="signature-name">{{instructorName}}</div>
+          <div class="signature-title">{{instructorTitle}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Embossed Gold Medallion Seal -->
+    <div class="seal-container">
+      <svg viewBox="0 0 160 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="goldGrad" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
+            <stop offset="0%" stop-color="#FDF0CD" />
+            <stop offset="35%" stop-color="#D4AF37" />
+            <stop offset="70%" stop-color="#B8860B" />
+            <stop offset="100%" stop-color="#8C6510" />
+          </radialGradient>
+          <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFF2B2" />
+            <stop offset="50%" stop-color="#B8860B" />
+            <stop offset="100%" stop-color="#5B3D06" />
+          </linearGradient>
+          <path id="topArc" d="M 40 78 A 42 42 0 0 1 120 78" fill="none" />
+          <path id="bottomArc" d="M 40 82 A 42 42 0 0 0 120 82" fill="none" />
+        </defs>
+        <circle cx="80" cy="80" r="76" fill="url(#goldGrad)" stroke="url(#goldRim)" stroke-width="2" />
+        <circle cx="80" cy="80" r="72" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6" stroke-dasharray="2 2" />
+        <circle cx="80" cy="80" r="62" fill="url(#goldGrad)" stroke="#784F07" stroke-width="1.2" />
+        <circle cx="80" cy="80" r="58" fill="none" stroke="#FFF0B0" stroke-width="1" opacity="0.7" />
+
+        <!-- Text Around Top Arc -->
+        <text font-family="'Montserrat', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
+          <textPath href="#topArc" startOffset="50%" text-anchor="middle">TECHNONEX</textPath>
+        </text>
+
+        <!-- Center Large EDGE Text -->
+        <text x="80" y="86" font-family="'Montserrat', sans-serif" font-size="20" font-weight="900" fill="#422903" text-anchor="middle" letter-spacing="1.5">EDGE</text>
+
+        <!-- Text Around Bottom Arc -->
+        <text font-family="'Montserrat', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
+          <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">CERTIFIED</textPath>
+        </text>
+      </svg>
+    </div>
+
+    <!-- Centered Footer Metadata -->
+    <div class="footer-meta">
+      Date issued: {{dateFormatted}} &nbsp;|&nbsp; Certificate ID: {{certificateId}}
+    </div>
+  </div>
+</body>
+</html>

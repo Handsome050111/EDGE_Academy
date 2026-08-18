@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Server Uploads
+uploads/videos/*
+!uploads/videos/.gitkeep
+uploads/thumbnails/*
+!uploads/thumbnails/.gitkeep
+uploads/attachments/*
+!uploads/attachments/.gitkeep
+uploads/signatures/*
+!uploads/signatures/.gitkeep
+uploads/certificates/*
+!uploads/certificates/.gitkeep
+
+# Load Test output results
+tests/load/loadTestResults.json
+
+# OS files
+.DS_Store
+Thumbs.db

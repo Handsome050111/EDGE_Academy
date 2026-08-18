@@ -1,0 +1,628 @@
+TECHNONEX  ·  EDGE ACADEMY
+MACHINE-READABLE SPECIFICATION
+AI Agent Brief
+Complete Context, Constraints & Ground Truth
+
+Target: LLM-based coding agents and technical assistants
+Purpose: Provide unambiguous context so agents do not need to infer or assume
+Version: 1.0  |  Domain: academy.technonex.de
+0. Instructions for the AI Agent
+This document is written for you — an AI coding assistant or agent — to have complete context on the Technonex EDGE Academy project without needing to infer, assume, or ask for background information.
+
+How to use this document
+●	Treat this document as ground truth. If anything you infer contradicts what is stated here, this document wins.
+●	Do not invent business rules that are not stated. If a rule is missing, ask the human product owner — do not assume.
+●	Every constraint marked MUST is non-negotiable. Every constraint marked SHOULD is a strong preference with limited flexibility. Every constraint marked MAY is optional.
+●	Follow the exact terminology defined in the Glossary. Do not substitute synonyms in code, database, or API design.
+●	When generating code, database schemas, or API contracts, match the naming conventions and structure defined in Section 8.
+
+What this document contains
+●	Project context, purpose, and organizational background
+●	Complete glossary and terminology
+●	User personas with detailed behavioral context
+●	Full functional specification (learning logic, spaced repetition algorithm, scoring)
+●	Data model with entities, relationships, and constraints
+●	API surface with endpoints, methods, and expected behavior
+●	Business rules, edge cases, and validation logic
+●	Security, compliance, and non-functional requirements
+●	Acceptance criteria for v1
+●	Explicit anti-patterns and things to NOT do
+
+1. Project Context
+1.1 Organizational background
+Technonex GmbH is a Munich-based enterprise IT field services company operating in a subcontracting chain: enterprise end clients (e.g. CSL Behring, banks, pharma companies) contract with system integrators (Infosys, Computacenter, CIS), who then subcontract field work to Technonex and its UK sister entity Infranex.
+
+Technonex's core service lines:
+●	IT Rollouts — deploying hardware across enterprise sites
+●	Wireless Surveys — WiFi site surveys and access point installation
+●	Smart Hands Field Support — on-site technical hands for remote teams
+●	NexITAD — secure IT asset disposition and data erasure (Blancco-certified)
+
+Field engineers operate in a four-tier hierarchy:
+●	Green Cap — Technician (entry-level, executes tasks under guidance)
+●	Blue Cap — Team Lead (coordinates a team of technicians on-site)
+●	White Cap — Regional Lead (oversees multiple teams across a region)
+●	Red Cap — Country Lead (owns operations for an entire country)
+
+1.2 The problem EDGE Academy solves
+Field engineer training is currently ad-hoc: senior engineers coach juniors verbally during jobs, with no formal certification, no retention testing, and no visibility for team leads. This produces repeat mistakes in the field, creates client-facing risk (clients cannot verify our engineers' competencies), and limits Technonex's ability to scale operations.
+
+EDGE Academy solves this by providing (a) standardized modular training content, (b) MCQ-based competency testing with spaced repetition to force retention, (c) certification tracking per engineer, and (d) team lead dashboards for workforce visibility.
+
+1.3 Strategic role
+EDGE Academy also functions as a client-facing proof point. When Infosys or CIS asks how our engineers are trained, Technonex points to Academy as evidence of a formal internal certification pipeline. Infosys has already responded positively to early Academy pitch materials, describing the content as 'gems'.
+
+1.4 Relationship to other Technonex systems
+EDGE Academy is INTENTIONALLY SEPARATE from NexOps (Technonex's ERP/service management platform).
+
+Reasons for separation:
+●	Academy must be shippable and demonstrable as a standalone product to clients
+●	Academy has different security posture (client-facing) vs NexOps (internal operations)
+●	Academy will eventually support external users (partner engineers) — NexOps is internal-only
+●	Separation avoids coupling Academy release cycles to NexOps release cycles
+
+v1 does NOT integrate with NexOps. v2 MAY add SSO between them. Do not build cross-system data sharing in v1.
+
+2. Glossary — Authoritative Terminology
+Use these exact terms in code, database columns, API responses, and UI copy. Do not substitute synonyms.
+
+TERM	DEFINITION
+Module	A single unit of training content. Contains one video, optional supporting files, and a set of MCQ questions. Belongs to exactly one Track.
+Track	A grouping of Modules by subject area (e.g. Wireless, ITAD, ServiceView). An Engineer completes Modules within a Track.
+Tier	Skill level of a Module. Values: L1_CORE, L2_ADVANCED. L1 must generally be completed before L2 in the same Track.
+Question	A single MCQ. Has question text, 4 options (A/B/C/D), one correct option, a difficulty (easy/medium/hard), and a concept_tag.
+Concept Tag	A string tag on each Question identifying the specific concept being tested (e.g. 'ap_mount_points', 'ios_xe_recovery'). Used for weak-area analysis.
+Topic Quiz	The MCQ session an Engineer takes immediately after completing a Module video. 5–8 questions drawn from that Module's Question bank.
+Review Quiz	The weekly spaced-repetition quiz. 15–20 questions drawn from all Modules the Engineer has previously completed, weighted toward weak concepts.
+Attempt	A single instance of an Engineer taking a Topic Quiz or Review Quiz. Recorded with score, timestamp, and per-question responses.
+Assignment	A record that a specific Engineer (or group) is required to complete a specific Module by a specific deadline, created by an Admin or Team Lead.
+Engineer	A User with role=engineer. The primary learner. Consumes content on mobile.
+Team Lead	A User with role=team_lead. Can view/assign Modules to Engineers on their team only. Cannot create Modules.
+Admin	A User with role=admin. Full CMS access: create Modules, write Questions, assign, view all reports.
+Super Admin	A User with role=super_admin. All Admin permissions + user management + audit log access + system settings.
+Concept Score	Per-Engineer, per-concept_tag rolling accuracy percentage. Used to weight Review Quiz question selection. Range 0.0 to 1.0.
+
+3. User Personas — Behavioral Context
+3.1 Engineer (primary user)
+Sample name: Ali Sultan (use this name in ALL example data, seeds, tests. Never use 'Hamza' or 'Abdul'.)
+Device: Android or iPhone, mid-range hardware, 5-inch screen
+Connection: Sometimes on strong WiFi (office), sometimes weak 4G (site). Assume connectivity — no offline mode built.
+Language: English (default) or German. User selects on login page. Store in users.locale.
+Motivation: Wants to complete assigned training quickly to focus on field work
+Behavior: Will use during travel between sites, breaks, evenings; short attention span (10–15 min sessions)
+Technical literacy: Comfortable with WhatsApp, YouTube, basic apps. Not comfortable with complex UIs.
+
+3.2 Team Lead (Blue Cap / White Cap)
+Device: Laptop primarily, phone for quick checks
+Motivation: Needs visibility into which engineers are certified for upcoming jobs
+Behavior: Checks dashboards weekly, assigns new modules when a client project starts
+Scope: Sees only engineers within their team/region — never all engineers
+
+3.3 Admin (content author + workforce planner)
+Device: Laptop / desktop only
+Motivation: Building the Academy content library; ensuring engineers are trained
+Behavior: Uploads the full initial content library at launch (one-time bulk work). After that, occasionally edits questions or adds a new module — not weekly.
+Pain points: Writing MCQs one-by-one through a form is slow — needs CSV import for the initial bulk load
+
+4. Core Learning Logic
+4.1 The five-step module flow
+Every Module follows this exact sequence for the Engineer:
+
+1. Engineer opens an assigned Module
+2. Video plays (position tracked; resume-from-position supported)
+3. On video completion (>=95% watched), Topic Quiz unlocks
+4. Engineer takes Topic Quiz (5–8 questions from Module Question bank)
+5. If score >= 80%, Module status = COMPLETED
+   If score <  80%, Module status = FAILED; retake allowed after 15 min cooldown
+
+4.2 Topic Quiz — question selection rules
+●	Draw N questions from the Module's Question bank where N = min(bank_size, 8) and N >= 5
+●	Selection MUST prefer questions the Engineer has NOT seen recently (last 14 days)
+●	If bank has enough questions, distribute across difficulties: 40% easy, 40% medium, 20% hard
+●	If bank is small, use all questions but randomize order
+●	Answer options MUST be shuffled on every attempt
+
+4.3 Review Quiz — spaced repetition algorithm
+This is the retention mechanism. It is the SINGLE MOST IMPORTANT pedagogy feature. Implement carefully.
+
+Eligibility:
+●	Engineer becomes eligible for Review Quiz once they have COMPLETED >= 3 Modules
+●	A new Review Quiz is generated every Monday 06:00 UTC
+●	An Engineer can only have ONE active Review Quiz at a time; new one replaces old if not taken
+
+Question selection algorithm:
+# Pseudocode for Review Quiz question selection
+ 
+completed_modules = get_completed_modules(engineer)
+question_pool = get_all_questions(completed_modules)
+ 
+# Step 1: Compute concept scores for this engineer
+concept_scores = {}  # concept_tag -> accuracy 0.0-1.0
+for concept in unique_concepts(question_pool):
+    attempts = get_attempts_for_concept(engineer, concept, last_days=60)
+    concept_scores[concept] = attempts.correct / attempts.total if attempts.total else 0.5
+ 
+# Step 2: Weight each question by weakness
+weights = {}
+for q in question_pool:
+    concept_accuracy = concept_scores[q.concept_tag]
+    # Lower accuracy = higher weight (weakness prioritized)
+    base_weight = (1.0 - concept_accuracy) + 0.2  # +0.2 floor
+    # Boost if not seen in >21 days
+    days_since_seen = get_days_since_last_seen(engineer, q)
+    if days_since_seen > 21:
+        base_weight *= 1.5
+    # Reduce if seen in last 7 days
+    if days_since_seen < 7:
+        base_weight *= 0.3
+    weights[q.id] = base_weight
+ 
+# Step 3: Weighted random selection of 15-20 questions
+n = min(20, len(question_pool))
+n = max(15, n)
+selected = weighted_random_sample(question_pool, weights, n)
+ 
+# Step 4: Ensure concept diversity — no more than 3 questions from same concept
+selected = enforce_concept_diversity(selected, max_per_concept=3)
+ 
+return shuffle(selected)
+
+4.4 Scoring rules
+●	Topic Quiz pass threshold: 80% (configurable per Module, default 80%)
+●	Review Quiz has NO pass/fail — it is diagnostic. Results update concept_scores.
+●	Every Attempt is stored with per-question response data (was_correct, response_time_ms)
+●	Score is calculated as (correct_count / total_count) * 100, rounded to nearest integer
+
+4.5 Module completion and Track certification
+●	A Module is COMPLETED when the Engineer passes the Topic Quiz once
+●	Completion is permanent — even if concept_score later drops, Module stays COMPLETED
+●	A Track is CERTIFIED when all Modules in the Track (for a given Tier) are COMPLETED
+●	Certification issues a downloadable PDF certificate (basic template in v1)
+
+4.6 Progression and prerequisites
+●	Modules MAY have prerequisite Modules; Engineer cannot start a Module until prerequisites are COMPLETED
+●	L2 Modules generally have their L1 counterparts as prerequisites, but this is configured per-Module, not automatic
+●	Prerequisites do NOT apply to Modules an Admin explicitly assigns — assignment overrides prerequisite lock
+
+5. Data Model
+This is the canonical schema. Use these exact table and column names. All tables include created_at, updated_at timestamps (not shown below for brevity). Soft deletes via deleted_at where indicated.
+
+5.1 users
+users
+├── id                    BIGINT PK
+├── email                 VARCHAR(255) UNIQUE NOT NULL
+├── password_hash         VARCHAR(255) NOT NULL
+├── full_name             VARCHAR(255) NOT NULL
+├── role                  ENUM('engineer','team_lead','admin','super_admin')
+├── team_id               BIGINT FK -> teams.id NULL
+├── locale                VARCHAR(10) DEFAULT 'en'
+├── last_login_at         TIMESTAMP NULL
+├── email_verified_at     TIMESTAMP NULL
+└── is_active             BOOLEAN DEFAULT true
+
+5.2 teams
+teams
+├── id                    BIGINT PK
+├── name                  VARCHAR(255) NOT NULL
+├── region                VARCHAR(100) NULL
+└── lead_user_id          BIGINT FK -> users.id NULL
+
+5.3 tracks
+tracks
+├── id                    BIGINT PK
+├── name                  VARCHAR(255) NOT NULL
+├── slug                  VARCHAR(100) UNIQUE
+├── description           TEXT
+├── icon                  VARCHAR(50) NULL
+└── display_order         INT DEFAULT 0
+
+5.4 modules
+modules
+├── id                    BIGINT PK
+├── track_id              BIGINT FK -> tracks.id
+├── title                 VARCHAR(255) NOT NULL
+├── slug                  VARCHAR(150) UNIQUE
+├── description           TEXT
+├── tier                  ENUM('L1_CORE','L2_ADVANCED')
+├── estimated_minutes     INT
+├── video_provider_id     VARCHAR(255) NULL  -- Cloudflare Stream video UID
+├── video_duration_sec    INT NULL
+├── pass_threshold        INT DEFAULT 80     -- percent
+├── quiz_question_count   INT DEFAULT 6      -- number of Qs in Topic Quiz
+├── status                ENUM('draft','published','archived')
+├── created_by            BIGINT FK -> users.id
+├── published_at          TIMESTAMP NULL
+└── deleted_at            TIMESTAMP NULL     -- soft delete
+
+5.5 module_prerequisites (join table)
+module_prerequisites
+├── id                    BIGINT PK
+├── module_id             BIGINT FK -> modules.id
+└── prerequisite_module_id BIGINT FK -> modules.id
+UNIQUE(module_id, prerequisite_module_id)
+
+5.6 module_attachments
+module_attachments
+├── id                    BIGINT PK
+├── module_id             BIGINT FK -> modules.id
+├── filename              VARCHAR(255)
+├── storage_path          VARCHAR(500)
+├── file_type             VARCHAR(50)  -- 'pdf', 'image', 'doc'
+└── file_size_bytes       BIGINT
+
+5.7 questions
+questions
+├── id                    BIGINT PK
+├── module_id             BIGINT FK -> modules.id
+├── question_text         TEXT NOT NULL
+├── option_a              TEXT NOT NULL
+├── option_b              TEXT NOT NULL
+├── option_c              TEXT NOT NULL
+├── option_d              TEXT NOT NULL
+├── correct_option        ENUM('A','B','C','D')
+├── explanation           TEXT NULL  -- shown after answer submitted
+├── difficulty            ENUM('easy','medium','hard')
+├── concept_tag           VARCHAR(100) NOT NULL  -- e.g. 'ap_mount_points'
+├── version               INT DEFAULT 1
+├── is_active             BOOLEAN DEFAULT true
+├── created_by            BIGINT FK -> users.id
+└── deleted_at            TIMESTAMP NULL
+
+5.8 assignments
+assignments
+├── id                    BIGINT PK
+├── module_id             BIGINT FK -> modules.id
+├── engineer_id           BIGINT FK -> users.id
+├── assigned_by           BIGINT FK -> users.id
+├── deadline_at           TIMESTAMP NULL
+├── status                ENUM('pending','in_progress','completed','overdue')
+└── completed_at          TIMESTAMP NULL
+
+5.9 attempts
+attempts
+├── id                    BIGINT PK
+├── engineer_id           BIGINT FK -> users.id
+├── quiz_type             ENUM('topic','review')
+├── module_id             BIGINT FK -> modules.id NULL  -- NULL for review
+├── started_at            TIMESTAMP
+├── completed_at          TIMESTAMP NULL
+├── score_percent         INT NULL
+├── passed                BOOLEAN NULL
+└── question_count        INT
+
+5.10 attempt_responses
+attempt_responses
+├── id                    BIGINT PK
+├── attempt_id            BIGINT FK -> attempts.id
+├── question_id           BIGINT FK -> questions.id
+├── selected_option       ENUM('A','B','C','D') NULL
+├── was_correct           BOOLEAN
+├── response_time_ms      INT NULL
+└── displayed_order       INT  -- position in this attempt (1-based)
+
+5.11 video_progress
+video_progress
+├── id                    BIGINT PK
+├── engineer_id           BIGINT FK -> users.id
+├── module_id             BIGINT FK -> modules.id
+├── position_sec          INT
+├── percent_watched       INT
+├── completed             BOOLEAN DEFAULT false
+└── last_watched_at       TIMESTAMP
+UNIQUE(engineer_id, module_id)
+
+5.12 concept_scores
+concept_scores
+├── id                    BIGINT PK
+├── engineer_id           BIGINT FK -> users.id
+├── concept_tag           VARCHAR(100)
+├── correct_count         INT DEFAULT 0
+├── total_count           INT DEFAULT 0
+├── accuracy              DECIMAL(4,3)  -- computed: correct/total
+└── last_updated_at       TIMESTAMP
+UNIQUE(engineer_id, concept_tag)
+
+5.13 certificates
+certificates
+├── id                    BIGINT PK
+├── certificate_id        VARCHAR(50) UNIQUE  -- e.g. TNX-2026-ALS-04
+├── engineer_id           BIGINT FK -> users.id
+├── track_id              BIGINT FK -> tracks.id
+├── tier                  ENUM('L1_CORE','L2_ADVANCED')
+├── issued_at             TIMESTAMP NOT NULL
+├── pdf_storage_path      VARCHAR(500)
+├── director_name         VARCHAR(255)  -- snapshot at issuance
+├── instructor_name       VARCHAR(255)  -- snapshot at issuance
+├── status                ENUM('active','revoked') DEFAULT 'active'
+├── revoked_at            TIMESTAMP NULL
+├── revoked_by            BIGINT FK -> users.id NULL
+└── revocation_reason     TEXT NULL
+UNIQUE(engineer_id, track_id, tier)  -- one cert per track+tier per engineer
+
+5.14 audit_log
+audit_log
+├── id                    BIGINT PK
+├── user_id               BIGINT FK -> users.id
+├── action                VARCHAR(100)  -- e.g. 'module.published'
+├── entity_type           VARCHAR(50)   -- e.g. 'module'
+├── entity_id             BIGINT
+├── before_json           JSON NULL
+├── after_json            JSON NULL
+├── ip_address            VARCHAR(45)
+└── occurred_at           TIMESTAMP
+
+6. API Surface
+All endpoints are prefixed with /api/v1. All responses are JSON. Authentication via Laravel Sanctum bearer token in Authorization header. All errors follow the same envelope.
+
+6.1 Error response envelope
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Human-readable message",
+    "details": { "field": ["error message"] }
+  }
+}
+
+6.2 Engineer endpoints
+POST   /api/v1/auth/login                 → { token, user }
+POST   /api/v1/auth/logout                → 204
+GET    /api/v1/me                         → current user profile
+GET    /api/v1/me/dashboard               → assigned + in_progress + review_available
+GET    /api/v1/modules                    → paginated list (filters: track, tier, status)
+GET    /api/v1/modules/{id}               → module detail with video URL (signed)
+POST   /api/v1/modules/{id}/video-progress → { position_sec, percent_watched }
+POST   /api/v1/modules/{id}/quiz/start    → creates Attempt, returns questions
+POST   /api/v1/attempts/{id}/submit       → { responses: [...] } → score result
+GET    /api/v1/review-quiz                → current available Review Quiz or 404
+POST   /api/v1/review-quiz/start          → creates Review Attempt
+GET    /api/v1/me/progress                → per-track, per-module status + concept weaknesses
+GET    /api/v1/me/certificates            → list of earned Track certificates
+GET    /api/v1/me/certificates/{id}/pdf   → download PDF
+ 
+# PUBLIC (no auth) — used for external verification
+GET    /verify/{certificate_id}           → HTML page: Verified / Revoked
+GET    /api/v1/verify/{certificate_id}    → JSON: { valid, engineer_name, track, tier, issued_at, status }
+
+6.3 Admin / CMS endpoints
+POST   /api/v1/admin/modules              → create draft module
+PUT    /api/v1/admin/modules/{id}         → update
+POST   /api/v1/admin/modules/{id}/publish → publish (validates: has video, has >= 5 Qs)
+POST   /api/v1/admin/modules/{id}/video   → upload video (proxy to Cloudflare Stream)
+POST   /api/v1/admin/modules/{id}/attachments → upload PDF/image
+POST   /api/v1/admin/modules/{id}/questions → create question
+PUT    /api/v1/admin/questions/{id}       → update (creates new version, deactivates old)
+DELETE /api/v1/admin/questions/{id}       → soft delete
+POST   /api/v1/admin/questions/import     → CSV bulk import
+POST   /api/v1/admin/assignments          → assign module(s) to engineer(s) with deadline
+GET    /api/v1/admin/reports/team/{id}    → team dashboard data
+GET    /api/v1/admin/reports/module/{id}  → per-module performance
+GET    /api/v1/admin/reports/weak-concepts → org-wide weak concept report
+GET    /api/v1/admin/audit-log            → paginated audit log (super_admin only)
+POST   /api/v1/admin/certificates/{id}/revoke → { reason } → revoke cert (super_admin only)
+
+6.4 Endpoint behavior notes
+●	Video URLs returned to Engineer clients MUST be signed URLs from Cloudflare Stream, expiring in 4 hours.
+●	Question list returned to Engineer during a Quiz MUST NOT include correct_option or explanation fields.
+●	After submitting an attempt, the response DOES include correct_option and explanation per question for immediate feedback.
+●	The CSV import endpoint accepts a specific format — see Section 9.3.
+●	All admin endpoints require role >= admin. Team leads only have read access to their team's data.
+
+7. Business Rules and Edge Cases
+7.1 Video completion
+●	A video is considered COMPLETED when percent_watched >= 95% (not 100%, to account for outros and skipping)
+●	Topic Quiz is UNLOCKED only when video is COMPLETED
+●	Video progress is throttle-updated: at most one write per 15 seconds
+
+7.2 Quiz attempts
+●	Engineer can retake a failed Topic Quiz after 15 minutes cooldown (configurable)
+●	On retake, questions MUST be re-selected from bank (may overlap with previous attempt if bank is small)
+●	All attempts are stored; latest passing attempt determines Module status
+●	If an Engineer starts a Quiz and does not submit within 60 minutes, the attempt is auto-abandoned (marked incomplete)
+●	Abandoned attempts do not update concept_scores
+
+7.3 Question versioning
+●	Editing a Question creates a new version_id and marks the old as inactive
+●	Historical attempts reference the version they were shown — never mutate historical attempt data
+●	Deleting a Question is a soft delete — old attempts remain valid, but the question is not selected for new quizzes
+
+7.4 Assignment lifecycle
+●	Status transitions: pending → in_progress (on first video play) → completed (on quiz pass) OR overdue (past deadline_at)
+●	Overdue check runs nightly via scheduled job
+●	Completed assignments are never reverted — even if the Module is later edited
+
+7.5 Team lead scope
+●	A team lead sees ONLY engineers where users.team_id matches their own team_id
+●	A team lead can create assignments for their team only
+●	A team lead CANNOT edit Modules or Questions — read-only on content
+
+7.6 Weekly Review Quiz generation
+●	Scheduled job runs Monday 06:00 UTC
+●	For each eligible Engineer (>=3 completed Modules), generate a fresh Review Quiz
+●	If Engineer has an unfinished Review Quiz from previous week, mark it expired and replace
+●	Do not generate Review Quiz for inactive users (is_active=false or no login in 60 days)
+
+7.7 Certificate issuance — AUTOMATIC, no admin action required
+This is a first-class feature. Auto-issuance is what makes Academy pitchable to clients. Do not build a manual approval step in v1.
+
+●	Trigger: The instant an Engineer's Topic Quiz submission causes the LAST remaining Module in a Track (for a given Tier) to become COMPLETED
+●	The issuance runs in the same request cycle as the quiz submission — no queued job, no delay, no admin approval
+●	Certificate ID format: TNX-{YYYY}-{ENGINEER_INITIALS}-{SEQ} where SEQ is a per-engineer sequence number (e.g. TNX-2026-ALS-04 for Ali Sultan's 4th certificate)
+●	PDF is rendered server-side (Browsershot or Puppeteer) from an HTML template, A4 landscape
+●	PDF is stored in S3-compatible storage; URL is signed with 30-day expiry for engineer downloads, but the verification URL is public and permanent
+●	Certificate template renders: engineer full name, track name, tier, date issued, certificate ID, gold seal, two signatures (Director + Lead Instructor names from track config)
+●	On issuance: send email to engineer with PDF attached, send in-app notification, appear in 'My Certificates' immediately, appear in Team Lead dashboard
+●	Public verification: GET /verify/{certificate_id} (no auth required) returns a page showing certificate details + 'Verified' or 'Revoked' state
+●	Revocation: Super Admin only; revoked certs remain in DB, verification page shows 'Revoked' with reason; all revocations logged to audit_log
+●	Engineers cannot re-download a revoked certificate PDF
+
+7.8 Edge cases to handle
+●	Engineer with 0 Modules assigned — dashboard shows 'Browse available modules' CTA, no error
+●	Module with 0 Questions — CANNOT be published; API returns 422 with clear message
+●	Question bank smaller than quiz_question_count — use all available, do not error
+●	Engineer network drops during quiz — show clear error, allow reconnect; do not attempt local caching in v1
+●	Video upload larger than 500MB — chunked upload; show progress; resume support
+●	Engineer's team is deleted — reassign to a 'Unassigned' team, do not delete Engineer
+●	Two Engineers submit an Attempt at the same instant — no locking issue because each Attempt is scoped to one Engineer
+
+8. Naming Conventions
+8.1 Backend
+●	Classes: PascalCase — Module, QuestionController, ReviewQuizGenerator
+●	Methods: camelCase — generateReviewQuiz(), assignModule()
+●	DB tables: snake_case, plural — modules, attempt_responses
+●	DB columns: snake_case — concept_tag, correct_option, response_time_ms
+●	Routes: kebab-case — /api/v1/review-quiz, /api/v1/admin/audit-log
+●	Migrations: timestamp_snake_case_description.php
+
+8.2 Frontend
+●	Components: PascalCase — ModuleCard.vue, QuizQuestion.vue
+●	Composables: use prefix, camelCase — useQuizState.js, useAuth.js
+●	Store modules (Pinia): camelCase — modulesStore, quizStore
+●	CSS: TailwindCSS utility classes; custom classes as kebab-case in component-scoped style blocks
+
+8.3 Example data — always use these names in seeds, tests, examples
+# Standard example user
+{
+  "id": 42,
+  "email": "ali.sultan@technonex.de",
+  "full_name": "Ali Sultan",
+  "role": "engineer",
+  "team_id": 3
+}
+ 
+# DO NOT use these names in generated content:
+# 'Hamza', 'Syed Hamza', 'Abdul'
+
+9. File Formats
+9.1 Video files
+●	Accepted formats: MP4 (H.264 + AAC), MOV, WebM
+●	Uploaded to Cloudflare Stream via API; Cloudflare handles transcoding and adaptive bitrate
+●	Max upload size: 500MB per file
+●	Recommended source: 1080p, 30fps, target duration 10–25 minutes per Module
+
+9.2 Attachment files
+●	PDF (up to 20MB), PNG/JPG (up to 5MB each), DOCX (up to 10MB)
+●	Stored in S3-compatible object storage; served via signed URLs
+
+9.3 MCQ CSV import format
+Header row required. UTF-8 encoded. Commas in text must be quoted with double quotes.
+question_text,option_a,option_b,option_c,option_d,correct_option,difficulty,concept_tag,explanation
+"What is the correct AP mount height?","1.5m","2.5m","3.0m","Ceiling only","B","easy","ap_mount_height","Standard for enterprise WiFi coverage"
+"Which command downgrades IOS-XE?","install remove","install rollback","install add file","install downgrade","C","hard","ios_xe_recovery","Full command: install add file flash: activate commit"
+
+Validation rules for CSV import:
+●	correct_option must be one of A, B, C, D
+●	difficulty must be one of easy, medium, hard
+●	concept_tag must be lowercase, alphanumeric with underscores only
+●	All text fields required except explanation
+●	On any row failure, return per-row errors — do NOT abort the whole import
+
+10. Security, Compliance & Non-Functional
+10.1 Authentication
+●	Passwords: bcrypt with cost factor 12
+●	Sessions: Laravel Sanctum tokens, 30-day expiry, revoke on logout
+●	Hosting: one.com VPS (existing Technonex infrastructure)
+●	Rate limiting: 60 requests/minute per IP on auth endpoints
+●	Login lockout: 5 failed attempts → 15 min lockout
+
+10.2 Authorization
+●	Every API endpoint MUST check role and scope (team_id where applicable)
+●	do not scatter authorization logic in controllers
+●	Team leads and engineers can never access another team's data — enforce at query level, not just view level
+
+10.3 Data protection (GDPR)
+●	Hosting: one.com VPS and services (existing Technonex infrastructure — no change required)
+●	GDPR compliance is required for the application itself: consent tracking, data export, right to erasure
+●	PII in exports must be limited to what the export is for
+●	Right to erasure: users.deleted_at soft delete; attempts and audit_log retained per legitimate interest but PII scrubbed after 30 days
+●	Data export: Engineer can download their own attempts and progress as JSON
+
+10.4 Video content protection
+●	Videos MUST be private (Cloudflare Stream signed URL access only)
+●	Signed URL expiry: 4 hours
+●	Domain restriction: signed URLs only playable from academy.technonex.de origin
+●	Download disabled at HTML5 video element level; recognize that determined users can still screen-record
+
+10.5 Performance targets
+●	API response time p95: < 500ms for read endpoints, < 1500ms for write endpoints
+●	Video start playback: < 3 seconds on 4G
+●	Dashboard load: < 2 seconds
+●	Support 500 concurrent Engineers in v1, 5000 in v2 architecture
+
+10.6 Observability
+●	Structured logging (JSON) via Node Log with correlation IDs
+●	Error tracking: Sentry or similar
+●	Uptime monitoring: Better Stack or similar
+●	Audit log for every admin action, immutable append-only
+
+11. Anti-Patterns — DO NOT DO THESE
+These are things the AI agent MUST NOT do when generating code, schemas, or copy for this project.
+
+●	DO NOT integrate with NexOps in v1. Academy is standalone.
+●	DO NOT use YouTube, Vimeo public, or any public video service. Videos are private.
+●	DO NOT hardcode UI strings — everything user-facing goes through a translation layer with English and German locales only.
+●	DO NOT build a native iOS or Android app in v1. PWA only.
+●	DO NOT use 'Hamza' or 'Abdul' as example names anywhere. Use 'Ali Sultan'.
+●	DO NOT skip the audit log on admin actions.
+●	DO NOT delete Questions hard — always soft delete to preserve historical Attempts.
+●	DO NOT mutate an Attempt after it is submitted.
+●	DO NOT allow a Module to be published without a video and at least 5 active Questions.
+●	DO NOT expose correct_option in Questions payload during a live Quiz.
+●	DO NOT let team leads see engineers outside their team_id.
+●	DO NOT skip prerequisite checks — but DO respect Admin assignment override.
+●	DO NOT build gamification (badges, leaderboards, streaks) in v1.
+●	DO NOT add social features (comments, discussions) in v1.
+●	DO NOT pick your own color palette — the brand pack (colors, fonts, logos) will be provided separately by Hamza. Do not start UI implementation before that pack is delivered.
+●	DO NOT add languages beyond English and German in v1.
+●	DO NOT build an offline mode. Assume network is available; graceful error messages are enough.
+●	DO NOT make up business rules. If a rule is missing from this document, ASK the human product owner.
+
+12. v1 Acceptance Criteria
+v1 is considered DONE when all of the following are true. This is the definition of done, not a nice-to-have list.
+
+12.1 Content management
+●	An Admin can create a Module with title, track, tier, description in < 2 minutes
+●	An Admin can upload a video to a Module and see it playable in < 15 minutes (including Cloudflare transcode)
+●	An Admin can add MCQ Questions individually via form
+●	An Admin can bulk-import >= 25 MCQ Questions via CSV in a single upload
+●	An Admin can publish a Module only if it has video + >= 5 Questions
+
+12.2 Engineer experience
+●	An Engineer can log in on mobile, install as PWA, and access assigned Modules
+●	An Engineer can watch a video with resume-from-position and playback speed control
+●	An Engineer can take a Topic Quiz after video completion and see immediate per-question feedback
+●	An Engineer can retake a failed Topic Quiz after cooldown
+●	An Engineer with >= 3 completed Modules receives a Review Quiz weekly
+●	An Engineer can view their progress: modules complete, weak concepts, earned certificates
+
+12.3 Team lead experience
+●	A Team Lead can view their team's engineers and per-engineer completion status
+●	A Team Lead can assign a Module to one or many engineers with a deadline
+●	A Team Lead can see per-concept weakness for their team
+
+12.4 System
+●	Videos are served via signed URLs that expire in 4 hours
+●	All PII data is stored in EU
+●	Audit log records every admin write operation
+●	Weekly Review Quiz generation runs automatically at Monday 06:00 UTC
+●	Overdue check runs nightly and updates assignment status
+●	On completing the last Module of a Track, the Engineer receives an auto-issued certificate PDF within seconds, via email + in-app + certificate list
+●	Certificate verification URL /verify/{id} is publicly accessible without login
+●	Super Admin can revoke a certificate and the verification page reflects the change immediately
+13. Open Questions for the Product Owner
+These are decisions NOT YET MADE. If your work depends on one of these, ask before assuming.
+
+●	Certificate template design — using placeholder in v1, needs design pass
+●	Exact list of Tracks and initial 5 Modules for launch content
+●	Notification email templates and sender identity (academy@technonex.de vs noreply@)
+●	Whether to support SMS notifications for deadlines (currently: no, email + in-app only)
+●	Data retention policy for abandoned attempts (currently: retained indefinitely for analytics)
+●	Whether Engineers can browse Modules NOT assigned to them (currently: yes, but cannot start without assignment or self-enroll)
+●	Self-enrollment allowed? (currently: no — assignment required)
+●	Exact CSV column ordering for Question import (draft in Section 9.3 — confirm with Admin team)
+14. Escalation and Contact
+For any decision, clarification, or ambiguity encountered while building this project:
+
+Product Owner: Syed Hamza Mehmood — sole decision-maker for scope and requirements
+Escalation path: Ask the human user in the current chat context. Do NOT invent answers to ambiguous requirements.
+
+This document supersedes any previous verbal or written brief. If this document conflicts with something you have been told elsewhere, this document wins.

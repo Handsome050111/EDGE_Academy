@@ -1,6 +1,35 @@
 const fs = require('fs');
 const path = require('path');
+const nodemailer = require('nodemailer');
 const { createNotification } = require('../controllers/notificationController');
+
+let smtpTransporter = null;
+
+const getSmtpTransporter = () => {
+  const host = process.env.SMTP_HOST || 'send.one.com';
+  const port = parseInt(process.env.SMTP_PORT || '465', 10);
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (user && pass) {
+    if (!smtpTransporter) {
+      smtpTransporter = nodemailer.createTransport({
+        host,
+        port,
+        secure: port === 465 || process.env.SMTP_SECURE === 'true',
+        auth: {
+          user,
+          pass,
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      });
+    }
+    return smtpTransporter;
+  }
+  return null;
+};
 
 let resendClient = null;
 if (process.env.RESEND_API_KEY) {
@@ -13,13 +42,15 @@ if (process.env.RESEND_API_KEY) {
 }
 
 /**
- * Dispatches an email notification via Resend with console logging fallback.
+ * Dispatches an email notification via SMTP (Nodemailer / one.com) or Resend API with console logging fallback.
  */
 const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
   try {
+    const recipient = Array.isArray(to) ? to.join(', ') : to;
+
     // In production or test, log structured email output
     console.log(`\n================== [EMAIL DISPATCH] ==================`);
-    console.log(`TO:          ${to}`);
+    console.log(`TO:          ${recipient}`);
     console.log(`SUBJECT:     ${subject}`);
     if (attachments && attachments.length > 0) {
       console.log(`ATTACHMENTS: ${attachments.map((a) => a.filename || a.path).join(', ')}`);
@@ -27,15 +58,40 @@ const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
     console.log(`BODY:        ${text || subject}`);
     console.log(`======================================================\n`);
 
-    // Dispatch via Resend API
-    if (resendClient || process.env.RESEND_API_KEY) {
+    const transporter = getSmtpTransporter();
+
+    if (transporter) {
+      // 1. Dispatch via SMTP (Nodemailer / one.com)
+      const senderFrom = process.env.SMTP_FROM || process.env.SMTP_USER || 'EDGE Academy <academy@technonex.de>';
+
+      const mailOptions = {
+        from: senderFrom,
+        to,
+        subject,
+        text: text || subject,
+        html: html || `<p>${text || subject}</p>`,
+        attachments: (attachments || []).map((att) => {
+          if (att.path && fs.existsSync(att.path)) {
+            return {
+              filename: att.filename || path.basename(att.path),
+              path: att.path,
+            };
+          }
+          return att;
+        }),
+      };
+
+      const info = await transporter.sendMail(mailOptions);
+      console.log(`[SMTP Success] Email delivered to ${recipient}. Message ID: ${info.messageId}`);
+      return true;
+    } else if (resendClient || process.env.RESEND_API_KEY) {
+      // 2. Dispatch via Resend API
       try {
         if (!resendClient) {
           const { Resend } = require('resend');
           resendClient = new Resend(process.env.RESEND_API_KEY);
         }
 
-        // Format attachments for Resend (supports buffers or path contents)
         const resendAttachments = (attachments || []).map((att) => {
           if (att.path && fs.existsSync(att.path)) {
             return {
@@ -56,12 +112,12 @@ const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
         });
 
         if (error) {
-          console.error(`[Resend Error] Failed to send email to ${to}:`, error.message);
+          console.error(`[Resend Error] Failed to send email to ${recipient}:`, error.message);
         } else {
-          console.log(`[Resend Success] Email delivered to ${to}. Message ID: ${data?.id}`);
+          console.log(`[Resend Success] Email delivered to ${recipient}. Message ID: ${data?.id}`);
         }
       } catch (resendErr) {
-        console.error(`[Resend Exception] Error sending to ${to}:`, resendErr.message);
+        console.error(`[Resend Exception] Error sending to ${recipient}:`, resendErr.message);
       }
     }
 

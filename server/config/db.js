@@ -1,4 +1,12 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Enforce reliable DNS servers for MongoDB Atlas SRV lookup on Windows
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (dnsErr) {
+  console.warn('DNS server override notice:', dnsErr.message);
+}
 
 const connectDB = async () => {
   try {
@@ -10,4 +18,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+module.exports = connectDB;

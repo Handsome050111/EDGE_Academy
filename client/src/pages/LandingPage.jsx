@@ -12,7 +12,7 @@ const officialModules = [
     badge: 'EDGE L1 • INFRASTRUCTURE',
     title: 'M3: Rack & Cabinet Fundamentals',
     description: 'RU counting, cable dressing to Siemens visual standard, bend radius, and rack elevations.',
-    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80',
+    image: '/modules-c1.jpeg',
     duration: '45 min',
     fieldScope: 'Hands-on physical infrastructure standard for installing, organizing, and securing enterprise server racks (12U to 42U) in live customer data centers. Focuses on Siemens benchmark visual cable management, copper/fiber minimum bend radius adherence, hot/cold aisle thermal containment, and PDU distribution.',
     learningOutcomes: [
@@ -33,7 +33,7 @@ const officialModules = [
     badge: 'EDGE L1 • OPTICAL MEDIA',
     title: 'M2: Fiber Cables & SFPs',
     description: 'Single/Multi-Mode (OS1/OS2, OM1–OM4), LC/SC connectors, and SFP/SFP+/QSFP transceiver matching.',
-    image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&auto=format&fit=crop&q=80',
+    image: '/modules-c2.jpeg',
     duration: '40 min',
     fieldScope: 'Physical identification, inspection, and deployment of enterprise optical cabling and transceiver interfaces. Covers core diameter differences between Single-Mode (9µm) and Multi-Mode (50/62.5µm), optical transceiver form factors (SFP, SFP+, SFP28, QSFP+), and proper inspection/cleaning protocols prior to insertion.',
     learningOutcomes: [
@@ -54,7 +54,7 @@ const officialModules = [
     badge: 'CORE L2 • SURVEY STANDARDS',
     title: 'C3: Site Survey (Infosys Form)',
     description: '14-section survey standard, Must-field validation, and the Technonex dual-validation model.',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
+    image: '/modules-c3.jpeg',
     duration: '60 min',
     fieldScope: 'Comprehensive methodology for conducting pre-transformation and physical wireless/LAN site surveys on client campuses. Covers all 14 mandatory sections of the official Infosys field audit document, distinguishing non-negotiable Must validation criteria from Good to Have metrics, and executing the Technonex dual-validation signoff process.',
     learningOutcomes: [
@@ -75,7 +75,7 @@ const officialModules = [
     badge: 'CORE L2 • WIRELESS INFRASTRUCTURE',
     title: 'C2: WLAN Fundamentals (Ekahau)',
     description: 'Heatmap interpretation, RSSI signal standards, AP placement, and active/passive surveys.',
-    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
+    image: '/modules-c4.jpeg',
     duration: '50 min',
     fieldScope: 'Advanced RF design and on-site Wi-Fi validation utilizing Ekahau AI Pro survey tools and sidekicks. Covers primary/secondary signal coverage (-65 dBm / -70 dBm RSSI benchmarks), SNR calculation, co-channel interference mitigation, attenuation modeling across physical wall materials, and active vs passive survey workflows.',
     learningOutcomes: [
@@ -133,6 +133,7 @@ const LandingPage = () => {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedModule, setSelectedModule] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -195,32 +196,86 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       {/* Top Navbar */}
-      <header className="bg-[#062452] text-white px-6 sm:px-12 lg:px-16 py-3 flex items-center justify-between border-b border-blue-900/40 sticky top-0 z-40 shadow-md">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center cursor-pointer group" onClick={() => navigate('/')}>
-            <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-none group-hover:text-blue-100 transition">
-              EDGE <span className="text-[#EAB308]">Academy</span>
-            </span>
+      <header className="bg-[#062452] text-white sticky top-0 z-40 border-b border-blue-900/40 shadow-md">
+        <div className="px-6 sm:px-12 lg:px-16 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center cursor-pointer group" onClick={() => navigate('/')}>
+              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-none group-hover:text-blue-100 transition">
+                EDGE <span className="text-[#EAB308]">Academy</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Center Nav Links */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-blue-100/90">
+            <a href="#modules" className="hover:text-white transition">Modules</a>
+            <a href="#certifications" className="hover:text-white transition">Certifications</a>
+            <a href="#about" className="hover:text-white transition">About Us</a>
+            <a href="#verification" className="hover:text-white transition">Verify Credential</a>
+          </nav>
+
+          {/* Right CTA & Mobile Hamburger */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-[#EAB308] hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-bold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full transition shadow-sm cursor-pointer active:scale-95"
+            >
+              Login
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-blue-100 hover:text-white hover:bg-blue-900/50 rounded-xl transition cursor-pointer"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Center Nav Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-blue-100/90">
-          <a href="#modules" className="hover:text-white transition">Modules</a>
-          <a href="#certifications" className="hover:text-white transition">Certifications</a>
-          <a href="#about" className="hover:text-white transition">About Us</a>
-          <a href="#verification" className="hover:text-white transition">Verify Credential</a>
-        </nav>
-
-        {/* Right CTA */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/login')}
-            className="bg-[#EAB308] hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-bold px-6 py-2.5 rounded-full transition shadow-sm cursor-pointer active:scale-95"
-          >
-            Login
-          </button>
-        </div>
+        {/* Mobile Dropdown Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-blue-900/60 bg-[#062452]/95 backdrop-blur-md px-6 py-4 space-y-1 animate-in slide-in-from-top-2 duration-200">
+            <a
+              href="#modules"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
+            >
+              Modules
+            </a>
+            <a
+              href="#certifications"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
+            >
+              Certifications
+            </a>
+            <a
+              href="#about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
+            >
+              About Us
+            </a>
+            <a
+              href="#verification"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
+            >
+              Verify Credential
+            </a>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -261,7 +316,7 @@ const LandingPage = () => {
           <div className="lg:col-span-5 relative">
             <div className="rounded-3xl overflow-hidden border border-white/20 shadow-2xl bg-slate-900 group">
               <img
-                src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1000&auto=format&fit=crop&q=80"
+                src="/hero-section.jpeg"
                 alt="Server Rack IT Infrastructure"
                 className="w-full h-[360px] sm:h-[420px] object-cover group-hover:scale-105 transition duration-500"
               />

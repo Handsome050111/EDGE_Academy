@@ -139,7 +139,7 @@ const AuthPage = () => {
   return (
     <div className="h-screen w-screen overflow-hidden bg-white flex flex-col lg:flex-row font-sans">
       {/* Left Side: Brand Panel */}
-      <div className="lg:w-1/2 bg-[#062452] p-8 lg:p-14 xl:p-16 flex flex-col justify-between text-white relative overflow-hidden shrink-0">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#062452] p-8 lg:p-14 xl:p-16 flex-col justify-between text-white relative overflow-hidden shrink-0">
         {/* Large Watermark Graphic */}
         <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full border-[32px] border-white/[0.04] flex items-center justify-center pointer-events-none">
           <div className="w-[360px] h-[360px] rounded-full border-[24px] border-white/[0.03] flex items-center justify-center">
@@ -155,9 +155,10 @@ const AuthPage = () => {
 
         {/* Top Brand Logo */}
         <div className="relative z-10">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-            <img src="/app-logo.png" alt="EDGE Academy Logo" className="h-10 w-10 rounded-xl object-contain shadow-xs" />
-            <span className="text-2xl font-black tracking-wider text-white uppercase">EDGE ACADEMY</span>
+          <div className="flex items-center cursor-pointer group" onClick={() => navigate('/')}>
+            <span className="text-2xl font-extrabold tracking-tight text-white leading-none">
+              EDGE <span className="text-[#EAB308]">Academy</span>
+            </span>
           </div>
         </div>
 
@@ -179,8 +180,15 @@ const AuthPage = () => {
       </div>
 
       {/* Right Side: Auth Form */}
-      <div className="lg:w-1/2 flex flex-col justify-between p-8 lg:p-14 xl:p-16 overflow-y-auto bg-white">
-        <div className="max-w-[420px] w-full mx-auto my-auto">
+      <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-8 lg:p-14 xl:p-16 overflow-y-auto bg-white flex-1 min-h-screen lg:min-h-0">
+        <div className="max-w-[420px] w-full mx-auto my-auto py-6 lg:py-0">
+          {/* Mobile-Only Header Brand */}
+          <div className="flex lg:hidden items-center mb-8 cursor-pointer group" onClick={() => navigate('/')}>
+            <span className="text-2xl font-extrabold tracking-tight text-[#062452] leading-none">
+              EDGE <span className="text-[#EAB308]">Academy</span>
+            </span>
+          </div>
+
           {/* Form Header */}
           <div className="mb-8">
             <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight mb-1.5">

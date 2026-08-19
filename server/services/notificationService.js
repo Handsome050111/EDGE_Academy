@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const dns = require('dns');
 const nodemailer = require('nodemailer');
 const { createNotification } = require('../controllers/notificationController');
 
@@ -39,6 +38,7 @@ const getSmtpTransporter = () => {
         host,
         port,
         secure,
+        family: 4,
         auth: {
           user,
           pass,

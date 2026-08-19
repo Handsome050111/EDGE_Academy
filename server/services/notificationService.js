@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const dns = require('dns');
 const nodemailer = require('nodemailer');
 const { createNotification } = require('../controllers/notificationController');
 
@@ -38,14 +39,17 @@ const getSmtpTransporter = () => {
         host,
         port,
         secure,
-        family: 4, // Force IPv4 routing (resolves ENETUNREACH on Railway/cloud containers)
         auth: {
           user,
           pass,
         },
-        connectionTimeout: 8000,
-        greetingTimeout: 8000,
-        socketTimeout: 10000,
+        // Strictly enforce IPv4 at the socket lookup level
+        lookup: (hostname, options, callback) => {
+          return dns.lookup(hostname, { family: 4, all: false }, callback);
+        },
+        connectionTimeout: 15000,
+        greetingTimeout: 15000,
+        socketTimeout: 15000,
         tls: {
           rejectUnauthorized: false,
         },

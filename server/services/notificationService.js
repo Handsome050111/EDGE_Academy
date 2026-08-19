@@ -19,7 +19,7 @@ const getSmtpTransporter = () => {
   const host = cleanEnv(process.env.SMTP_HOST) || 'send.one.com';
   const rawPort = cleanEnv(process.env.SMTP_PORT);
   const parsedPort = parseInt(rawPort, 10);
-  const port = isNaN(parsedPort) ? 587 : parsedPort;
+  const port = isNaN(parsedPort) ? 465 : parsedPort;
   const user = cleanEnv(process.env.SMTP_USER);
   const pass = cleanEnv(process.env.SMTP_PASS);
   const rawSecure = cleanEnv(process.env.SMTP_SECURE);
@@ -38,28 +38,14 @@ const getSmtpTransporter = () => {
       smtpTransporter = nodemailer.createTransport({
         host,
         port,
-        secure: false, // Port 587 uses STARTTLS
-        requireTLS: true,
+        secure,
         auth: {
           user,
           pass,
         },
-        logger: true, // Enables full SMTP conversation logging
-        debug: true, // Prints raw commands and server responses
-        lookup: (hostname, options, callback) => {
-          const cb = typeof options === 'function' ? options : callback;
-          dns.lookup(hostname, { family: 4 }, (err, address, family) => {
-            if (err) return cb(err);
-            cb(null, address, 4);
-          });
-        },
         connectionTimeout: 30000,
         greetingTimeout: 30000,
         socketTimeout: 30000,
-        tls: {
-          servername: host,
-          rejectUnauthorized: false,
-        },
       });
     }
     return smtpTransporter;
@@ -98,12 +84,14 @@ const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
     const transporter = getSmtpTransporter();
 
     if (transporter) {
-      // 1. Dispatch via SMTP (Nodemailer / one.com)
+      // 1. Dispatch via SMTP (Nodemailer / Gmail / one.com)
       const senderFrom = cleanEnv(process.env.SMTP_FROM) || cleanEnv(process.env.SMTP_USER) || 'EDGE Academy <khaista.rehman@technonex.de>';
+      const replyTo = cleanEnv(process.env.SMTP_REPLY_TO);
 
       const mailOptions = {
         from: senderFrom,
         to,
+        ...(replyTo ? { replyTo } : {}),
         subject,
         text: text || subject,
         html: html || `<p>${text || subject}</p>`,

@@ -38,6 +38,7 @@ const getSmtpTransporter = () => {
         host,
         port,
         secure,
+        family: 4, // Force IPv4 routing (resolves ENETUNREACH on Railway/cloud containers)
         auth: {
           user,
           pass,

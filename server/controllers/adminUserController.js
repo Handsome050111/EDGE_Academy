@@ -170,8 +170,10 @@ const inviteUser = async (req, res) => {
 
     const inviteLink = `/invite/accept?token=${token}`;
 
-    // Dual Notification: in-app bell + Resend email dispatch
-    await notifyUserInvitation({ user, token, isResend: false });
+    // Dual Notification: in-app bell + email dispatch (non-blocking background execution)
+    notifyUserInvitation({ user, token, isResend: false }).catch((err) => {
+      console.error('[Invitation Notification Error]:', err.message);
+    });
 
     await logAudit({
       req,
@@ -618,8 +620,10 @@ const resendInvite = async (req, res) => {
 
     const inviteLink = `/invite/accept?token=${token}`;
 
-    // Dual Notification: in-app bell + Resend email dispatch
-    await notifyUserInvitation({ user, token, isResend: true });
+    // Dual Notification: in-app bell + email dispatch (non-blocking background execution)
+    notifyUserInvitation({ user, token, isResend: true }).catch((err) => {
+      console.error('[Resend Invitation Notification Error]:', err.message);
+    });
 
     await logAudit({
       req,

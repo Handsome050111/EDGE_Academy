@@ -3,24 +3,40 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const { createNotification } = require('../controllers/notificationController');
 
+const cleanEnv = (val) => {
+  if (!val) return '';
+  let str = String(val).trim();
+  if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
+    str = str.slice(1, -1).trim();
+  }
+  return str;
+};
+
 let smtpTransporter = null;
 
 const getSmtpTransporter = () => {
-  const host = process.env.SMTP_HOST || 'send.one.com';
-  const port = parseInt(process.env.SMTP_PORT || '465', 10);
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const host = cleanEnv(process.env.SMTP_HOST) || 'send.one.com';
+  const rawPort = cleanEnv(process.env.SMTP_PORT);
+  const parsedPort = parseInt(rawPort, 10);
+  const port = isNaN(parsedPort) ? 465 : parsedPort;
+  const user = cleanEnv(process.env.SMTP_USER);
+  const pass = cleanEnv(process.env.SMTP_PASS);
+  const rawSecure = cleanEnv(process.env.SMTP_SECURE);
+  const secure = port === 465 || rawSecure === 'true';
 
   if (user && pass) {
     if (!smtpTransporter) {
       smtpTransporter = nodemailer.createTransport({
         host,
         port,
-        secure: port === 465 || process.env.SMTP_SECURE === 'true',
+        secure,
         auth: {
           user,
           pass,
         },
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
+        socketTimeout: 10000,
         tls: {
           rejectUnauthorized: false,
         },
@@ -32,10 +48,11 @@ const getSmtpTransporter = () => {
 };
 
 let resendClient = null;
-if (process.env.RESEND_API_KEY) {
+const resendKey = cleanEnv(process.env.RESEND_API_KEY);
+if (resendKey) {
   try {
     const { Resend } = require('resend');
-    resendClient = new Resend(process.env.RESEND_API_KEY);
+    resendClient = new Resend(resendKey);
   } catch (err) {
     console.error('Failed to initialize Resend client:', err.message);
   }
@@ -62,7 +79,7 @@ const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
 
     if (transporter) {
       // 1. Dispatch via SMTP (Nodemailer / one.com)
-      const senderFrom = process.env.SMTP_FROM || process.env.SMTP_USER || 'EDGE Academy <academy@technonex.de>';
+      const senderFrom = cleanEnv(process.env.SMTP_FROM) || cleanEnv(process.env.SMTP_USER) || 'EDGE Academy <khaista.rehman@technonex.de>';
 
       const mailOptions = {
         from: senderFrom,

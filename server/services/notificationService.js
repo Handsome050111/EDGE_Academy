@@ -38,13 +38,14 @@ const getSmtpTransporter = () => {
       smtpTransporter = nodemailer.createTransport({
         host,
         port,
-        secure,
-        family: 4,
-        requireTLS: port === 587 || !secure,
+        secure: false, // Port 587 uses STARTTLS
+        requireTLS: true,
         auth: {
           user,
           pass,
         },
+        logger: true, // Enables full SMTP conversation logging
+        debug: true, // Prints raw commands and server responses
         lookup: (hostname, options, callback) => {
           const cb = typeof options === 'function' ? options : callback;
           dns.lookup(hostname, { family: 4 }, (err, address, family) => {
@@ -52,9 +53,9 @@ const getSmtpTransporter = () => {
             cb(null, address, 4);
           });
         },
-        connectionTimeout: 20000,
-        greetingTimeout: 20000,
-        socketTimeout: 20000,
+        connectionTimeout: 30000,
+        greetingTimeout: 30000,
+        socketTimeout: 30000,
         tls: {
           servername: host,
           rejectUnauthorized: false,
@@ -159,7 +160,14 @@ const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
 
     return true;
   } catch (error) {
-    console.error(`[Email Service] Failed to send email to ${to}:`, error.message);
+    console.error('[Email Service Full Error Details]:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response,
+      responseCode: error.responseCode,
+      stack: error.stack,
+    });
     return false;
   }
 };

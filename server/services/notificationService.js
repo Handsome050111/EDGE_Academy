@@ -39,6 +39,7 @@ const getSmtpTransporter = () => {
         host,
         port,
         secure,
+        family: 4,
         requireTLS: port === 587 || !secure,
         auth: {
           user,

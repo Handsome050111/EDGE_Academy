@@ -19,7 +19,7 @@ const getSmtpTransporter = () => {
   const host = cleanEnv(process.env.SMTP_HOST) || 'send.one.com';
   const rawPort = cleanEnv(process.env.SMTP_PORT);
   const parsedPort = parseInt(rawPort, 10);
-  const port = isNaN(parsedPort) ? 465 : parsedPort;
+  const port = isNaN(parsedPort) ? 587 : parsedPort;
   const user = cleanEnv(process.env.SMTP_USER);
   const pass = cleanEnv(process.env.SMTP_PASS);
   const rawSecure = cleanEnv(process.env.SMTP_SECURE);
@@ -39,6 +39,7 @@ const getSmtpTransporter = () => {
         host,
         port,
         secure,
+        requireTLS: port === 587 || !secure,
         auth: {
           user,
           pass,

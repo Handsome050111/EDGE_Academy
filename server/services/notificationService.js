@@ -51,6 +51,7 @@ const getSmtpTransporter = () => {
         greetingTimeout: 15000,
         socketTimeout: 15000,
         tls: {
+          servername: 'send.one.com',
           rejectUnauthorized: false,
         },
       });

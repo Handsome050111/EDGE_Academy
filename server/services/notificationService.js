@@ -43,15 +43,18 @@ const getSmtpTransporter = () => {
           user,
           pass,
         },
-        // Strictly enforce IPv4 at the socket lookup level
         lookup: (hostname, options, callback) => {
-          return dns.lookup(hostname, { family: 4, all: false }, callback);
+          const cb = typeof options === 'function' ? options : callback;
+          dns.lookup(hostname, { family: 4 }, (err, address, family) => {
+            if (err) return cb(err);
+            cb(null, address, 4);
+          });
         },
-        connectionTimeout: 15000,
-        greetingTimeout: 15000,
-        socketTimeout: 15000,
+        connectionTimeout: 20000,
+        greetingTimeout: 20000,
+        socketTimeout: 20000,
         tls: {
-          servername: 'send.one.com',
+          servername: host,
           rejectUnauthorized: false,
         },
       });

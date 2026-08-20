@@ -41,6 +41,10 @@ connectDB().then(() => {
 
 const app = express();
 
+// Enable trust proxy for reverse proxy deployments (Railway/NGINX/Cloudflare)
+// Ensures req.ip and x-forwarded-for accurately resolve the real client IP address
+app.set('trust proxy', 1);
+
 // Security Middleware
 app.use(
   helmet({

@@ -37,6 +37,7 @@ const VideoPlayer = ({
   percentWatched = 0,
   onLoadedMetadata,
   onTimeUpdate,
+  onEnded,
   resumeNotice,
   onRestart,
 }) => {
@@ -93,6 +94,7 @@ const VideoPlayer = ({
               onPause={() => setIsPlaying(false)}
               onLoadedMetadata={onLoadedMetadata}
               onTimeUpdate={onTimeUpdate}
+              onEnded={onEnded}
               className="h-full w-full object-contain bg-black"
             >
               {t('videoPlayer.unsupported')}

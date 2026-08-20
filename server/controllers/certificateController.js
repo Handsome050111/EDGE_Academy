@@ -53,12 +53,34 @@ const validateCertificateEligibility = (completedAssignmentsCount, requiredModul
   return { valid: true, errors: [] };
 };
 
-const generateCertificate = async (engineer_id, track_id, tier = 'CORE') => {
+const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_next = 'EDGE') => {
   try {
+    const isHttpRequest = Boolean(
+      engineer_id_or_req &&
+      typeof engineer_id_or_req === 'object' &&
+      engineer_id_or_req.headers &&
+      typeof track_id_or_res?.status === 'function'
+    );
+
+    const engineer_id = isHttpRequest
+      ? (engineer_id_or_req.body?.engineer_id || engineer_id_or_req.body?.engineerId || engineer_id_or_req.user?._id)
+      : engineer_id_or_req;
+
+    const track_id = isHttpRequest
+      ? (engineer_id_or_req.body?.track_id || engineer_id_or_req.body?.trackId)
+      : track_id_or_res;
+
+    const passedTier = isHttpRequest ? engineer_id_or_req.body?.tier : tier_or_next;
+
     const track = await Track.findById(track_id);
     const user = await User.findById(engineer_id);
 
-    if (!track || !user) throw new Error('Track or user not found');
+    if (!track || !user) {
+      if (isHttpRequest) {
+        return track_id_or_res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Track or user not found' } });
+      }
+      throw new Error('Track or user not found');
+    }
 
     const engineerObjId = mongoose.Types.ObjectId.isValid(engineer_id) ? new mongoose.Types.ObjectId(engineer_id) : engineer_id;
     const trackObjId = mongoose.Types.ObjectId.isValid(track_id) ? new mongoose.Types.ObjectId(track_id) : track_id;
@@ -72,13 +94,21 @@ const generateCertificate = async (engineer_id, track_id, tier = 'CORE') => {
       ],
     });
     if (existingCert) {
+      if (isHttpRequest) {
+        return track_id_or_res.status(200).json(existingCert);
+      }
       return existingCert;
     }
 
-    // Load admin certificate template configuration
+    // Load admin certificate template configuration with explicit signatory validation
     let config = await CertificateConfig.findOne();
-    if (!config) {
-      config = await CertificateConfig.create({});
+    if (!config || !config.director_name || !config.director_name.trim()) {
+      const errMsg = 'Certificate generation failed: CertificateConfig is missing or director_name signatory is not configured.';
+      console.error(`[Certificate Engine Error] ${errMsg}`);
+      if (isHttpRequest) {
+        return track_id_or_res.status(500).json({ error: { code: 'CONFIG_MISSING', message: errMsg } });
+      }
+      throw new Error(errMsg);
     }
 
     const certCount = await Certificate.countDocuments();
@@ -116,13 +146,12 @@ const generateCertificate = async (engineer_id, track_id, tier = 'CORE') => {
     }
 
     const recipientName = user.fullName || user.full_name || user.name || 'Technonex Engineer';
-    let resolvedTier = 'L1_CORE';
-    if (tier === 'EDGE' || tier === 'L2_ADVANCED' || track.tier === 'EDGE' || track.tier === 'L2_ADVANCED') {
-      resolvedTier = 'L2_ADVANCED';
-    } else if (tier === 'CORE' || tier === 'L1_CORE' || track.tier === 'CORE' || track.tier === 'L1_CORE') {
-      resolvedTier = 'L1_CORE';
-    }
-    const tierDisplay = (resolvedTier === 'L2_ADVANCED' || resolvedTier === 'EDGE') ? 'EDGE' : 'CORE';
+
+    // Authoritative tier resolution: Track.tier is the source of truth, normalized to 'EDGE' or 'CORE'
+    const tierDisplay = (track.tier === 'CORE' || passedTier === 'CORE' || passedTier === 'L2_ADVANCED')
+      ? 'CORE'
+      : 'EDGE';
+
     const dateFormatted = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
     // Load official Technonex logo from public folder
@@ -535,9 +564,9 @@ const generateCertificate = async (engineer_id, track_id, tier = 'CORE') => {
       tier: tierDisplay,
       issued_at: new Date(),
       pdf_storage_path: `/uploads/certificates/${certificate_id}.pdf`,
-      director_name: config.director_name,
+      director_name: config.director_name.trim(),
       director_signature_url: config.director_signature_url || null,
-      instructor_name: config.instructor_name,
+      instructor_name: config.instructor_name ? config.instructor_name.trim() : null,
       instructor_signature_url: config.instructor_signature_url || null,
       status: 'active',
     });
@@ -585,7 +614,8 @@ const verifyCertificate = async (req, res) => {
     const engineerName = certificate.engineer_id?.full_name || certificate.engineer_id?.fullName || 'Technonex Engineer';
     const trackName = certificate.track_id?.name || certificate.track_id?.title || 'EDGE Track';
 
-    // Canonical payload as per Spec Section 6.5 & 8.4
+    // Canonical public payload — explicit allow-list, no raw document dump.
+    // revocation_reason is intentionally omitted: it contains internal admin notes.
     return res.json({
       valid: certificate.status === 'active',
       certificate_id: certificate.certificate_id,
@@ -600,8 +630,6 @@ const verifyCertificate = async (req, res) => {
       instructor_name: certificate.instructor_name,
       instructor_signature_url: certificate.instructor_signature_url || null,
       revoked_at: certificate.revoked_at || null,
-      revocation_reason: certificate.revocation_reason || null,
-      certificate: certificate,
     });
   } catch (error) {
     return res.status(500).json({ error: { code: 'SERVER_ERROR', message: error.message } });
@@ -622,7 +650,7 @@ const renderPublicVerifyPage = async (req, res) => {
     };
 
     const certificate = await Certificate.findOne(query)
-      .populate('engineer_id', 'full_name fullName email')
+      .populate('engineer_id', 'full_name fullName')
       .populate('track_id', 'name title slug code');
 
     if (!certificate) {
@@ -710,7 +738,7 @@ const renderPublicVerifyPage = async (req, res) => {
             <div class="info-row"><span class="info-label">Tier:</span><span class="info-value">${certificate.tier}</span></div>
             <div class="info-row"><span class="info-label">Issued Date:</span><span class="info-value">${issuedFormatted}</span></div>
             <div class="info-row"><span class="info-label">Status:</span><span class="info-value">${certificate.status.toUpperCase()}</span></div>
-            ${certificate.revocation_reason ? `<div class="info-row"><span class="info-label">Revocation Reason:</span><span class="info-value" style="color:#F87171;">${certificate.revocation_reason}</span></div>` : ''}
+
           </div>
         </div>
       </body>
@@ -718,6 +746,96 @@ const renderPublicVerifyPage = async (req, res) => {
     `);
   } catch (error) {
     return res.status(500).send('Server Error');
+  }
+};
+
+// @desc    Get certificates listing with squad scoping for TeamLead and full access for Admin
+// @route   GET /api/v1/admin/certificates or GET /api/v1/certificates
+// @access  Private (Admin, TeamLead)
+const getAdminCertificates = async (req, res) => {
+  try {
+    const requesterRole = (req.user?.role || '').toLowerCase().replace('_', '');
+    const isTeamLead = requesterRole === 'teamlead' || requesterRole === 'team_lead';
+    let filter = {};
+
+    if (isTeamLead) {
+      const orClauses = [{ team_lead_id: req.user._id }];
+      if (req.user.team_id) {
+        orClauses.push({ team_id: req.user.team_id }, { teamId: req.user.team_id });
+      }
+      const teamEngineers = await User.find({
+        $or: orClauses,
+        role: { $in: ['engineer', 'Engineer'] },
+        is_active: { $ne: false },
+        deleted_at: null,
+      }).select('_id');
+      const engineerIds = teamEngineers.map((e) => e._id);
+
+      if (engineerIds.length === 0) {
+        return res.json({
+          certificates: [],
+          total: 0,
+          page: 1,
+          pages: 0,
+          limit: 20,
+        });
+      }
+
+      filter = {
+        $or: [
+          { engineer_id: { $in: engineerIds } },
+          { userId: { $in: engineerIds } },
+        ],
+      };
+    }
+
+    // Optional query filters
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+    if (req.query.engineer_id || req.query.engineerId) {
+      const eId = req.query.engineer_id || req.query.engineerId;
+      filter.$and = (filter.$and || []).concat({
+        $or: [{ engineer_id: eId }, { userId: eId }],
+      });
+    }
+    if (req.query.track_id || req.query.trackId) {
+      const tId = req.query.track_id || req.query.trackId;
+      filter.$and = (filter.$and || []).concat({
+        $or: [{ track_id: tId }, { trackId: tId }],
+      });
+    }
+    if (req.query.search) {
+      const s = req.query.search.trim();
+      filter.$or = (filter.$or || []).concat([
+        { certificate_id: { $regex: s, $options: 'i' } },
+      ]);
+    }
+
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit, 10) || 20));
+    const skip = (page - 1) * limit;
+
+    const [total, certificates] = await Promise.all([
+      Certificate.countDocuments(filter),
+      Certificate.find(filter)
+        .populate('engineer_id', 'full_name fullName email role status is_active team_id')
+        .populate('track_id', 'name title slug code tier is_published')
+        .sort({ issued_at: -1, created_at: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+    ]);
+
+    return res.json({
+      certificates,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+      limit,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -788,7 +906,7 @@ const getUserCertificates = async (req, res) => {
           const isFullyCompleted = trackModuleIds.every((mId) => passedModuleSet.has(mId));
           if (isFullyCompleted) {
             console.log(`[CERTIFICATE] Auto-reconciling missing certificate for engineer ${engineer_id} on track ${track._id}`);
-            await generateCertificate(engineer_id, track._id, track.tier || trackModules[0]?.tier || 'L1_CORE');
+            await generateCertificate(engineer_id, track._id, track.tier || 'EDGE');
           }
         }
       }
@@ -828,7 +946,7 @@ const downloadCertificatePdf = async (req, res) => {
       return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Certificate not found' } });
     }
 
-    // Spec Section 8.4: Revoked Certificate Guard
+    // Revoked certificate guard (Spec Section 8.4)
     if (certificate.status === 'revoked') {
       return res.status(403).json({
         error: {
@@ -839,6 +957,44 @@ const downloadCertificatePdf = async (req, res) => {
           revocation_reason: certificate.revocation_reason,
         },
       });
+    }
+
+    // Ownership and role-based access control.
+    // req.user is always present — protect middleware runs before this handler.
+    const requesterId = req.user._id.toString();
+    const ownerId = (certificate.engineer_id || certificate.userId)?.toString();
+    const requesterRole = (req.user.role || '').toLowerCase().replace('_', '');
+    const isOwner = requesterId === ownerId;
+    const isAdmin = requesterRole === 'admin';
+    const isTeamLead = requesterRole === 'teamlead' || requesterRole === 'team_lead';
+
+    if (!isOwner && !isAdmin && !isTeamLead) {
+      // Return 403, not 404, so we don't reveal whether the certificate exists
+      return res.status(403).json({
+        error: {
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to download this certificate.',
+        },
+      });
+    }
+
+    // TeamLead scope check: the engineer must belong to this TeamLead's team
+    if (isTeamLead && !isOwner) {
+      const engineer = await User.findById(ownerId).select('team_id team_lead_id');
+      const leadTeamId = req.user.team_id?.toString();
+      const engineerTeamId = (engineer?.team_id)?.toString();
+      const engineerLeadId = (engineer?.team_lead_id)?.toString();
+      const isManagedEngineer =
+        engineerLeadId === requesterId ||
+        (leadTeamId && engineerTeamId && engineerTeamId === leadTeamId);
+      if (!isManagedEngineer) {
+        return res.status(403).json({
+          error: {
+            code: 'FORBIDDEN',
+            message: 'You do not have permission to download this certificate.',
+          },
+        });
+      }
     }
 
     let pdfPath = path.join(__dirname, '..', certificate.pdf_storage_path);
@@ -930,6 +1086,7 @@ module.exports = {
   verifyCertificate,
   renderPublicVerifyPage,
   validateCertificateEligibility,
+  getAdminCertificates,
   getAllCertificates,
   getUserCertificates,
   downloadCertificatePdf,

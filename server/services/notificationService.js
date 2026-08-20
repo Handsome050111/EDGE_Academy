@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
+const User = require('../models/User');
 const { createNotification } = require('../controllers/notificationController');
 
 const cleanEnv = (val) => {
@@ -394,6 +395,93 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
         html: emailHtml,
         attachments,
       });
+    }
+
+    // 3. Notification to Supervising Team Lead (In-App + Email) & Platform Admins (In-App Only)
+    try {
+      const rawLead = engineer.team_lead_id;
+      const leadId = rawLead?._id || rawLead;
+      if (leadId) {
+        const leadUser = (typeof rawLead === 'object' && rawLead?.email && ('is_active' in rawLead || 'deleted_at' in rawLead))
+          ? rawLead
+          : await User.findById(leadId).select('email fullName full_name is_active isActive status deleted_at');
+
+        const isLeadActive = Boolean(
+          leadUser &&
+          leadUser.is_active !== false &&
+          leadUser.isActive !== false &&
+          leadUser.status !== 'deactivated' &&
+          !leadUser.deleted_at
+        );
+
+        if (isLeadActive) {
+          // In-App Bell Notification for Active Team Lead
+          await createNotification({
+            recipient_id: leadUser._id || leadId,
+            title: `🎓 Team Certificate Earned: ${engineerName}`,
+            message: `Your team engineer ${engineerName} has completed '${trackTitle}' (${tier}) and earned certificate ${certId}.`,
+            type: 'certificate',
+            link: `/verify/${certId}`,
+          });
+
+          // Email Notification for Active Team Lead (without PDF attachment)
+          if (leadUser.email) {
+            const leadName = leadUser.fullName || leadUser.full_name || 'Team Lead';
+            const leadEmailHtml = `
+              <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 16px; background-color: #ffffff;">
+                <div style="background-color: #0A2540; padding: 24px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
+                  <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">TECHNONEX EDGE ACADEMY</h1>
+                  <p style="color: #D4AF37; margin: 6px 0 0 0; font-size: 13px; font-weight: 600;">Team Member Certification Alert</p>
+                </div>
+                <div style="padding: 0 8px; color: #1E293B; line-height: 1.6;">
+                  <p style="font-size: 15px;">Hello <strong>${leadName}</strong>,</p>
+                  <p style="font-size: 14px;">Your team engineer <strong>${engineerName}</strong> has successfully completed the <strong>${trackTitle}</strong> curriculum track and has been awarded official certification.</p>
+                  <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin: 20px 0;">
+                    <p style="margin: 0 0 6px 0; font-size: 13px; color: #64748B;">Engineer: <strong style="color: #0F172A;">${engineerName}</strong> (${engineer.email})</p>
+                    <p style="margin: 0 0 6px 0; font-size: 13px; color: #64748B;">Curriculum Track: <strong style="color: #0F172A;">${trackTitle}</strong></p>
+                    <p style="margin: 0 0 6px 0; font-size: 13px; color: #64748B;">Program Tier: <strong style="color: #0A2540;">${tier}</strong></p>
+                    <p style="margin: 0 0 6px 0; font-size: 13px; color: #64748B;">Certificate ID: <strong style="color: #0A2540; font-family: monospace;">${certId}</strong></p>
+                  </div>
+                  <p style="font-size: 13px; color: #475569;">You can review this certificate and inspect verified credential details on the official platform:</p>
+                  <div style="text-align: center; margin: 24px 0 16px 0;">
+                    <a href="${verifyUrl}" style="background-color: #0A2540; color: #ffffff; padding: 12px 28px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-block;">
+                      View Verified Certificate
+                    </a>
+                  </div>
+                  <p style="font-size: 12px; color: #94A3B8; text-align: center; margin-top: 24px;">Technonex EDGE Academy · Team Management & Oversight</p>
+                </div>
+              </div>
+            `;
+
+            await sendEmail({
+              to: leadUser.email,
+              subject: `🎓 Team Certification Alert: ${engineerName} earned ${trackTitle} (${certId})`,
+              text: `Hello ${leadName},\n\nYour team engineer ${engineerName} has completed '${trackTitle}' (${tier}) and earned certificate ${certId}.\n\nView and verify certificate: ${verifyUrl}`,
+              html: leadEmailHtml,
+            });
+          }
+        }
+      }
+
+      // Query active Admin / SuperAdmin users (In-App Only)
+      const admins = await User.find({
+        $or: [{ deleted_at: null }, { deleted_at: { $exists: false } }],
+        is_active: { $ne: false },
+        role: { $regex: /^(admin|super_?admin)$/i },
+      }).select('_id');
+
+      for (const admin of admins) {
+        if (leadId && admin._id.toString() === leadId.toString()) continue;
+        await createNotification({
+          recipient_id: admin._id,
+          title: `🎓 Certificate Issued: ${engineerName}`,
+          message: `Engineer ${engineerName} has completed '${trackTitle}' (${tier}) and was awarded certificate ${certId}.`,
+          type: 'certificate',
+          link: `/verify/${certId}`,
+        });
+      }
+    } catch (adminNotifyErr) {
+      console.error('Error dispatching admin/team lead certificate notification:', adminNotifyErr.message);
     }
   } catch (error) {
     console.error('Error sending certificate issuance email notification:', error.message);

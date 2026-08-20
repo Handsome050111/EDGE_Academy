@@ -47,16 +47,16 @@ const ModuleCatalogTab = ({ showNotification }) => {
     name: '',
     slug: '',
     description: '',
+    tier: 'EDGE',
     is_published: true,
     display_order: 0,
   });
 
-  // Module Form State
+  // Module Form State (tier removed — tier is now a Track-level property)
   const [moduleFormData, setModuleFormData] = useState({
     trackId: '',
     title: '',
     description: '',
-    tier: 'CORE',
     passingScorePercentage: '80',
     thumbnail_url: '',
   });
@@ -76,6 +76,16 @@ const ModuleCatalogTab = ({ showNotification }) => {
     type: '', // 'track' | 'module'
     item: null,
   });
+
+  // Centralized reset for file-picker and media upload state
+  const resetModuleMediaState = () => {
+    setVideoFile(null);
+    setDetectedDurationSec(null);
+    setCloudflareVideoId('');
+    setThumbnailFile(null);
+    setThumbnailPreview('');
+    setAttachmentFile(null);
+  };
 
   useEffect(() => {
     loadTracksAndModules();
@@ -129,16 +139,12 @@ const ModuleCatalogTab = ({ showNotification }) => {
         trackId: mod.track_id?._id || mod.track_id || mod.trackId?._id || mod.trackId || '',
         title: mod.title || '',
         description: mod.description || '',
-        tier: (mod.tier === 'EDGE' || mod.tier === 'L2_ADVANCED') ? 'EDGE' : 'CORE',
         passingScorePercentage: String(mod.pass_threshold || mod.passingScorePercentage || '80'),
         thumbnail_url: mod.thumbnail_url || mod.thumbnailUrl || '',
       });
 
+      resetModuleMediaState();
       setCloudflareVideoId(mod.video_provider_id && !mod.video_provider_id.startsWith('video_') ? mod.video_provider_id : '');
-      setThumbnailFile(null);
-      setThumbnailPreview('');
-      setVideoFile(null);
-      setDetectedDurationSec(null);
 
       // Load questions for publish guard
       try {
@@ -167,6 +173,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
       name: '',
       slug: '',
       description: '',
+      tier: 'EDGE',
       is_published: true,
       display_order: tracks.length + 1,
     });
@@ -180,6 +187,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
       name: track.name || track.title || '',
       slug: track.slug || '',
       description: track.description || '',
+      tier: track.tier || 'EDGE',
       is_published: track.is_published !== undefined ? track.is_published : true,
       display_order: track.display_order || 0,
     });
@@ -199,6 +207,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
         name: trackFormData.name.trim(),
         slug: trackFormData.slug.trim() || trackFormData.name.trim().replace(/[^a-zA-Z0-9]/g, '-').toUpperCase(),
         description: trackFormData.description.trim(),
+        tier: trackFormData.tier,
         is_published: trackFormData.is_published,
         display_order: Number(trackFormData.display_order) || 0,
       };
@@ -236,7 +245,6 @@ const ModuleCatalogTab = ({ showNotification }) => {
         trackId: moduleFormData.trackId,
         title: moduleFormData.title.trim(),
         description: moduleFormData.description.trim(),
-        tier: moduleFormData.tier,
         passingScorePercentage: Number(moduleFormData.passingScorePercentage),
         thumbnail_url: moduleFormData.thumbnail_url.trim() || null,
       };
@@ -252,6 +260,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
         payload.status = 'draft';
         const res = await api.post('/modules', payload);
         const created = res.data;
+        resetModuleMediaState();
         setSelectedModule(created);
         setModules((prev) => [...prev, created]);
         showNotification('success', `Module '${created.title}' created in Draft mode! Upload media below.`);
@@ -455,7 +464,8 @@ const ModuleCatalogTab = ({ showNotification }) => {
         setModules((prev) => prev.filter((m) => m._id !== item._id));
         if (selectedModule?._id === item._id) {
           setSelectedModule(null);
-          setModuleFormData({ trackId: '', title: '', description: '', tier: 'CORE', passingScorePercentage: '80', thumbnail_url: '' });
+          resetModuleMediaState();
+          setModuleFormData({ trackId: '', title: '', description: '', passingScorePercentage: '80', thumbnail_url: '' });
           setModuleQuestions([]);
           setModuleAttachments([]);
         }
@@ -498,11 +508,11 @@ const ModuleCatalogTab = ({ showNotification }) => {
           <button
             onClick={() => {
               setSelectedModule(null);
+              resetModuleMediaState();
               setModuleFormData({
                 trackId: tracks[0]?._id || '',
                 title: '',
                 description: '',
-                tier: 'CORE',
                 passingScorePercentage: '80',
                 thumbnail_url: '',
               });
@@ -664,16 +674,19 @@ const ModuleCatalogTab = ({ showNotification }) => {
                         {parentTrack?.name || m.track_id?.name || 'General Track'}
                       </td>
 
+                      {/* Tier now shown from parentTrack, not from module */}
                       <td className="px-4 py-3.5">
-                        <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                            (m.tier === 'EDGE' || m.tier === 'L2_ADVANCED')
-                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                              : 'bg-blue-100 text-[#08306B] border border-blue-200'
-                          }`}
-                        >
-                          {(m.tier === 'EDGE' || m.tier === 'L2_ADVANCED') ? 'EDGE' : 'CORE'}
-                        </span>
+                        {parentTrack ? (
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                              parentTrack.tier === 'EDGE'
+                                ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                : 'bg-blue-100 text-[#08306B] border border-blue-200'
+                            }`}
+                          >
+                            {parentTrack.tier || '—'}
+                          </span>
+                        ) : <span className="text-slate-400">—</span>}
                       </td>
 
                       <td className="px-4 py-3.5 text-slate-600">
@@ -806,17 +819,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Curriculum Tier</label>
-              <select
-                value={(moduleFormData.tier === 'EDGE' || moduleFormData.tier === 'L2_ADVANCED') ? 'EDGE' : 'CORE'}
-                onChange={(e) => setModuleFormData((prev) => ({ ...prev, tier: e.target.value }))}
-                className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-medium"
-              >
-                <option value="CORE">CORE</option>
-                <option value="EDGE">EDGE</option>
-              </select>
-            </div>
+            {/* Curriculum Tier dropdown REMOVED from module form — now on Track modal */}
           </div>
 
           <div>
@@ -1094,6 +1097,18 @@ const ModuleCatalogTab = ({ showNotification }) => {
                   placeholder="Overview of this certification pathway..."
                   className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none resize-none"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Curriculum Tier *</label>
+                <select
+                  value={trackFormData.tier}
+                  onChange={(e) => setTrackFormData((prev) => ({ ...prev, tier: e.target.value }))}
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-medium"
+                >
+                  <option value="EDGE">EDGE — Level 1 (Certified Technician)</option>
+                  <option value="CORE">CORE — Level 2 (Certified Engineer)</option>
+                </select>
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">

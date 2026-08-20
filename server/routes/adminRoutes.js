@@ -23,7 +23,7 @@ const {
 
 const { createModule, updateModule } = require('../controllers/moduleController');
 
-const { createAssignments } = require('../controllers/adminAssignmentController');
+const { createAssignments, getAssignments } = require('../controllers/adminAssignmentController');
 
 const {
   getTeamReport,
@@ -35,6 +35,10 @@ const {
   getAuditLogs,
   revokeCertificate,
 } = require('../controllers/superAdminController');
+
+const {
+  getAdminCertificates,
+} = require('../controllers/certificateController');
 
 const {
   createUser,
@@ -189,7 +193,8 @@ router.post('/modules/:id/attachments', authorize('Admin'), handleAttachmentUplo
 router.delete('/modules/:moduleId/attachments/:attachmentId', authorize('Admin'), deleteModuleAttachment);
 router.post('/modules/:id/publish', authorize('Admin'), publishModule);
 
-// Assignment Engine Endpoint (Admin, TeamLead)
+// Assignment Engine Endpoints (Admin, TeamLead)
+router.get('/assignments', getAssignments);
 router.post('/assignments', createAssignments);
 
 // User Management & Invitations Endpoints (Admin only)
@@ -208,6 +213,7 @@ router.post('/users/:id/resend-invite', authorize('Admin'), resendInvite);
 router.get('/reports/team/:id', getTeamReport);
 router.get('/reports/module/:id', getModuleReport);
 router.get('/reports/weak-concepts', getWeakConceptsReport);
+router.get('/certificates', getAdminCertificates);
 
 // Security & Governance Endpoints (Admin only)
 router.get('/audit-log', authorize('Admin'), getAuditLogs);

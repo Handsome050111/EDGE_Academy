@@ -267,7 +267,7 @@ const QuestionBankTab = ({ showNotification }) => {
           >
             {modules.map((m) => (
               <option key={m._id} value={m._id}>
-                {m.title} ({m.tier || 'L1_CORE'})
+                {m.title}
               </option>
             ))}
           </select>

@@ -2,25 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 const AuditLog = require('../models/AuditLog');
 const Certificate = require('../models/Certificate');
-
-
-// Helper to log audit actions
-const logAudit = async ({ req, action, resourceType, resourceId, outcome = 'success', description, metadata = {} }) => {
-  try {
-    await AuditLog.create({
-      actorId: req.user?._id,
-      actorRole: req.user?.role || 'Unknown',
-      action,
-      resourceType,
-      resourceId: resourceId ? String(resourceId) : undefined,
-      outcome,
-      description,
-      metadata,
-    });
-  } catch (error) {
-    console.error('AuditLog creation error:', error.message);
-  }
-};
+const { logAudit } = require('../utils/audit');
 
 // @desc    Get paginated audit logs with search and date filters
 // @route   GET /api/v1/admin/audit-log

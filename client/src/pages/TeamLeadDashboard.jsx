@@ -32,6 +32,28 @@ const TeamLeadDashboard = () => {
   const [conceptProficiencyFilter, setConceptProficiencyFilter] = useState('all');
   const [conceptsPage, setConceptsPage] = useState(1);
 
+  // Squad Certificates State
+  const [squadCertificates, setSquadCertificates] = useState([]);
+  const [loadingCertificates, setLoadingCertificates] = useState(false);
+  const [certSearchQuery, setCertSearchQuery] = useState('');
+  const [certTrackFilter, setCertTrackFilter] = useState('all');
+  const [certStatusFilter, setCertStatusFilter] = useState('all');
+  const [certsPage, setCertsPage] = useState(1);
+  const [downloadingCertId, setDownloadingCertId] = useState(null);
+
+  // Drill-down Certificate Modal State for individual engineer
+  const [selectedEngineerForCerts, setSelectedEngineerForCerts] = useState(null);
+
+  // Squad Assignments State
+  const [squadAssignments, setSquadAssignments] = useState([]);
+  const [loadingAssignments, setLoadingAssignments] = useState(false);
+  const [assignmentSearchQuery, setAssignmentSearchQuery] = useState('');
+  const [assignmentStatusFilter, setAssignmentStatusFilter] = useState('all');
+  const [assignmentsPage, setAssignmentsPage] = useState(1);
+
+  // Drill-down Assignment Modal State for individual engineer
+  const [selectedEngineerForAssignments, setSelectedEngineerForAssignments] = useState(null);
+
   // Assignment Modal Form State
   const [curriculumScope, setCurriculumScope] = useState('module'); // 'module' | 'track'
   const [selectedTrackId, setSelectedTrackId] = useState('');
@@ -53,7 +75,7 @@ const TeamLeadDashboard = () => {
       setLoading(true);
       setError(null);
       const teamEndpoint = user?.team_id ? `/admin/reports/team/${user.team_id}` : '/admin/reports/team/me';
-      const [teamRes, conceptsRes, tracksRes, modulesRes] = await Promise.all([
+      const [teamRes, conceptsRes, tracksRes, modulesRes, certsRes, assignmentsRes] = await Promise.all([
         api.get(teamEndpoint).catch((err) => {
           console.error('Failed to fetch team report:', err);
           return { data: null };
@@ -68,6 +90,14 @@ const TeamLeadDashboard = () => {
         }),
         api.get('/modules').catch((err) => {
           console.error('Failed to fetch modules:', err);
+          return { data: null };
+        }),
+        api.get('/admin/certificates?limit=100').catch((err) => {
+          console.error('Failed to fetch squad certificates:', err);
+          return { data: null };
+        }),
+        api.get('/admin/assignments?limit=200').catch((err) => {
+          console.error('Failed to fetch squad assignments:', err);
           return { data: null };
         }),
       ]);
@@ -91,6 +121,14 @@ const TeamLeadDashboard = () => {
         if (rawMods.length > 0) {
           setSelectedModuleId(rawMods[0]._id);
         }
+      }
+      if (certsRes?.data) {
+        const list = certsRes.data.certificates || (Array.isArray(certsRes.data) ? certsRes.data : []);
+        setSquadCertificates(list);
+      }
+      if (assignmentsRes?.data) {
+        const list = assignmentsRes.data.assignments || (Array.isArray(assignmentsRes.data) ? assignmentsRes.data : []);
+        setSquadAssignments(list);
       }
     } catch (err) {
       console.error('Failed to fetch team report data:', err);
@@ -156,6 +194,121 @@ const TeamLeadDashboard = () => {
   const paginatedConcepts = useMemo(() => {
     return filteredConcepts.slice((conceptsPage - 1) * 8, conceptsPage * 8);
   }, [filteredConcepts, conceptsPage]);
+
+  // Filtered Squad Certificates
+  const filteredCertificates = useMemo(() => {
+    return squadCertificates.filter((cert) => {
+      const engName = (cert.engineer_id?.fullName || cert.engineer_id?.full_name || cert.userId?.fullName || cert.engineer_id?.name || '').toLowerCase();
+      const engEmail = (cert.engineer_id?.email || cert.userId?.email || '').toLowerCase();
+      const certId = (cert.certificate_id || '').toLowerCase();
+      const trackTitle = (cert.track_id?.title || cert.track_id?.name || cert.trackId?.title || '').toLowerCase();
+      const q = certSearchQuery.toLowerCase().trim();
+
+      const matchesSearch = !q || engName.includes(q) || engEmail.includes(q) || certId.includes(q) || trackTitle.includes(q);
+
+      const tId = (cert.track_id?._id || cert.track_id || cert.trackId?._id || cert.trackId)?.toString();
+      const matchesTrack = certTrackFilter === 'all' || tId === certTrackFilter;
+
+      const certStatus = (cert.status || 'active').toLowerCase();
+      const matchesStatus = certStatusFilter === 'all' || certStatus === certStatusFilter.toLowerCase();
+
+      return matchesSearch && matchesTrack && matchesStatus;
+    });
+  }, [squadCertificates, certSearchQuery, certTrackFilter, certStatusFilter]);
+
+  // Filtered Squad Assignments
+  const filteredSquadAssignments = useMemo(() => {
+    return squadAssignments.filter((item) => {
+      const eng = item.engineer_id || item.userId || {};
+      const mod = item.module_id || item.moduleId || {};
+      const track = mod.track_id || mod.trackId || {};
+      const assigner = item.assigned_by || item.assignedBy || {};
+
+      const engName = (eng.fullName || eng.full_name || eng.name || '').toLowerCase();
+      const engEmail = (eng.email || '').toLowerCase();
+      const modTitle = (mod.title || '').toLowerCase();
+      const trackTitle = (track.title || track.name || '').toLowerCase();
+      const assignerName = (assigner.fullName || assigner.full_name || assigner.name || '').toLowerCase();
+      const q = assignmentSearchQuery.toLowerCase().trim();
+
+      const matchesSearch =
+        !q ||
+        engName.includes(q) ||
+        engEmail.includes(q) ||
+        modTitle.includes(q) ||
+        trackTitle.includes(q) ||
+        assignerName.includes(q);
+
+      const statusVal = item.computed_status || item.status || 'pending';
+      const matchesStatus =
+        assignmentStatusFilter === 'all'
+          ? true
+          : assignmentStatusFilter === 'overdue'
+          ? Boolean(item.is_overdue || statusVal === 'overdue')
+          : statusVal === assignmentStatusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [squadAssignments, assignmentSearchQuery, assignmentStatusFilter]);
+
+  const paginatedSquadAssignments = useMemo(() => {
+    return filteredSquadAssignments.slice((assignmentsPage - 1) * 8, assignmentsPage * 8);
+  }, [filteredSquadAssignments, assignmentsPage]);
+
+  // Assignments belonging to selected engineer for drill-down modal
+  const engineerModalAssignments = useMemo(() => {
+    if (!selectedEngineerForAssignments) return [];
+    const engId = (selectedEngineerForAssignments._id || selectedEngineerForAssignments.id)?.toString();
+    return squadAssignments.filter((a) => {
+      const aEngId = (a.engineer_id?._id || a.engineer_id || a.userId?._id || a.userId)?.toString();
+      return aEngId === engId;
+    });
+  }, [selectedEngineerForAssignments, squadAssignments]);
+
+  // Certificates belonging to selected engineer for modal drill-down
+  const engineerModalCertificates = useMemo(() => {
+    if (!selectedEngineerForCerts) return [];
+    const engId = (selectedEngineerForCerts._id || selectedEngineerForCerts.id)?.toString();
+    return squadCertificates.filter((c) => {
+      const cEngId = (c.engineer_id?._id || c.engineer_id || c.userId?._id || c.userId)?.toString();
+      return cEngId === engId;
+    });
+  }, [selectedEngineerForCerts, squadCertificates]);
+
+  // Authenticated PDF Download Handler
+  const handleDownloadCertPdf = async (cert) => {
+    const certId = cert._id || cert.certificate_id;
+    try {
+      setDownloadingCertId(certId);
+      const res = await api.get(`/certificates/${certId}/pdf`, { responseType: 'blob' });
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${cert.certificate_id || 'certificate'}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download error:', err);
+      let errorMessage = 'Failed to download certificate PDF. Please try again.';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          errorMessage = parsed.error?.message || parsed.message || errorMessage;
+        } catch (parseErr) {
+          // Keep fallback
+        }
+      } else if (err.response?.data?.message || err.response?.data?.error?.message) {
+        errorMessage = err.response.data.error?.message || err.response.data.message;
+      }
+      alert(errorMessage);
+    } finally {
+      setDownloadingCertId(null);
+    }
+  };
 
   // Helper to resolve all modules for a given track dynamically
   const getModulesForTrack = (track) => {
@@ -312,7 +465,7 @@ const TeamLeadDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col lg:flex-row font-sans relative">
+    <div className="h-screen bg-[#F8FAFC] flex flex-col lg:flex-row font-sans relative overflow-hidden">
       {/* Mobile Backdrop Overlay */}
       {mobileMenuOpen && (
         <div
@@ -324,7 +477,7 @@ const TeamLeadDashboard = () => {
 
       {/* Slide-Out Navigation Drawer on Mobile / Fixed Sidebar on Desktop */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[78vw] max-w-xs sm:max-w-sm lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 min-h-screen shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[78vw] max-w-xs sm:max-w-sm lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 h-screen overflow-y-auto shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -405,6 +558,34 @@ const TeamLeadDashboard = () => {
               </svg>
               <span>Curriculum Browser</span>
             </button>
+            <button
+              onClick={() => {
+                setActiveTab('assignments');
+                setMobileMenuOpen(false);
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                activeTab === 'assignments' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+              <span>Squad Assignments ({activeAssignments})</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('certificates');
+                setMobileMenuOpen(false);
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                activeTab === 'certificates' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+              <span>Squad Certificates ({earnedCertificatesTotal})</span>
+            </button>
           </nav>
         </div>
 
@@ -447,7 +628,7 @@ const TeamLeadDashboard = () => {
       </aside>
 
       {/* Main Right Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Top Navbar Header */}
         <header className="h-16 bg-white border-b border-slate-200 text-slate-800 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 shadow-xs">
           {/* Left: Mobile Hamburger Button */}
@@ -492,15 +673,56 @@ const TeamLeadDashboard = () => {
           )}
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">{t('teamPerformanceDashboard')}</h1>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">{t('teamPerformanceSubtitle')}</p>
+            <div className="min-w-0">
+              <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center flex-wrap gap-2.5">
+                <span>
+                  {activeTab === 'engineers'
+                    ? 'Engineer Progress & Concept Tracking'
+                    : activeTab === 'concepts'
+                    ? 'Weak Concepts Map'
+                    : activeTab === 'curriculum'
+                    ? 'Curriculum Browser'
+                    : activeTab === 'assignments'
+                    ? 'Squad Assignments & Deadlines'
+                    : activeTab === 'certificates'
+                    ? 'Squad Certificates & Compliance'
+                    : 'Team Performance Dashboard'}
+                </span>
+                {activeTab === 'concepts' && allWeakConcepts.length > 0 && (
+                  <span className="bg-blue-50 text-[#08306B] border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold align-middle">
+                    {allWeakConcepts.length} Concept{allWeakConcepts.length === 1 ? '' : 's'} Tracked
+                  </span>
+                )}
+                {activeTab === 'assignments' && squadAssignments.length > 0 && (
+                  <span className="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold align-middle">
+                    {squadAssignments.length} Assignment{squadAssignments.length === 1 ? '' : 's'} Total
+                  </span>
+                )}
+                {activeTab === 'certificates' && squadCertificates.length > 0 && (
+                  <span className="bg-amber-50 text-amber-800 border border-amber-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold align-middle">
+                    {squadCertificates.length} Verified Credential{squadCertificates.length === 1 ? '' : 's'}
+                  </span>
+                )}
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                {activeTab === 'engineers'
+                  ? 'Track completion rates, quiz averages, and active training status for squad engineers'
+                  : activeTab === 'concepts'
+                  ? 'Aggregated quiz metrics across your squad, sorted from lowest to highest accuracy to pinpoint training opportunities'
+                  : activeTab === 'curriculum'
+                  ? 'Read-only view of published EDGE Academy tracks and training modules.'
+                  : activeTab === 'assignments'
+                  ? 'Monitor pending, in-progress, completed, and overdue training assignments for your squad.'
+                  : activeTab === 'certificates'
+                  ? 'View, verify, and download official credentials and certificates earned by engineers on your squad.'
+                  : t('teamPerformanceSubtitle')}
+              </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={() => setShowAssignModal(true)}
-                className="bg-[#08306B] hover:bg-[#062452] text-white text-xs sm:text-sm font-extrabold px-4 sm:px-5 py-2.5 rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer"
+                className="bg-[#08306B] hover:bg-[#062452] text-white text-xs sm:text-sm font-extrabold px-4 sm:px-5 py-2.5 rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer shrink-0"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -510,45 +732,39 @@ const TeamLeadDashboard = () => {
             </div>
           </div>
 
-          {/* Metric Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('activeEngineers')}</p>
-              <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-[#08306B]">{totalEngineers}</p>
-              <span className="mt-1 inline-block text-[11px] font-semibold text-emerald-600">Active Squad Members</span>
+          {/* Metric Cards (Rendered on Overview tab only) */}
+          {activeTab === 'overview' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('activeEngineers')}</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-[#08306B]">{totalEngineers}</p>
+                <span className="mt-1 inline-block text-[11px] font-semibold text-emerald-600">Active Squad Members</span>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('avgQuizScore')}</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-[#08306B]">
+                  {avgQuizScore}%
+                </p>
+                <span className="mt-1 inline-block text-[11px] font-semibold text-emerald-600">Team Pass Avg ({completionRate}% completed)</span>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Active Assignments</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-blue-600">{activeAssignments}</p>
+                <span className="mt-1 inline-block text-[11px] font-semibold text-blue-600">Pending / In Progress</span>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Earned Certificates</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-amber-600">
+                  {earnedCertificatesTotal}
+                </p>
+                <span className="mt-1 inline-block text-[11px] font-semibold text-amber-600">Verified Credentials</span>
+              </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('avgQuizScore')}</p>
-              <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-[#08306B]">
-                {avgQuizScore}%
-              </p>
-              <span className="mt-1 inline-block text-[11px] font-semibold text-emerald-600">Team Pass Avg ({completionRate}% completed)</span>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Active Assignments</p>
-              <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-blue-600">{activeAssignments}</p>
-              <span className="mt-1 inline-block text-[11px] font-semibold text-blue-600">Pending / In Progress</span>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Earned Certificates</p>
-              <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-amber-600">
-                {earnedCertificatesTotal}
-              </p>
-              <span className="mt-1 inline-block text-[11px] font-semibold text-amber-600">Verified Credentials</span>
-            </div>
-          </div>
+          )}
 
           {/* TAB 1: Engineers Table (Admin Users Design) */}
           {(activeTab === 'overview' || activeTab === 'engineers') && (
             <div className="space-y-4">
-              {/* Header Section */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900">{t('engineerProgress')}</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Track completion rates, quiz averages, and active training status for squad engineers</p>
-                </div>
-              </div>
-
               {/* Filter & Search Bar */}
               <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-between">
                 <div className="relative flex-1">
@@ -563,18 +779,18 @@ const TeamLeadDashboard = () => {
                       setEngineersPage(1);
                     }}
                     placeholder="Search squad engineers by name or email..."
-                    className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition"
+                    className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition font-medium"
                   />
                 </div>
 
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 shrink-0">
                   <select
                     value={engineerStatusFilter}
                     onChange={(e) => {
                       setEngineerStatusFilter(e.target.value);
                       setEngineersPage(1);
                     }}
-                    className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B]"
+                    className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-700 font-medium outline-none focus:border-[#08306B] cursor-pointer"
                   >
                     <option value="all">All Statuses</option>
                     <option value="active">Active</option>
@@ -588,7 +804,7 @@ const TeamLeadDashboard = () => {
                         setEngineerStatusFilter('all');
                         setEngineersPage(1);
                       }}
-                      className="text-xs text-slate-500 hover:text-slate-800 px-2 py-1 underline cursor-pointer"
+                      className="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer border border-slate-200 shadow-2xs shrink-0"
                     >
                       Reset
                     </button>
@@ -605,105 +821,124 @@ const TeamLeadDashboard = () => {
                   </div>
                 ) : filteredEngineers.length === 0 ? (
                   <div className="p-12 text-center">
-                    <div className="h-12 w-12 rounded-2xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center mb-3">
+                    <div className="h-12 w-12 rounded-2xl bg-blue-50 text-[#08306B] mx-auto flex items-center justify-center mb-3">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                       </svg>
                     </div>
                     <p className="text-sm font-semibold text-slate-800">No squad engineers found</p>
-                    <p className="text-xs text-slate-500 mt-1">Try adjusting your search criteria or filter settings.</p>
+                    <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                      {engineerSearchQuery || engineerStatusFilter !== 'all'
+                        ? 'Try adjusting your search query or status filter.'
+                        : 'No engineers are assigned to your team squad yet.'}
+                    </p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                         <tr>
-                          <th className="px-5 py-3.5">Engineer</th>
+                          <th className="px-5 py-3.5">{t('engineer')}</th>
                           <th className="px-4 py-3.5">Track Progress</th>
                           <th className="px-4 py-3.5">Active Assignments</th>
                           <th className="px-4 py-3.5">Earned Certificates</th>
                           <th className="px-4 py-3.5">Avg Quiz Score</th>
                           <th className="px-4 py-3.5">Primary Weak Concept</th>
-                          <th className="px-5 py-3.5 text-right">Status</th>
+                          <th className="px-5 py-3.5 text-right">{t('common.status')}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 text-slate-700">
-                        {paginatedEngineers.map((eng) => {
-                          const name = eng.fullName || eng.name || eng.email || 'Unnamed Engineer';
-                          const initial = name.charAt(0).toUpperCase() || 'E';
-                          const isActive = eng.is_active !== false && eng.status !== 'deactivated';
-
-                          return (
-                            <tr key={eng._id || eng.id} className="hover:bg-slate-50/70 transition">
-                              <td className="px-5 py-3.5">
-                                <div className="flex items-center gap-3">
-                                  <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#08306B] to-[#0d4f9b] text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
-                                    {initial}
-                                  </div>
-                                  <div className="min-w-0">
-                                    <p className="font-semibold text-slate-900 truncate">{name}</p>
-                                    <p className="text-[11px] text-slate-500 truncate">{eng.email}</p>
-                                  </div>
+                        {paginatedEngineers.map((eng) => (
+                          <tr key={eng._id || eng.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="px-5 py-3.5">
+                              <div className="flex items-center gap-3">
+                                <div className="h-9 w-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs shrink-0 shadow-2xs">
+                                  {(eng.fullName || eng.name || eng.email || 'E')[0].toUpperCase()}
                                 </div>
-                              </td>
-
-                              <td className="px-4 py-3.5 w-48">
-                                <div className="space-y-1">
-                                  <div className="flex items-center justify-between text-[11px]">
-                                    <span className="font-bold text-slate-800">{eng.progress || 0}%</span>
-                                    <span className="text-slate-400 text-[10px]">
-                                      {eng.completedModulesCount || 0}/{eng.totalAssignedCount || (eng.completedModulesCount + eng.activeAssignmentsCount) || 0} mods
-                                    </span>
-                                  </div>
-                                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div
-                                      className="bg-[#08306B] h-full transition-all duration-300 rounded-full"
-                                      style={{ width: `${eng.progress || 0}%` }}
-                                    />
-                                  </div>
+                                <div className="min-w-0">
+                                  <p className="font-bold text-slate-900 truncate">{eng.fullName || eng.name}</p>
+                                  <p className="text-[11px] text-slate-400 truncate">{eng.email}</p>
                                 </div>
-                              </td>
+                              </div>
+                            </td>
 
-                              <td className="px-4 py-3.5">
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
-                                  {eng.activeAssignmentsCount || 0} active
-                                </span>
-                              </td>
+                            <td className="px-4 py-3.5 w-44">
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between text-[11px]">
+                                  <span className="font-bold text-slate-800">{eng.progress || 0}%</span>
+                                  <span className="text-slate-400 font-medium">
+                                    {eng.completedModulesCount || 0}/{eng.totalAssignedCount || 0}
+                                  </span>
+                                </div>
+                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                  <div
+                                    className="bg-[#08306B] h-full rounded-full transition-all duration-300"
+                                    style={{ width: `${eng.progress || 0}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </td>
 
-                              <td className="px-4 py-3.5">
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                                  {eng.earnedCertificatesCount || 0} earned
-                                </span>
-                              </td>
+                            <td className="px-4 py-3.5">
+                              <button
+                                onClick={() => setSelectedEngineerForAssignments(eng)}
+                                title="Click to view training assignments for this engineer"
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition cursor-pointer"
+                              >
+                                <span>{eng.activeAssignmentsCount || 0} active</span>
+                                {(eng.activeAssignmentsCount || 0) > 0 && (
+                                  <svg className="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                  </svg>
+                                )}
+                              </button>
+                            </td>
 
-                              <td className="px-4 py-3.5">
-                                <span className="font-bold text-slate-900 text-xs">
-                                  {eng.averageQuizScore !== null && eng.averageQuizScore !== undefined
-                                    ? `${eng.averageQuizScore}%`
-                                    : '—'}
-                                </span>
-                              </td>
+                            <td className="px-4 py-3.5">
+                              <button
+                                onClick={() => setSelectedEngineerForCerts(eng)}
+                                title="Click to view certificates earned by this engineer"
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 hover:border-amber-300 transition cursor-pointer"
+                              >
+                                <span>{eng.earnedCertificatesCount || 0} earned</span>
+                                {(eng.earnedCertificatesCount || 0) > 0 && (
+                                  <svg className="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                  </svg>
+                                )}
+                              </button>
+                            </td>
 
-                              <td className="px-4 py-3.5">
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
-                                  {eng.weakConcept && eng.weakConcept !== 'N/A' ? eng.weakConcept : 'None Logged'}
-                                </span>
-                              </td>
+                            <td className="px-4 py-3.5 font-bold text-slate-900">
+                              {eng.averageQuizScore !== null && eng.averageQuizScore !== undefined
+                                ? `${eng.averageQuizScore}%`
+                                : <span className="text-slate-400 font-normal italic">No quiz data</span>}
+                            </td>
 
-                              <td className="px-5 py-3.5 text-right">
-                                <span
-                                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                                    isActive
-                                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                                      : 'bg-rose-100 text-rose-800 border border-rose-200'
-                                  }`}
-                                >
-                                  {isActive ? 'Active' : 'Inactive'}
+                            <td className="px-4 py-3.5">
+                              {eng.weakConcept && eng.weakConcept !== 'N/A' ? (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                  {eng.weakConcept}
                                 </span>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                              ) : (
+                                <span className="text-slate-400 italic">None</span>
+                              )}
+                            </td>
+
+                            <td className="px-5 py-3.5 text-right">
+                              <span
+                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold capitalize ${
+                                  eng.status === 'active'
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                    : 'bg-slate-100 text-slate-500 border border-slate-200'
+                                }`}
+                              >
+                                {eng.status || 'active'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -728,23 +963,6 @@ const TeamLeadDashboard = () => {
           {/* TAB 2: Weak Concepts Table (Admin Users Design) */}
           {activeTab === 'concepts' && (
             <div className="space-y-4">
-              {/* Header Section */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <span>{t('weakConceptsMap')}</span>
-                    {allWeakConcepts.length > 0 && (
-                      <span className="bg-blue-50 text-[#08306B] border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold">
-                        {allWeakConcepts.length} Concept{allWeakConcepts.length === 1 ? '' : 's'} Tracked
-                      </span>
-                    )}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Aggregated quiz metrics across your squad, sorted from lowest to highest accuracy to pinpoint training opportunities
-                  </p>
-                </div>
-              </div>
-
               {/* Filter & Search Bar */}
               <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-between">
                 <div className="relative flex-1">
@@ -759,18 +977,18 @@ const TeamLeadDashboard = () => {
                       setConceptsPage(1);
                     }}
                     placeholder="Search concept tags (e.g. FIBER, OTDR, SAFETY)..."
-                    className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition"
+                    className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition font-medium"
                   />
                 </div>
 
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 shrink-0">
                   <select
                     value={conceptProficiencyFilter}
                     onChange={(e) => {
                       setConceptProficiencyFilter(e.target.value);
                       setConceptsPage(1);
                     }}
-                    className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B]"
+                    className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-700 font-medium outline-none focus:border-[#08306B] cursor-pointer"
                   >
                     <option value="all">All Proficiency Levels</option>
                     <option value="critical">Critical Need (&lt; 60%)</option>
@@ -785,7 +1003,7 @@ const TeamLeadDashboard = () => {
                         setConceptProficiencyFilter('all');
                         setConceptsPage(1);
                       }}
-                      className="text-xs text-slate-500 hover:text-slate-800 px-2 py-1 underline cursor-pointer"
+                      className="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer border border-slate-200 shadow-2xs shrink-0"
                     >
                       Reset
                     </button>
@@ -927,11 +1145,7 @@ const TeamLeadDashboard = () => {
           {activeTab === 'curriculum' && (
             <div className="space-y-8">
               <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="text-lg md:text-xl font-bold text-slate-900">Curriculum Browser</h3>
-                    <p className="text-xs text-slate-500 mt-1">Read-only view of published EDGE Academy tracks and training modules.</p>
-                  </div>
+                <div className="flex items-center justify-end mb-4">
                   <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-xl font-bold border border-blue-200">
                     Read-Only Access
                   </span>
@@ -957,7 +1171,7 @@ const TeamLeadDashboard = () => {
                               </span>
                             </h4>
                             <span className="bg-[#08306B] text-white text-xs px-2.5 py-1 rounded-full font-extrabold">
-                              {track.tier || 'L1_CORE'}
+                              {track.tier}
                             </span>
                           </div>
                           <p className="text-xs text-slate-600 mb-6">{track.description || 'No description provided.'}</p>
@@ -988,6 +1202,375 @@ const TeamLeadDashboard = () => {
                         </div>
                       );
                     })}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          {/* TAB: Squad Assignments View */}
+          {activeTab === 'assignments' && (
+            <div className="space-y-4">
+              {/* Filter & Search Bar */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-between">
+                <div className="relative flex-1">
+                  <svg className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    value={assignmentSearchQuery}
+                    onChange={(e) => {
+                      setAssignmentSearchQuery(e.target.value);
+                      setAssignmentsPage(1);
+                    }}
+                    placeholder="Search by engineer name, email, module, or track..."
+                    className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition font-medium"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2.5 shrink-0">
+                  <select
+                    value={assignmentStatusFilter}
+                    onChange={(e) => {
+                      setAssignmentStatusFilter(e.target.value);
+                      setAssignmentsPage(1);
+                    }}
+                    className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-700 font-medium outline-none focus:border-[#08306B] cursor-pointer"
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="overdue">Overdue</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Assignments Table Card */}
+              <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+                {loadingAssignments ? (
+                  <div className="p-12 text-center text-slate-400">
+                    <div className="w-8 h-8 border-3 border-[#08306B] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-xs font-semibold">Loading squad assignments...</p>
+                  </div>
+                ) : filteredSquadAssignments.length === 0 ? (
+                  <div className="p-12 text-center text-slate-500 space-y-2">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <p className="text-sm font-semibold text-slate-800">No assignments found</p>
+                    <p className="text-xs text-slate-400">
+                      {assignmentSearchQuery || assignmentStatusFilter !== 'all'
+                        ? 'Try adjusting your search query or status filter.'
+                        : 'No curriculum assignments have been dispatched to your squad yet.'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                        <tr>
+                          <th className="px-5 py-3.5">Engineer</th>
+                          <th className="px-4 py-3.5">Assigned Module & Track</th>
+                          <th className="px-4 py-3.5">Assigned By</th>
+                          <th className="px-4 py-3.5">Assigned Date</th>
+                          <th className="px-4 py-3.5">Deadline</th>
+                          <th className="px-5 py-3.5 text-right">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        {paginatedSquadAssignments.map((item) => {
+                          const eng = item.engineer_id || item.userId || {};
+                          const mod = item.module_id || item.moduleId || {};
+                          const track = mod.track_id || mod.trackId || {};
+                          const assigner = item.assigned_by || item.assignedBy || {};
+                          const statusVal = item.computed_status || item.status || 'pending';
+                          const isOverdue = item.is_overdue || statusVal === 'overdue';
+
+                          return (
+                            <tr key={item._id} className="hover:bg-slate-50/70 transition">
+                              <td className="px-5 py-3.5">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-8 w-8 rounded-full bg-[#08306B] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                                    {(eng.fullName || eng.full_name || eng.name || eng.email || 'E')[0]?.toUpperCase()}
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="font-semibold text-slate-900 truncate">
+                                      {eng.fullName || eng.full_name || eng.name || 'Unknown Engineer'}
+                                    </p>
+                                    <p className="text-[11px] text-slate-400 truncate">{eng.email || 'No email'}</p>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="px-4 py-3.5">
+                                <div>
+                                  <p className="font-semibold text-slate-900">{mod.title || 'Training Module'}</p>
+                                  <p className="text-[11px] text-slate-400">
+                                    {track.title || track.name || 'Curriculum Track'} {track.tier ? `· ${track.tier}` : ''}
+                                  </p>
+                                </div>
+                              </td>
+
+                              <td className="px-4 py-3.5">
+                                <p className="font-medium text-slate-800">{assigner.fullName || assigner.full_name || 'Team Lead'}</p>
+                                <p className="text-[11px] text-slate-400 capitalize">{assigner.role || 'Lead'}</p>
+                              </td>
+
+                              <td className="px-4 py-3.5 text-slate-500">
+                                {new Date(item.assigned_at || item.createdAt || Date.now()).toLocaleDateString()}
+                              </td>
+
+                              <td className="px-4 py-3.5">
+                                {item.deadline_at ? (
+                                  <span className={`font-medium ${isOverdue ? 'text-rose-600 font-bold' : 'text-slate-700'}`}>
+                                    {new Date(item.deadline_at).toLocaleDateString()}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-400 italic">No deadline</span>
+                                )}
+                              </td>
+
+                              <td className="px-5 py-3.5 text-right">
+                                <span
+                                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                    isOverdue
+                                      ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                      : statusVal === 'completed'
+                                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                      : statusVal === 'in_progress'
+                                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                      : 'bg-amber-50 text-amber-800 border border-amber-200'
+                                  }`}
+                                >
+                                  {isOverdue && (
+                                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
+                                  )}
+                                  {isOverdue ? 'Overdue' : statusVal.replace('_', ' ')}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* Table Pagination Footer */}
+                {!loadingAssignments && filteredSquadAssignments.length > 0 && (
+                  <div className="p-3.5 sm:p-4 border-t border-slate-100">
+                    <Pagination
+                      currentPage={assignmentsPage}
+                      totalItems={filteredSquadAssignments.length}
+                      pageSize={8}
+                      onPageChange={setAssignmentsPage}
+                      itemLabel="assignments"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          {activeTab === 'certificates' && (
+            <div className="space-y-4">
+              {/* Filter & Search Bar */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-between">
+                <div className="relative flex-1">
+                  <svg className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    value={certSearchQuery}
+                    onChange={(e) => {
+                      setCertSearchQuery(e.target.value);
+                      setCertsPage(1);
+                    }}
+                    placeholder="Search by engineer name, email, or certificate ID..."
+                    className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition font-medium"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+                  <select
+                    value={certTrackFilter}
+                    onChange={(e) => {
+                      setCertTrackFilter(e.target.value);
+                      setCertsPage(1);
+                    }}
+                    className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-700 font-medium outline-none focus:border-[#08306B] cursor-pointer"
+                  >
+                    <option value="all">All Tracks</option>
+                    {tracksList.map((tr) => (
+                      <option key={tr._id} value={tr._id}>
+                        {tr.name || tr.title}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={certStatusFilter}
+                    onChange={(e) => {
+                      setCertStatusFilter(e.target.value);
+                      setCertsPage(1);
+                    }}
+                    className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-700 font-medium outline-none focus:border-[#08306B] cursor-pointer"
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="revoked">Revoked</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Certificates Table Card */}
+              <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+                {loadingCertificates ? (
+                  <div className="p-12 text-center text-slate-400">
+                    <div className="w-8 h-8 border-3 border-[#08306B] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-xs font-semibold">Loading squad certificates...</p>
+                  </div>
+                ) : filteredCertificates.length === 0 ? (
+                  <div className="p-12 text-center text-slate-500 space-y-2">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                    </div>
+                    <p className="text-sm font-semibold text-slate-800">No certificates found</p>
+                    <p className="text-xs text-slate-400">
+                      {certSearchQuery || certTrackFilter !== 'all' || certStatusFilter !== 'all'
+                        ? 'Try adjusting your search query or filters.'
+                        : 'No engineers on your squad have earned a certificate yet.'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                        <tr>
+                          <th className="px-5 py-3.5">Recipient Engineer</th>
+                          <th className="px-4 py-3.5">Certificate ID</th>
+                          <th className="px-4 py-3.5">Curriculum Track</th>
+                          <th className="px-4 py-3.5">Tier</th>
+                          <th className="px-4 py-3.5">Issued Date</th>
+                          <th className="px-4 py-3.5">Status</th>
+                          <th className="px-5 py-3.5 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        {paginatedCertificates.map((cert) => {
+                          const eng = cert.engineer_id || cert.userId || {};
+                          const track = cert.track_id || cert.trackId || {};
+                          const tierVal = track.tier || cert.tier || 'EDGE';
+                          const isDownloading = downloadingCertId === (cert.certificate_id || cert._id);
+
+                          return (
+                            <tr key={cert._id || cert.certificate_id} className="hover:bg-slate-50/70 transition">
+                              <td className="px-5 py-3.5">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-8 w-8 rounded-full bg-[#08306B] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                                    {(eng.fullName || eng.full_name || eng.name || eng.email || 'E')[0]?.toUpperCase()}
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="font-semibold text-slate-900 truncate">
+                                      {eng.fullName || eng.full_name || eng.name || 'Unknown Engineer'}
+                                    </p>
+                                    <p className="text-[11px] text-slate-400 truncate">{eng.email || 'No email'}</p>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="px-4 py-3.5">
+                                <span className="font-mono text-xs font-bold text-[#08306B] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                                  {cert.certificate_id}
+                                </span>
+                              </td>
+
+                              <td className="px-4 py-3.5 text-slate-800 font-semibold">
+                                {track.title || track.name || 'EDGE Curriculum Track'}
+                              </td>
+
+                              <td className="px-4 py-3.5">
+                                <span
+                                  className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                                    tierVal === 'EDGE'
+                                      ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                      : 'bg-blue-100 text-[#08306B] border border-blue-200'
+                                  }`}
+                                >
+                                  {tierVal}
+                                </span>
+                              </td>
+
+                              <td className="px-4 py-3.5 text-slate-500">
+                                {new Date(cert.issued_at || cert.createdAt || Date.now()).toLocaleDateString()}
+                              </td>
+
+                              <td className="px-4 py-3.5">
+                                <span
+                                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                    cert.status === 'active'
+                                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                      : 'bg-rose-50 text-rose-700 border border-rose-200'
+                                  }`}
+                                >
+                                  {cert.status || 'active'}
+                                </span>
+                              </td>
+
+                              <td className="px-5 py-3.5 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <a
+                                    href={`/verify/${cert.certificate_id}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="px-2.5 py-1 text-[11px] font-semibold text-slate-600 hover:text-[#08306B] hover:bg-slate-100 rounded-lg border border-slate-200 transition"
+                                  >
+                                    Verify
+                                  </a>
+                                  <button
+                                    onClick={() => handleDownloadCertPdf(cert)}
+                                    disabled={isDownloading || cert.status === 'revoked'}
+                                    className="inline-flex items-center gap-1 px-3 py-1 text-[11px] font-bold bg-[#08306B] text-white hover:bg-[#062452] rounded-lg shadow-xs transition disabled:opacity-50 cursor-pointer"
+                                  >
+                                    {isDownloading ? (
+                                      <>
+                                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        <span>Saving...</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                        <span>PDF</span>
+                                      </>
+                                    )}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* Table Pagination Footer */}
+                {!loadingCertificates && filteredCertificates.length > 0 && (
+                  <div className="p-3.5 sm:p-4 border-t border-slate-100">
+                    <Pagination
+                      currentPage={certsPage}
+                      totalItems={filteredCertificates.length}
+                      pageSize={8}
+                      onPageChange={setCertsPage}
+                      itemLabel="certificates"
+                    />
                   </div>
                 )}
               </div>
@@ -1255,6 +1838,250 @@ const TeamLeadDashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ENGINEER CERTIFICATES DRILL-DOWN MODAL */}
+      {selectedEngineerForCerts && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in duration-150 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-[#08306B] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                  {(selectedEngineerForCerts.fullName || selectedEngineerForCerts.full_name || selectedEngineerForCerts.name || 'E')[0]?.toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900">
+                    {selectedEngineerForCerts.fullName || selectedEngineerForCerts.full_name || selectedEngineerForCerts.name}
+                  </h3>
+                  <p className="text-xs text-slate-500">{selectedEngineerForCerts.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedEngineerForCerts(null)}
+                className="text-slate-400 hover:text-slate-600 text-xl font-bold p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Earned Certificates ({engineerModalCertificates.length})</h4>
+              </div>
+
+              {engineerModalCertificates.length === 0 ? (
+                <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-500 space-y-1">
+                  <p className="text-xs font-semibold text-slate-700">No certificates issued yet</p>
+                  <p className="text-[11px] text-slate-400">This engineer has not completed all modules required for a certificate.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {engineerModalCertificates.map((cert) => {
+                    const track = cert.track_id || cert.trackId || {};
+                    const tierVal = track.tier || cert.tier || 'EDGE';
+                    const isDownloading = downloadingCertId === (cert.certificate_id || cert._id);
+
+                    return (
+                      <div
+                        key={cert._id || cert.certificate_id}
+                        className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[11px] font-bold text-[#08306B] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                              {cert.certificate_id}
+                            </span>
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                                tierVal === 'EDGE'
+                                  ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                  : 'bg-blue-100 text-[#08306B] border border-blue-200'
+                              }`}
+                            >
+                              {tierVal}
+                            </span>
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                cert.status === 'active'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : 'bg-rose-50 text-rose-700 border border-rose-200'
+                              }`}
+                            >
+                              {cert.status || 'active'}
+                            </span>
+                          </div>
+                          <p className="text-xs font-bold text-slate-900">{track.title || track.name || 'Curriculum Track'}</p>
+                          <p className="text-[11px] text-slate-400">
+                            Issued on {new Date(cert.issued_at || cert.createdAt || Date.now()).toLocaleDateString()}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                          <a
+                            href={`/verify/${cert.certificate_id}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-[#08306B] hover:bg-white rounded-xl border border-slate-200 transition"
+                          >
+                            Verify
+                          </a>
+                          <button
+                            onClick={() => handleDownloadCertPdf(cert)}
+                            disabled={isDownloading || cert.status === 'revoked'}
+                            className="inline-flex items-center gap-1 px-3 py-1 text-xs font-bold bg-[#08306B] text-white hover:bg-[#062452] rounded-xl shadow-xs transition disabled:opacity-50 cursor-pointer"
+                          >
+                            {isDownloading ? (
+                              <>
+                                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                <span>Saving...</span>
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                <span>Download PDF</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setSelectedEngineerForCerts(null)}
+                className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ENGINEER ASSIGNMENTS DRILL-DOWN MODAL */}
+      {selectedEngineerForAssignments && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in duration-150 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-[#08306B] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                  {(selectedEngineerForAssignments.fullName || selectedEngineerForAssignments.full_name || selectedEngineerForAssignments.name || 'E')[0]?.toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900">
+                    {selectedEngineerForAssignments.fullName || selectedEngineerForAssignments.full_name || selectedEngineerForAssignments.name}
+                  </h3>
+                  <p className="text-xs text-slate-500">{selectedEngineerForAssignments.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedEngineerForAssignments(null)}
+                className="text-slate-400 hover:text-slate-600 text-xl font-bold p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Curriculum Assignments ({engineerModalAssignments.length})
+                </h4>
+              </div>
+
+              {engineerModalAssignments.length === 0 ? (
+                <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-500 space-y-1">
+                  <p className="text-xs font-semibold text-slate-700">No active assignments found</p>
+                  <p className="text-[11px] text-slate-400">This engineer has not been assigned any modules yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {engineerModalAssignments.map((assignment) => {
+                    const mod = assignment.module_id || assignment.moduleId || {};
+                    const track = mod.track_id || mod.trackId || {};
+                    const assigner = assignment.assigned_by || assignment.assignedBy || {};
+                    const statusVal = assignment.computed_status || assignment.status || 'pending';
+                    const isOverdue = assignment.is_overdue || statusVal === 'overdue';
+
+                    return (
+                      <div
+                        key={assignment._id}
+                        className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-slate-900">{mod.title || 'Training Module'}</span>
+                            {track.tier && (
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                                  track.tier === 'EDGE'
+                                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                    : 'bg-blue-100 text-[#08306B] border border-blue-200'
+                                }`}
+                              >
+                                {track.tier}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-500">
+                            Track: <strong>{track.title || track.name || 'General Curriculum'}</strong>
+                          </p>
+                          <p className="text-[11px] text-slate-400">
+                            Assigned by {assigner.fullName || assigner.full_name || 'Team Lead'} on{' '}
+                            {new Date(assignment.assigned_at || assignment.createdAt || Date.now()).toLocaleDateString()}
+                          </p>
+                          {assignment.deadline_at && (
+                            <p className={`text-[11px] font-semibold ${isOverdue ? 'text-rose-600' : 'text-slate-600'}`}>
+                              Deadline: {new Date(assignment.deadline_at).toLocaleDateString()} {isOverdue && '(Overdue)'}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="self-end sm:self-center shrink-0">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                              isOverdue
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : statusVal === 'completed'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : statusVal === 'in_progress'
+                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                : 'bg-amber-50 text-amber-800 border border-amber-200'
+                            }`}
+                          >
+                            {isOverdue && (
+                              <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
+                            )}
+                            {isOverdue ? 'Overdue' : statusVal.replace('_', ' ')}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setSelectedEngineerForAssignments(null)}
+                className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

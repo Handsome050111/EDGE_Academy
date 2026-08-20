@@ -16,6 +16,45 @@ const AcceptInvitePage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Typewriter Animation State
+  const phrases = [
+    'Welcome to the Team',
+    'Mastering Field Engineering',
+    'Accelerating Technical Growth',
+    'Certified Enterprise Standards',
+  ];
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [typedText, setTypedText] = useState('Welcome to the Team');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentPhrase = phrases[phraseIndex];
+    const typingSpeed = isDeleting ? 35 : 70;
+    const pauseTime = isDeleting ? 400 : 2400;
+
+    let timer;
+
+    if (!isDeleting && typedText === currentPhrase) {
+      timer = setTimeout(() => setIsDeleting(true), pauseTime);
+    } else if (isDeleting && typedText === '') {
+      timer = setTimeout(() => {
+        setIsDeleting(false);
+        setPhraseIndex((prev) => (prev + 1) % phrases.length);
+      }, 400);
+    } else {
+      timer = setTimeout(() => {
+        setTypedText((prev) =>
+          isDeleting
+            ? currentPhrase.substring(0, prev.length - 1)
+            : currentPhrase.substring(0, prev.length + 1)
+        );
+      }, typingSpeed);
+    }
+
+    return () => clearTimeout(timer);
+  }, [typedText, isDeleting, phraseIndex]);
 
   useEffect(() => {
     if (!token) {
@@ -34,7 +73,7 @@ const AcceptInvitePage = () => {
         if (err.response?.status === 400) {
           setError(err.response?.data?.message || 'Invalid or expired invitation token. Please request a new invite.');
         } else {
-          // If server is on older cache or endpoint not found, proceed to allow submission
+          // If server is on older cache or fallback mode, allow submission
           setInviteInfo({ role: 'Engineer' });
         }
       } finally {
@@ -71,7 +110,7 @@ const AcceptInvitePage = () => {
       setSuccess(true);
       setTimeout(() => {
         navigate('/login', { state: { activatedEmail: inviteInfo?.email } });
-      }, 2500);
+      }, 2200);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to activate account. Please try again.');
     } finally {
@@ -82,7 +121,7 @@ const AcceptInvitePage = () => {
   return (
     <div className="h-screen w-screen overflow-hidden bg-white flex flex-col lg:flex-row font-sans">
       {/* Left Side: Brand Panel */}
-      <div className="lg:w-1/2 bg-[#062452] p-8 lg:p-14 xl:p-16 flex flex-col justify-between text-white relative overflow-hidden shrink-0">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#062452] p-8 lg:p-14 xl:p-16 flex-col justify-between text-white relative overflow-hidden shrink-0">
         {/* Large Watermark Graphic */}
         <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full border-[32px] border-white/[0.04] flex items-center justify-center pointer-events-none">
           <div className="w-[360px] h-[360px] rounded-full border-[24px] border-white/[0.03] flex items-center justify-center">
@@ -98,44 +137,48 @@ const AcceptInvitePage = () => {
 
         {/* Top Brand Logo */}
         <div className="relative z-10">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-            <img src="/app-logo.png" alt="EDGE Academy Logo" className="h-9 w-9 rounded-xl object-contain shadow-xs" />
-            <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight text-white leading-none">
-                Technone<span className="text-red-500">X</span>
-              </span>
-              <span className="text-[11px] font-semibold text-blue-200/80 tracking-wider">EDGE Academy</span>
-            </div>
+          <div className="flex items-center cursor-pointer group" onClick={() => navigate('/')}>
+            <span className="text-2xl font-extrabold tracking-tight text-white leading-none">
+              EDGE <span className="text-[#EAB308]">Academy</span>
+            </span>
           </div>
         </div>
 
-        {/* Middle Copy */}
+        {/* Middle Copy with Typewriter Effect */}
         <div className="relative z-10 max-w-md my-auto py-12">
           <div className="inline-flex items-center gap-2 bg-blue-400/10 border border-blue-300/20 text-blue-200 text-xs px-3.5 py-1.5 rounded-full font-semibold mb-6">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             Account Activation Portal
           </div>
-          <h1 className="text-3xl lg:text-4xl xl:text-[40px] font-bold leading-tight text-white mb-4 tracking-tight">
-            Welcome to the Team<span className="font-light text-blue-300 animate-pulse">|</span>
+          <h1 className="text-3xl lg:text-4xl xl:text-[42px] font-bold leading-tight text-white mb-4 tracking-tight min-h-[96px] sm:min-h-[110px]">
+            <span>{typedText}</span>
+            <span className="inline-block w-[3.5px] h-[0.82em] bg-blue-300 ml-1.5 align-baseline animate-pulse rounded-full"></span>
           </h1>
           <p className="text-sm lg:text-base text-blue-200/80 leading-relaxed font-normal">
-            Activate your corporate account to access personalized curriculum tracks, hands-on field assessments, and verified certifications.
+            Activate your corporate account to access personalized curriculum tracks, dynamic assessments, and verified certifications.
           </p>
         </div>
 
         {/* Bottom Product Footer */}
-        <div className="relative z-10 text-xs text-blue-200/60 font-medium">
+        <div className="relative z-10 text-center lg:text-left text-xs text-blue-200/60 font-medium">
           © {new Date().getFullYear()} Technonex GmbH. All rights reserved.
         </div>
       </div>
 
       {/* Right Side: Activation Form */}
-      <div className="lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-16 overflow-y-auto bg-slate-50/50">
-        <div className="w-full max-w-md bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-slate-100 relative">
+      <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-8 lg:p-14 xl:p-16 overflow-y-auto bg-white flex-1 min-h-screen lg:min-h-0">
+        <div className="max-w-[420px] w-full mx-auto my-auto py-6 lg:py-0">
+          {/* Mobile-Only Header Brand */}
+          <div className="flex lg:hidden items-center mb-8 cursor-pointer group" onClick={() => navigate('/')}>
+            <span className="text-2xl font-extrabold tracking-tight text-[#062452] leading-none">
+              EDGE <span className="text-[#EAB308]">Academy</span>
+            </span>
+          </div>
+
           {loading ? (
             <div className="py-16 text-center space-y-4">
               <div className="h-10 w-10 border-3 border-[#08306B] border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <p className="text-sm font-semibold text-slate-600">Verifying your invitation token...</p>
+              <p className="text-sm font-semibold text-slate-600">Verifying invitation token...</p>
             </div>
           ) : success ? (
             <div className="text-center py-8 space-y-5">
@@ -145,16 +188,18 @@ const AcceptInvitePage = () => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">Account Activated!</h2>
+                <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">
+                  Account Activated!
+                </h2>
                 <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-                  Your password has been set successfully. Redirecting you to the login screen...
+                  Your password has been set successfully. Redirecting you to sign in...
                 </p>
               </div>
               <button
                 onClick={() => navigate('/login', { state: { activatedEmail: inviteInfo?.email } })}
-                className="w-full py-3 bg-[#08306B] hover:bg-[#062452] text-white font-bold text-sm rounded-xl transition cursor-pointer"
+                className="w-full rounded-xl bg-[#08306B] hover:bg-[#062452] px-6 py-3.5 text-sm font-bold text-white shadow-md transition active:scale-[0.99] cursor-pointer"
               >
-                Go to Login Now →
+                Go to Sign In →
               </button>
             </div>
           ) : error && !inviteInfo ? (
@@ -165,34 +210,43 @@ const AcceptInvitePage = () => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900">Invalid or Expired Link</h2>
+                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Invalid or Expired Link</h2>
                 <p className="text-sm text-slate-500 mt-2 leading-relaxed">{error}</p>
               </div>
               <button
                 onClick={() => navigate('/login')}
-                className="w-full py-3 bg-[#08306B] hover:bg-[#062452] text-white font-bold text-sm rounded-xl transition cursor-pointer"
+                className="w-full rounded-xl bg-[#08306B] hover:bg-[#062452] px-6 py-3.5 text-sm font-bold text-white shadow-md transition active:scale-[0.99] cursor-pointer"
               >
-                Return to Login
+                Return to Sign In
               </button>
             </div>
           ) : (
             <div>
-              {/* Header */}
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="px-3 py-1 bg-blue-50 text-[#08306B] text-xs font-bold rounded-full capitalize">
-                    {inviteInfo?.role?.replace('_', ' ') || 'Engineer'}
-                  </span>
-                </div>
-                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Create Your Password</h2>
-                <p className="text-sm text-slate-500 mt-1">
-                  Activating account for <strong className="text-slate-800 font-semibold">{inviteInfo?.email}</strong>
+              {/* Form Header */}
+              <div className="mb-8">
+                {inviteInfo?.role && (
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-[#08306B] border border-blue-100 mb-3 capitalize">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#08306B]"></span>
+                    {inviteInfo.role.replace('_', ' ')}
+                  </div>
+                )}
+                <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight mb-1.5">
+                  Create your password
+                </h2>
+                <p className="text-sm text-slate-500 font-normal">
+                  {inviteInfo?.email ? (
+                    <>
+                      Activating corporate account for <span className="font-semibold text-slate-700">{inviteInfo.email}</span>
+                    </>
+                  ) : (
+                    'Set your corporate credentials to activate your account'
+                  )}
                 </p>
               </div>
 
               {error && (
-                <div className="mb-5 rounded-2xl bg-red-50 border border-red-200 p-3.5 text-xs font-semibold text-red-800 flex items-center gap-2">
-                  <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="mb-6 rounded-xl bg-red-50 border border-red-200 p-3.5 text-xs font-medium text-red-600 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                   <span>{error}</span>
@@ -200,48 +254,83 @@ const AcceptInvitePage = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* New Password */}
+                {/* New Password Field */}
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                    SET PASSWORD
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5" htmlFor="password">
+                    New password
                   </label>
                   <div className="relative">
                     <input
+                      id="password"
+                      name="password"
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••••••"
                       required
-                      className="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition pr-10"
+                      placeholder="••••••••••••"
+                      className="w-full rounded-xl bg-[#F0F5FF] border border-transparent px-4 py-3 text-sm text-slate-900 outline-none transition focus:bg-white focus:border-[#08306B] focus:ring-2 focus:ring-[#08306B]/20 pr-10"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                      tabIndex={-1}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
-                      {showPassword ? 'Hide' : 'Show'}
+                      {showPassword ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.007 10.007 0 014.122-.963c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m-3.903-3.903a3 3 0 11-4.243-4.243m4.242 4.242L3 3l18 18" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
                     </button>
                   </div>
                 </div>
 
-                {/* Confirm Password */}
+                {/* Confirm Password Field */}
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                    CONFIRM PASSWORD
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5" htmlFor="confirmPassword">
+                    Confirm password
                   </label>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••••••"
-                    required
-                    className="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
-                  />
+                  <div className="relative">
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      placeholder="••••••••••••"
+                      className="w-full rounded-xl bg-[#F0F5FF] border border-transparent px-4 py-3 text-sm text-slate-900 outline-none transition focus:bg-white focus:border-[#08306B] focus:ring-2 focus:ring-[#08306B]/20 pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                      tabIndex={-1}
+                      aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                    >
+                      {showConfirmPassword ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.007 10.007 0 014.122-.963c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m-3.903-3.903a3 3 0 11-4.243-4.243m4.242 4.242L3 3l18 18" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Password Criteria Checklist */}
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 space-y-1.5 text-xs text-slate-500">
-                  <p className="font-bold text-slate-600 mb-1 text-[11px] uppercase tracking-wider">Security Requirements:</p>
+                <div className="rounded-xl bg-slate-50 border border-slate-200/80 p-3.5 space-y-1.5 text-xs text-slate-500">
+                  <p className="font-semibold text-slate-700 mb-1 text-[11px] uppercase tracking-wider">Security Requirements:</p>
                   <div className="flex items-center gap-2">
                     <span className={hasLength ? 'text-emerald-600 font-bold' : 'text-slate-400'}>
                       {hasLength ? '✓' : '•'} At least 8 characters
@@ -259,18 +348,18 @@ const AcceptInvitePage = () => {
                   </div>
                   {confirmPassword && (
                     <div className="flex items-center gap-2">
-                      <span className={passwordsMatch ? 'text-emerald-600 font-bold' : 'text-red-500 font-bold'}>
+                      <span className={passwordsMatch ? 'text-emerald-600 font-bold' : 'text-rose-500 font-bold'}>
                         {passwordsMatch ? '✓ Passwords match' : '✕ Passwords do not match'}
                       </span>
                     </div>
                   )}
                 </div>
 
-                {/* Submit Button */}
+                {/* Call-to-Action Submit Button */}
                 <button
                   type="submit"
                   disabled={submitting || !isPasswordValid}
-                  className="w-full py-3.5 bg-[#08306B] hover:bg-[#062452] text-white font-bold text-sm rounded-xl shadow-md transition duration-150 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer mt-2"
+                  className="w-full rounded-xl bg-[#08306B] hover:bg-[#062452] px-6 py-3.5 text-sm font-bold text-white shadow-md transition active:scale-[0.99] disabled:opacity-50 mt-2 cursor-pointer flex items-center justify-center gap-2"
                 >
                   {submitting ? (
                     <>

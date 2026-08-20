@@ -18,7 +18,11 @@ const generateToken = (id, rememberMe = false) => {
 // @access  Public
 const registerUser = async (req, res) => {
   try {
-    const { fullName, email, password, role, language } = req.body;
+    // NOTE: `role` is intentionally NOT destructured from req.body.
+    // Self-registration always creates Engineer accounts. Role assignment
+    // is exclusively handled by the admin-gated POST /admin/users and
+    // POST /admin/users/invite flows (protected by `protect + authorize('Admin')`).
+    const { fullName, email, password, language } = req.body;
 
     const passwordCheck = validatePasswordStrength(password);
     if (!passwordCheck.valid) {
@@ -39,7 +43,7 @@ const registerUser = async (req, res) => {
     if (userExists && userExists.deleted_at) {
       userExists.full_name = fullName;
       userExists.password_hash = hashedPassword;
-      userExists.role = role || 'engineer';
+      userExists.role = 'engineer';
       userExists.locale = language || 'en';
       userExists.is_active = true;
       userExists.status = 'active';
@@ -52,13 +56,14 @@ const registerUser = async (req, res) => {
         full_name: fullName,
         email: cleanEmail,
         password_hash: hashedPassword,
-        role: role || 'engineer',
+        role: 'engineer',
         locale: language || 'en',
       });
     }
 
     if (user) {
       const auditEntry = buildAuditEntry({
+        req,
         actor: user,
         action: 'user_registered',
         resourceType: 'User',
@@ -66,7 +71,7 @@ const registerUser = async (req, res) => {
         outcome: 'success',
         description: 'New user registered',
       });
-      await logAuditEvent(auditEntry);
+      await logAuditEvent(auditEntry, req);
 
       res.status(201).json({
         _id: user._id,
@@ -107,6 +112,7 @@ const loginUser = async (req, res) => {
       const isDeactivated = user.is_active === false || user.isActive === false || user.status === 'deactivated' || user.deleted_at !== null;
       if (isDeactivated) {
         const auditEntry = buildAuditEntry({
+          req,
           actor: user,
           action: 'login_blocked_account_deactivated',
           resourceType: 'Session',
@@ -114,7 +120,7 @@ const loginUser = async (req, res) => {
           outcome: 'denied',
           description: 'Login rejected: account is deactivated or access has been revoked',
         });
-        await logAuditEvent(auditEntry);
+        await logAuditEvent(auditEntry, req);
 
         return res.status(403).json({
           error: {
@@ -130,6 +136,7 @@ const loginUser = async (req, res) => {
         const remainingMinutes = Math.ceil(remainingSeconds / 60);
 
         const auditEntry = buildAuditEntry({
+          req,
           actor: user,
           action: 'login_blocked_account_locked',
           resourceType: 'Session',
@@ -138,7 +145,7 @@ const loginUser = async (req, res) => {
           description: `Login attempt blocked: account locked for ${remainingMinutes} more minute(s)`,
           metadata: { remainingSeconds },
         });
-        await logAuditEvent(auditEntry);
+        await logAuditEvent(auditEntry, req);
 
         return res.status(403).json({
           error: {
@@ -178,6 +185,7 @@ const loginUser = async (req, res) => {
         await user.save();
 
         const auditEntry = buildAuditEntry({
+          req,
           actor: user,
           action: 'user_logged_in',
           resourceType: 'Session',
@@ -185,7 +193,7 @@ const loginUser = async (req, res) => {
           outcome: 'success',
           description: 'User authenticated successfully',
         });
-        await logAuditEvent(auditEntry);
+        await logAuditEvent(auditEntry, req);
 
         return res.json({
           _id: user._id,
@@ -210,6 +218,7 @@ const loginUser = async (req, res) => {
         await user.save();
 
         const auditEntry = buildAuditEntry({
+          req,
           actor: user,
           action: lockoutTriggered ? 'account_locked_failed_logins' : 'login_failed_invalid_credentials',
           resourceType: 'Session',
@@ -220,7 +229,7 @@ const loginUser = async (req, res) => {
             : `Failed login attempt (${user.failed_login_attempts}/5)`,
           metadata: { failedAttempts: user.failed_login_attempts, lockoutTriggered },
         });
-        await logAuditEvent(auditEntry);
+        await logAuditEvent(auditEntry, req);
 
         if (lockoutTriggered) {
           return res.status(403).json({
@@ -260,6 +269,7 @@ const logoutUser = async (req, res) => {
   try {
     if (req.user) {
       const auditEntry = buildAuditEntry({
+        req,
         actor: req.user,
         action: 'user_logged_out',
         resourceType: 'Session',
@@ -267,7 +277,7 @@ const logoutUser = async (req, res) => {
         outcome: 'success',
         description: 'User logged out successfully',
       });
-      await logAuditEvent(auditEntry);
+      await logAuditEvent(auditEntry, req);
     }
     // Spec Section 6.2: POST /api/v1/auth/logout → 204
     return res.status(204).send();

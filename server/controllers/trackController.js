@@ -1,6 +1,7 @@
 const Track = require('../models/Track');
 const Module = require('../models/Module');
 const AuditLog = require('../models/AuditLog');
+const { getClientIp } = require('../utils/audit');
 
 // @desc    Get all active tracks with populated modules
 // @route   GET /api/tracks
@@ -12,7 +13,7 @@ const getTracks = async (req, res) => {
         path: 'modules',
         match: { status: { $ne: 'archived' }, deleted_at: null },
       })
-      .sort({ display_order: 1, created_at: -1 });
+      .sort({ display_order: 1, created_at: 1 });
 
     const allModules = await Module.find({
       status: { $ne: 'archived' },
@@ -95,12 +96,15 @@ const getTrackById = async (req, res) => {
 // @access  Private/Admin/SuperAdmin
 const createTrack = async (req, res) => {
   try {
-    const { name, title, description, slug, code, is_published, isPublished, icon, display_order, displayOrder } = req.body;
+    const { name, title, description, slug, code, is_published, isPublished, icon, display_order, displayOrder, tier } = req.body;
 
     const trackName = name || title;
     if (!trackName || !trackName.trim()) {
       return res.status(400).json({ message: 'Track name is required.' });
     }
+
+    const validTiers = ['EDGE', 'CORE'];
+    const trackTier = tier && validTiers.includes(tier.toUpperCase()) ? tier.toUpperCase() : 'EDGE';
 
     const trackSlug = (slug || code || trackName.replace(/[^a-zA-Z0-9]/g, '-').toUpperCase()).trim();
 
@@ -109,6 +113,7 @@ const createTrack = async (req, res) => {
       slug: trackSlug,
       description: description ? description.trim() : '',
       icon: icon || null,
+      tier: trackTier,
       is_published: is_published !== undefined ? is_published : (isPublished !== undefined ? isPublished : true),
       display_order: display_order || displayOrder || 0,
       modules: [],
@@ -123,8 +128,8 @@ const createTrack = async (req, res) => {
         action: 'CREATE_TRACK',
         entity: 'Track',
         entity_id: createdTrack._id,
-        details: { name: createdTrack.name, slug: createdTrack.slug },
-        ip_address: req.ip,
+        details: { name: createdTrack.name, slug: createdTrack.slug, tier: createdTrack.tier },
+        ip_address: getClientIp(req),
         user_agent: req.headers['user-agent'],
       }).catch(() => {});
     }
@@ -140,7 +145,7 @@ const createTrack = async (req, res) => {
 // @access  Private/Admin/SuperAdmin
 const updateTrack = async (req, res) => {
   try {
-    const { name, title, description, slug, code, is_published, isPublished, icon, display_order, displayOrder } = req.body;
+    const { name, title, description, slug, code, is_published, isPublished, icon, display_order, displayOrder, tier } = req.body;
 
     const track = await Track.findById(req.params.id);
     if (!track) {
@@ -156,6 +161,15 @@ const updateTrack = async (req, res) => {
     if (display_order !== undefined) track.display_order = display_order;
     else if (displayOrder !== undefined) track.display_order = displayOrder;
 
+    // Validate and update tier if provided
+    if (tier !== undefined) {
+      const validTiers = ['EDGE', 'CORE'];
+      if (!validTiers.includes(tier.toUpperCase())) {
+        return res.status(400).json({ message: `Invalid tier value. Must be one of: ${validTiers.join(', ')}.` });
+      }
+      track.tier = tier.toUpperCase();
+    }
+
     const updatedTrack = await track.save();
 
     // Log Audit Event
@@ -165,8 +179,8 @@ const updateTrack = async (req, res) => {
         action: 'UPDATE_TRACK',
         entity: 'Track',
         entity_id: updatedTrack._id,
-        details: { name: updatedTrack.name, slug: updatedTrack.slug },
-        ip_address: req.ip,
+        details: { name: updatedTrack.name, slug: updatedTrack.slug, tier: updatedTrack.tier },
+        ip_address: getClientIp(req),
         user_agent: req.headers['user-agent'],
       }).catch(() => {});
     }
@@ -205,7 +219,7 @@ const deleteTrack = async (req, res) => {
         entity: 'Track',
         entity_id: track._id,
         details: { name: track.name, slug: track.slug },
-        ip_address: req.ip,
+        ip_address: getClientIp(req),
         user_agent: req.headers['user-agent'],
       }).catch(() => {});
     }

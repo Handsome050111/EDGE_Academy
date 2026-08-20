@@ -9,14 +9,20 @@ const saveProgress = async (req, res) => {
     const module_id = req.params.id;
     const engineer_id = req.user._id;
 
-    const completed = percent_watched >= 95;
+    const existing = await VideoProgress.findOne({ engineer_id, module_id });
+
+    const incomingPct = typeof percent_watched === 'number' ? Math.round(percent_watched) : 0;
+    const finalPercent = Math.max(existing?.percent_watched || 0, incomingPct);
+    const completed = finalPercent >= 95 || Boolean(existing?.completed);
 
     const progress = await VideoProgress.findOneAndUpdate(
       { engineer_id, module_id },
       {
         $set: {
-          position_sec: position_sec || 0,
-          percent_watched: percent_watched || 0,
+          engineer_id,
+          module_id,
+          position_sec: position_sec !== undefined ? position_sec : (existing?.position_sec || 0),
+          percent_watched: finalPercent,
           completed,
           last_watched_at: new Date(),
         },

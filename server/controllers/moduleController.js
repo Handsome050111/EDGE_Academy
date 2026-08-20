@@ -4,6 +4,7 @@ const Question = require('../models/Question');
 const ModuleAttachment = require('../models/ModuleAttachment');
 const ModulePrerequisite = require('../models/ModulePrerequisite');
 const AuditLog = require('../models/AuditLog');
+const { getClientIp } = require('../utils/audit');
 
 // @desc    Create a new module and link to Track
 // @route   POST /api/modules
@@ -16,9 +17,10 @@ const createModule = async (req, res) => {
       title,
       slug,
       description,
-      tier,
+      // tier removed — tier is now a Track-level property, not Module-level
       estimatedDurationMinutes,
       estimated_duration_min,
+      video_url,
       videoUrl,
       cloudflareVideoId,
       video_provider_id,
@@ -41,7 +43,7 @@ const createModule = async (req, res) => {
       return res.status(404).json({ error: { code: 'TRACK_NOT_FOUND', message: 'Parent Track not found' } });
     }
 
-    const providerId = video_provider_id || cloudflareVideoId || null;
+    const providerId = video_provider_id || cloudflareVideoId || video_url || videoUrl || null;
     let thumbUrl = thumbnail_url || thumbnailUrl || null;
     if (!thumbUrl && providerId && !providerId.startsWith('/uploads/') && !providerId.endsWith('.mp4') && !providerId.endsWith('.webm') && !providerId.startsWith('video_')) {
       thumbUrl = `https://videodelivery.net/${providerId}/thumbnails/thumbnail.jpg`;
@@ -53,7 +55,6 @@ const createModule = async (req, res) => {
       title: title ? title.trim() : 'Untitled Module',
       slug: slug || `module-${Date.now()}`,
       description: description ? description.trim() : '',
-      tier: tier || 'L1_CORE',
       estimated_duration_min: estimated_duration_min || estimatedDurationMinutes || 15,
       video_provider_id: providerId,
       thumbnail_url: thumbUrl,
@@ -78,7 +79,7 @@ const createModule = async (req, res) => {
         entity: 'Module',
         entity_id: createdModule._id,
         details: { title: createdModule.title, track: track.name },
-        ip_address: req.ip || '127.0.0.1',
+        ip_address: getClientIp(req),
         user_agent: req.headers ? req.headers['user-agent'] : 'System',
       }).catch(() => {});
     }
@@ -100,7 +101,7 @@ const getModules = async (req, res) => {
     const modules = await Module.find(filter)
       .populate('track_id', 'name title slug code')
       .populate('trackId', 'name title slug code')
-      .sort({ created_at: -1 });
+      .sort({ display_order: 1, created_at: 1 });
     res.json(modules);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -197,6 +198,8 @@ const updateModule = async (req, res) => {
       req.body.thumbnail_url = `https://videodelivery.net/${newProviderId}/thumbnails/thumbnail.jpg`;
     }
 
+    // Note: req.body.tier is intentionally ignored \u2014 tier belongs to Track, not Module.
+    // Mongoose strict mode will strip the 'tier' key from req.body since it's not in the Module schema.
     Object.assign(module, req.body);
 
     const updatedModule = await module.save();
@@ -215,7 +218,7 @@ const updateModule = async (req, res) => {
         entity: 'Module',
         entity_id: updatedModule._id,
         details: { title: updatedModule.title },
-        ip_address: req.ip || '127.0.0.1',
+        ip_address: getClientIp(req),
         user_agent: req.headers ? req.headers['user-agent'] : 'System',
       }).catch(() => {});
     }
@@ -263,7 +266,7 @@ const deleteModule = async (req, res) => {
         entity: 'Module',
         entity_id: module._id,
         details: { title: module.title },
-        ip_address: req.ip || '127.0.0.1',
+        ip_address: getClientIp(req),
         user_agent: req.headers ? req.headers['user-agent'] : 'System',
       }).catch(() => {});
     }

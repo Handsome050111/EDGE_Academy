@@ -22,11 +22,6 @@ const moduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    tier: {
-      type: String,
-      enum: ['CORE', 'EDGE', 'L1_CORE', 'L2_ADVANCED'],
-      default: 'CORE',
-    },
     estimated_minutes: {
       type: Number,
       default: 0,

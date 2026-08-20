@@ -4,25 +4,7 @@ const mm = require('music-metadata');
 const Module = require('../models/Module');
 const Question = require('../models/Question');
 const ModuleAttachment = require('../models/ModuleAttachment');
-const AuditLog = require('../models/AuditLog');
-
-// Helper to log audit actions
-const logAudit = async ({ req, action, resourceType, resourceId, outcome = 'success', description, metadata = {} }) => {
-  try {
-    await AuditLog.create({
-      actorId: req.user?._id,
-      actorRole: req.user?.role || 'Unknown',
-      action,
-      resourceType,
-      resourceId: resourceId ? String(resourceId) : undefined,
-      outcome,
-      description,
-      metadata,
-    });
-  } catch (error) {
-    console.error('AuditLog creation error:', error.message);
-  }
-};
+const { logAudit } = require('../utils/audit');
 
 // @desc    Upload / proxy video for a module with exact duration calculation
 // @route   POST /api/v1/admin/modules/:id/video
@@ -279,8 +261,9 @@ const publishModule = async (req, res) => {
     });
 
     const hasVideo = Boolean(
-      module.video_provider_id ||
+      module.video_url ||
       module.videoUrl ||
+      module.video_provider_id ||
       module.signed_video_url ||
       module.streamUrl ||
       module.cloudflareVideoId

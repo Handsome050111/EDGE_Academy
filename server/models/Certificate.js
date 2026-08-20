@@ -23,8 +23,10 @@ const certificateSchema = new mongoose.Schema(
     },
     tier: {
       type: String,
-      enum: ['CORE', 'EDGE', 'L1_CORE', 'L2_ADVANCED'],
-      default: 'CORE',
+      // Normalized values post-migration. Historical certificates may retain
+      // legacy values (L1_CORE, L2_ADVANCED) — see Step 5 decision note.
+      enum: ['EDGE', 'CORE', 'L1_CORE', 'L2_ADVANCED'],
+      default: 'EDGE',
     },
     issued_at: {
       type: Date,
@@ -37,7 +39,7 @@ const certificateSchema = new mongoose.Schema(
     },
     director_name: {
       type: String,
-      default: 'Syed Hamza Mehmood', // Snapshot at issuance
+      required: true, // Snapshot from CertificateConfig at issuance
     },
     director_signature_url: {
       type: String,
@@ -45,7 +47,7 @@ const certificateSchema = new mongoose.Schema(
     },
     instructor_name: {
       type: String,
-      default: 'EDGE Instructor', // Snapshot at issuance
+      default: null, // Snapshot from CertificateConfig at issuance
     },
     instructor_signature_url: {
       type: String,

@@ -92,7 +92,7 @@ const AdminPortal = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col lg:flex-row font-sans relative">
+    <div className="h-screen bg-[#F8FAFC] flex flex-col lg:flex-row font-sans relative overflow-hidden">
       {/* Mobile Backdrop Overlay */}
       {mobileMenuOpen && (
         <div
@@ -104,7 +104,7 @@ const AdminPortal = () => {
 
       {/* Slide-Out Navigation Drawer on Mobile / Fixed Sidebar on Desktop */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[80vw] max-w-xs lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 min-h-screen shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[80vw] max-w-xs lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 h-screen overflow-y-auto shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -190,7 +190,7 @@ const AdminPortal = () => {
       </aside>
 
       {/* Main Right Content Workspace */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Top Navbar Header */}
         <header className="h-16 bg-white border-b border-slate-200 text-slate-800 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 shadow-xs">
           {/* Mobile Hamburger Button */}

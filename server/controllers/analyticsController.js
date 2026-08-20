@@ -83,18 +83,58 @@ const getLeaderboard = async (req, res) => {
 };
 
 // @desc    Get stats for a single user
-// @route   GET /api/analytics/users/:userId
-// @access  Private
+// @route   GET /api/analytics/users/:userId  (authenticated user's own ID or permitted role)
+// @route   GET /api/analytics/users/me       (always the logged-in user's own stats)
+// @access  Private — owner, Admin, or team-scoped TeamLead
 const getUserStats = async (req, res) => {
   try {
-    const userId = req.params.userId || req.user._id;
+    // /users/me arrives with req.params.userId === undefined; fall back to own ID.
+    const targetId = req.params.userId || req.user._id;
+    const requesterId = req.user._id.toString();
+    const targetIdStr = targetId.toString();
+    const requesterRole = (req.user.role || '').toLowerCase().replace('_', '');
 
-    const user = await User.findById(userId).select('fullName email');
+    const isOwner = requesterId === targetIdStr;
+    const isAdmin = requesterRole === 'admin';
+    const isTeamLead = requesterRole === 'teamlead' || requesterRole === 'team_lead';
+
+    // Fast path: non-owner, non-admin, non-teamlead → reject immediately (403, not 404)
+    if (!isOwner && !isAdmin && !isTeamLead) {
+      return res.status(403).json({
+        error: {
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to view this user\'s stats.',
+        },
+      });
+    }
+
+    // Fetch target user — include team fields for the TeamLead scope check below.
+    // team_id and team_lead_id are NOT included in the response.
+    const user = await User.findById(targetId).select('fullName email team_id team_lead_id');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const progressDocs = await Progress.find({ userId }).lean();
+    // TeamLead scope check: target engineer must belong to this TeamLead's team.
+    // Reuses the exact same pattern as the certificate PDF download ownership check.
+    if (isTeamLead && !isOwner) {
+      const leadTeamId = req.user.team_id?.toString();
+      const engineerTeamId = user.team_id?.toString();
+      const engineerLeadId = user.team_lead_id?.toString();
+      const isManagedEngineer =
+        engineerLeadId === requesterId ||
+        (leadTeamId && engineerTeamId && engineerTeamId === leadTeamId);
+      if (!isManagedEngineer) {
+        return res.status(403).json({
+          error: {
+            code: 'FORBIDDEN',
+            message: 'You do not have permission to view this user\'s stats.',
+          },
+        });
+      }
+    }
+
+    const progressDocs = await Progress.find({ userId: targetId }).lean();
 
     const totalEnrolledTracks = progressDocs.length;
     const completedTracks = progressDocs.filter((entry) => entry.isCompleted).length;
@@ -109,6 +149,7 @@ const getUserStats = async (req, res) => {
       ? Number((allQuizScores.reduce((sum, score) => sum + score, 0) / allQuizScores.length).toFixed(2))
       : 0;
 
+    // Response shape is unchanged — team_id/team_lead_id are intentionally excluded.
     res.json({
       userId: user._id,
       name: user.fullName,

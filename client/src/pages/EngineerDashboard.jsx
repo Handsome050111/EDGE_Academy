@@ -66,6 +66,7 @@ const EngineerDashboard = () => {
   const [playbackRate, setPlaybackRate] = useState(1);
   const [resumeNotice, setResumeNotice] = useState('');
   const targetSeekPositionRef = useRef(0);
+  const maxPercentWatchedRef = useRef(0);
   const videoRef = useRef(null);
   const throttleRef = useRef(null);
 
@@ -124,7 +125,9 @@ const EngineerDashboard = () => {
             chapters: Array.isArray(mod.chapters) ? mod.chapters : [],
           });
           const savedPos = mod.position_sec || 0;
-          setPercentWatched(mod.percent_watched || 0);
+          const savedPct = mod.percent_watched || 0;
+          maxPercentWatchedRef.current = savedPct;
+          setPercentWatched(savedPct);
           setVideoPosition(savedPos);
           targetSeekPositionRef.current = savedPos;
         }
@@ -167,6 +170,7 @@ const EngineerDashboard = () => {
           attachments: mod.attachments || [],
           chapters: Array.isArray(mod.chapters) ? mod.chapters : [],
         });
+        maxPercentWatchedRef.current = savedPct;
         setPercentWatched(savedPct);
         setVideoPosition(savedPos);
         targetSeekPositionRef.current = savedPos;
@@ -216,17 +220,33 @@ const EngineerDashboard = () => {
   const handleTimeUpdate = useCallback(() => {
     if (!videoRef.current) return;
     const video = videoRef.current;
-    const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
-    setPercentWatched(Math.round(pct));
+    const livePct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+    const currentRounded = Math.round(livePct);
+    const monotonicPct = Math.max(maxPercentWatchedRef.current, currentRounded);
+    maxPercentWatchedRef.current = monotonicPct;
+    setPercentWatched(monotonicPct);
     setVideoPosition(video.currentTime);
 
     if (!throttleRef.current) {
       throttleRef.current = setTimeout(() => {
-        saveVideoProgress(video.currentTime, pct);
+        saveVideoProgress(video.currentTime, maxPercentWatchedRef.current);
         throttleRef.current = null;
       }, 10000);
     }
   }, [saveVideoProgress]);
+
+  const handleVideoEnded = useCallback(async () => {
+    maxPercentWatchedRef.current = 100;
+    setPercentWatched(100);
+    const duration = videoRef.current?.duration || videoPosition;
+    setVideoPosition(duration);
+    if (throttleRef.current) {
+      clearTimeout(throttleRef.current);
+      throttleRef.current = null;
+    }
+    // Await server-side save so the 95%+ completion is committed to database before user clicks Take Quiz
+    await saveVideoProgress(duration, 100);
+  }, [saveVideoProgress, videoPosition]);
 
   const quizUnlocked = percentWatched >= 95;
 
@@ -253,8 +273,10 @@ const EngineerDashboard = () => {
   const handleMarkLessonComplete = async () => {
     if (!activeModule) return;
     try {
-      await saveVideoProgress(videoPosition, 100);
+      maxPercentWatchedRef.current = 100;
       setPercentWatched(100);
+      const pos = videoRef.current?.duration || videoPosition;
+      await saveVideoProgress(pos, 100);
       alert(t('engineerDashboard.lessonCompleted'));
     } catch (err) {
       alert(t('common.error') + ': ' + err.message);
@@ -271,7 +293,13 @@ const EngineerDashboard = () => {
 
   const handleVerify = async (e) => {
     e.preventDefault();
-    if (!verifySearchId.trim()) return;
+    if (!verifySearchId.trim()) {
+      setVerifyResult({
+        valid: false,
+        message: 'Please enter a certificate ID to verify.',
+      });
+      return;
+    }
     try {
       setVerifyLoading(true);
       const res = await api.get(`/certificates/verify/${verifySearchId.trim()}`);
@@ -292,7 +320,7 @@ const EngineerDashboard = () => {
   };
 
   const handleDownloadPdf = async (cert) => {
-    const certId = cert.certificate_id || cert._id || cert.id;
+    const certId = cert._id || cert.certificate_id || cert.id;
     try {
       const res = await api.get(`/certificates/${certId}/pdf`, { responseType: 'blob' });
       const blob = new Blob([res.data], { type: 'application/pdf' });
@@ -302,11 +330,23 @@ const EngineerDashboard = () => {
       link.setAttribute('download', `${cert.certificate_id || 'certificate'}.pdf`);
       document.body.appendChild(link);
       link.click();
-      link.parentNode.removeChild(link);
+      link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Download error, trying direct window open:', err);
-      window.open(`/api/v1/certificates/${certId}/pdf`, '_blank');
+      console.error('Download error:', err);
+      let errorMessage = t('engineerDashboard.downloadError') || 'Failed to download certificate PDF. Please try again.';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          errorMessage = parsed.error?.message || parsed.message || errorMessage;
+        } catch (parseErr) {
+          // Keep fallback
+        }
+      } else if (err.response?.data?.message || err.response?.data?.error?.message) {
+        errorMessage = err.response.data.error?.message || err.response.data.message;
+      }
+      alert(errorMessage);
     }
   };
 
@@ -345,7 +385,7 @@ const EngineerDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col lg:flex-row font-sans relative">
+    <div className="h-screen overflow-hidden bg-[#F8FAFC] flex flex-col lg:flex-row font-sans relative">
       {/* Mobile Backdrop Overlay */}
       {mobileMenuOpen && (
         <div
@@ -357,7 +397,7 @@ const EngineerDashboard = () => {
 
       {/* Slide-Out Navigation Drawer on Mobile / Fixed Full-Height Sidebar on Desktop */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[78vw] max-w-xs sm:max-w-sm lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 min-h-screen shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[78vw] max-w-xs sm:max-w-sm lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 h-screen overflow-y-auto shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -550,7 +590,7 @@ const EngineerDashboard = () => {
       </aside>
 
       {/* Main Right Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Top Navbar Header */}
         <header className="h-16 bg-white border-b border-slate-200 text-slate-800 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 shadow-xs">
           {/* Left: Mobile Hamburger Button */}
@@ -648,6 +688,7 @@ const EngineerDashboard = () => {
                     }
                   }}
                   onTimeUpdate={handleTimeUpdate}
+                  onEnded={handleVideoEnded}
                 />
 
                 {/* CONDITIONAL CHAPTER MARKERS */}
@@ -751,10 +792,10 @@ const EngineerDashboard = () => {
                     <button
                       onClick={handleStartQuiz}
                       className={`flex-1 sm:flex-none text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition cursor-pointer ${
-                        quizUnlocked ? 'bg-amber-500 hover:bg-amber-600' : 'bg-slate-400 cursor-not-allowed opacity-75'
+                        quizUnlocked || isCompleted ? 'bg-amber-500 hover:bg-amber-600' : 'bg-slate-400 cursor-not-allowed opacity-75'
                       }`}
                     >
-                      {t('engineerDashboard.takeModuleQuiz')} {!quizUnlocked && `(${percentWatched}%/95%)`}
+                      {isCompleted ? (t('engineerDashboard.retakeQuizPractice') || 'Retake Quiz (Practice)') : t('engineerDashboard.takeModuleQuiz')} {!quizUnlocked && !isCompleted && `(${percentWatched}%/95%)`}
                     </button>
                   </div>
                 </div>
@@ -771,7 +812,7 @@ const EngineerDashboard = () => {
                       {activeLessonData.attachments.map((att) => (
                         <a
                           key={att._id || att.storage_path}
-                          href={att.storage_path?.startsWith('http') || att.storage_path?.startsWith('/') ? att.storage_path : `/${att.storage_path}`}
+                          href={resolveVideoUrl(att.storage_path)}
                           target="_blank"
                           rel="noreferrer"
                           className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50/50 hover:border-blue-300 transition text-xs group"
@@ -840,10 +881,18 @@ const EngineerDashboard = () => {
                         return (
                           <div
                             key={m._id}
-                            className={`flex items-center justify-between p-4 rounded-2xl border ${
+                            onClick={() => {
+                              if (isLocked) {
+                                alert(t('engineerDashboard.lockedModuleAlert'));
+                                return;
+                              }
+                              handleModuleSelect(m._id);
+                              setCurrentTab('dashboard');
+                            }}
+                            className={`flex items-center justify-between p-4 rounded-2xl border transition cursor-pointer ${
                               isLocked
-                                ? 'bg-slate-100/70 border-slate-200/80 opacity-70'
-                                : 'border-slate-200 bg-slate-50'
+                                ? 'bg-slate-100/70 border-slate-200/80 opacity-70 cursor-not-allowed'
+                                : 'border-slate-200 bg-slate-50 hover:bg-blue-50/60 hover:border-blue-300'
                             }`}
                           >
                             <div className="flex items-center gap-3">
@@ -906,7 +955,10 @@ const EngineerDashboard = () => {
                   type="text"
                   placeholder={t('engineerDashboard.verifyPlaceholder')}
                   value={verifySearchId}
-                  onChange={(e) => setVerifySearchId(e.target.value)}
+                  onChange={(e) => {
+                    setVerifySearchId(e.target.value);
+                    if (verifyResult) setVerifyResult(null);
+                  }}
                   className="flex-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#08306B]"
                 />
                 <button
@@ -968,7 +1020,7 @@ const EngineerDashboard = () => {
 
                         <h3 className="text-xl font-extrabold text-slate-900 mb-2">{cert.track_id?.title || cert.trackTitle || 'EDGE Certified Technician'}</h3>
                         <p className="text-sm text-slate-500 mb-4">
-                          {t('engineerDashboard.tierLabel', { tier: cert.tier || 'L1_CORE' })} · {t('engineerDashboard.issuedOn', { date: new Date(cert.issued_at || cert.issuedAt).toLocaleDateString() })}
+                          {t('engineerDashboard.tierLabel', { tier: cert.tier || 'EDGE' })} · {t('engineerDashboard.issuedOn', { date: new Date(cert.issued_at || cert.issuedAt).toLocaleDateString() })}
                         </p>
 
                         <div className="text-xs text-slate-400 space-y-1 border-t border-slate-100 pt-3">

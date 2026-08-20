@@ -1,29 +1,11 @@
 const mongoose = require('mongoose');
 const Question = require('../models/Question');
 const Module = require('../models/Module');
-const AuditLog = require('../models/AuditLog');
+const { logAudit } = require('../utils/audit');
 
 const CONCEPT_TAG_REGEX = /^[a-z0-9_]+$/;
 const VALID_CORRECT_OPTIONS = ['A', 'B', 'C', 'D'];
 const VALID_DIFFICULTIES = ['easy', 'medium', 'hard'];
-
-// Helper to log audit actions
-const logAudit = async ({ req, action, resourceType, resourceId, outcome = 'success', description, metadata = {} }) => {
-  try {
-    await AuditLog.create({
-      actorId: req.user?._id,
-      actorRole: req.user?.role || 'Unknown',
-      action,
-      resourceType,
-      resourceId: resourceId ? String(resourceId) : undefined,
-      outcome,
-      description,
-      metadata,
-    });
-  } catch (error) {
-    console.error('AuditLog creation error:', error.message);
-  }
-};
 
 // @desc    Create a single MCQ question
 // @route   POST /api/v1/admin/modules/:id/questions

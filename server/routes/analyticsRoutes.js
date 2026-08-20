@@ -7,7 +7,7 @@ const {
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/leaderboard', protect, getLeaderboard);
-router.get('/users/:userId', protect, getUserStats);
 router.get('/users/me', protect, getUserStats);
+router.get('/users/:userId', protect, getUserStats);
 
 module.exports = router;

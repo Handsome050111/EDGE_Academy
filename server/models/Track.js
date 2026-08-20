@@ -40,6 +40,15 @@ const trackSchema = new mongoose.Schema(
       default: 0,
       alias: 'displayOrder',
     },
+    // Certification level for this track. Authoritative source of tier — not Module.
+    // EDGE = Level 1 (deployment-ready technician, works under CORE supervision)
+    // CORE = Level 2 (technical leader, mentors EDGE engineers, validates quality)
+    tier: {
+      type: String,
+      enum: ['EDGE', 'CORE'],
+      required: [true, 'Track tier is required'],
+      default: 'EDGE',
+    },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

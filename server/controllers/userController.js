@@ -68,15 +68,22 @@ const getUserProgress = async (req, res) => {
     const quizAttempts = await QuizAttempt.find({
       $or: [{ engineer_id: engineerId }, { userId: engineerId }],
       status: 'completed',
-    });
+    }).sort({ created_at: 1, createdAt: 1 });
+
     const attemptMap = {};
     quizAttempts.forEach((qa) => {
       const mId = (qa.module_id || qa.moduleId)?.toString();
-      if (mId) {
-        if (!attemptMap[mId] || (qa.score_percent || 0) > (attemptMap[mId].score_percent || 0)) {
-          attemptMap[mId] = qa;
-        }
+      if (!mId) return;
+
+      const current = attemptMap[mId];
+      // Once a passing attempt is recorded, it is locked as authoritative (ignore later retakes)
+      if (current && current.passed) {
+        return;
       }
+
+      // If this attempt passed, lock it as the first passing attempt.
+      // If unpassed, always update to the latest chronological attempt.
+      attemptMap[mId] = qa;
     });
 
     const assignments = await Assignment.find({
@@ -126,7 +133,7 @@ const getUserProgress = async (req, res) => {
           id: mod._id,
           title: mod.title,
           slug: mod.slug,
-          tier: mod.tier,
+          // tier removed from module level — tier is now a Track property
           status,
           percent_watched: vp ? vp.percent_watched : 0,
           video_completed: vp ? vp.completed : false,
@@ -144,6 +151,7 @@ const getUserProgress = async (req, res) => {
         name: track.name || track.title,
         slug: track.slug || track.code,
         icon: track.icon,
+        tier: track.tier,          // Authoritative tier — moved from Module to Track
         total_modules: trackModules.length,
         completed_modules: completedInTrack,
         progress_percent: progressPercent,
@@ -233,6 +241,7 @@ const updateUserProfile = async (req, res) => {
     delete userResponse.password;
 
     const auditEntry = buildAuditEntry({
+      req,
       actor: req.user,
       action: 'profile_updated',
       resourceType: 'UserProfile',
@@ -241,7 +250,7 @@ const updateUserProfile = async (req, res) => {
       description: 'User updated profile details',
       metadata: { changedEmail: Boolean(email && email !== req.user.email), changedPassword: Boolean(targetNewPassword) },
     });
-    await logAuditEvent(auditEntry);
+    await logAuditEvent(auditEntry, req);
 
     res.status(200).json({
       message: 'Profile updated successfully',

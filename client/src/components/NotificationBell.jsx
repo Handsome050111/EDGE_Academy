@@ -134,7 +134,7 @@ const NotificationBell = () => {
 
       {/* Popover Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white shadow-2xl border border-slate-100 z-50 overflow-hidden">
+        <div className="fixed left-3 right-3 top-16 mt-1 sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 rounded-2xl bg-white shadow-2xl border border-slate-100 z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <h4 className="text-sm font-bold text-[#092857]">Notifications</h4>

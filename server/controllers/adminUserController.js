@@ -2,33 +2,15 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Team = require('../models/Team');
-const AuditLog = require('../models/AuditLog');
+const { logAudit } = require('../utils/audit');
 const { notifyTeamAssignment, notifyTeamLeadAssignment, notifyUserInvitation } = require('../services/notificationService');
-
-// Helper to log audit actions
-const logAudit = async ({ req, action, resourceType, resourceId, outcome = 'success', description, metadata = {} }) => {
-  try {
-    await AuditLog.create({
-      actorId: req.user?._id,
-      actorRole: req.user?.role || 'Unknown',
-      action,
-      resourceType,
-      resourceId: resourceId ? String(resourceId) : undefined,
-      outcome,
-      description,
-      metadata,
-    });
-  } catch (error) {
-    console.error('AuditLog creation error:', error.message);
-  }
-};
 
 // @desc    Direct user creation by Admin / Super Admin
 // @route   POST /api/v1/admin/users
 // @access  Private/Admin/SuperAdmin
 const createUser = async (req, res) => {
   try {
-    const { fullName, email, password, role, team_id, teamId, locale } = req.body;
+    const { fullName, email, password, role, team_id, teamId, team_lead_id, teamLeadId, locale } = req.body;
 
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: 'fullName, email, and password are required' });
@@ -50,6 +32,7 @@ const createUser = async (req, res) => {
     }
 
     const effectiveTeamId = formattedRole === 'engineer' ? (team_id || teamId || null) : null;
+    const effectiveTeamLeadId = formattedRole === 'engineer' ? (team_lead_id || teamLeadId || null) : null;
 
     let user;
     if (existingUser && existingUser.deleted_at) {
@@ -57,7 +40,7 @@ const createUser = async (req, res) => {
       existingUser.password_hash = hashedPassword;
       existingUser.role = formattedRole;
       existingUser.team_id = effectiveTeamId;
-      existingUser.team_lead_id = null;
+      existingUser.team_lead_id = effectiveTeamLeadId;
       existingUser.locale = locale || 'en';
       existingUser.status = 'active';
       existingUser.is_active = true;
@@ -74,6 +57,7 @@ const createUser = async (req, res) => {
         password_hash: hashedPassword,
         role: formattedRole,
         team_id: effectiveTeamId,
+        team_lead_id: effectiveTeamLeadId,
         locale: locale || 'en',
         status: 'active',
         is_active: true,
@@ -113,7 +97,7 @@ const createUser = async (req, res) => {
 // @access  Private/Admin/SuperAdmin
 const inviteUser = async (req, res) => {
   try {
-    const { email, fullName, role, team_id, teamId, locale } = req.body;
+    const { email, fullName, role, team_id, teamId, team_lead_id, teamLeadId, locale } = req.body;
 
     if (!email) {
       return res.status(400).json({ message: 'email is required' });
@@ -137,12 +121,13 @@ const inviteUser = async (req, res) => {
     const dummyPassword = await bcrypt.hash(crypto.randomBytes(16).toString('hex'), 12);
 
     const effectiveTeamId = formattedRole === 'engineer' ? (team_id || teamId || null) : null;
+    const effectiveTeamLeadId = formattedRole === 'engineer' ? (team_lead_id || teamLeadId || null) : null;
 
     if (user) {
       user.full_name = (fullName || user.full_name || user.fullName || cleanEmail.split('@')[0]).trim();
       user.role = formattedRole;
       user.team_id = effectiveTeamId;
-      user.team_lead_id = null;
+      user.team_lead_id = effectiveTeamLeadId;
       user.invite_token = token;
       user.invite_token_expires = expiresAt;
       user.status = 'pending';
@@ -158,6 +143,7 @@ const inviteUser = async (req, res) => {
         password_hash: dummyPassword,
         role: formattedRole,
         team_id: effectiveTeamId,
+        team_lead_id: effectiveTeamLeadId,
         locale: locale || 'en',
         status: 'pending',
         is_active: true,

@@ -107,9 +107,11 @@ const startTopicQuiz = async (req, res) => {
     // 3. 15-MINUTE RETAKE COOLDOWN GUARD (Spec Section 4.2)
     const COOLDOWN_MS = 15 * 60 * 1000; // 15 minutes
     const latestFailedAttempt = await QuizAttempt.findOne({
-      $or: [{ engineer_id: engineerId }, { userId: engineerId }],
-      $or: [{ module_id: moduleId }, { moduleId: moduleId }],
-      passed: false,
+      $and: [
+        { $or: [{ engineer_id: engineerId }, { userId: engineerId }] },
+        { $or: [{ module_id: moduleId }, { moduleId: moduleId }] },
+        { passed: false },
+      ],
     }).sort({ completed_at: -1, completedAt: -1, updatedAt: -1, createdAt: -1 });
 
     if (latestFailedAttempt) {
@@ -227,6 +229,34 @@ const submitQuizAttempt = async (req, res) => {
       return res.status(400).json({ error: { message: 'Invalid or already submitted attempt' } });
     }
 
+    // Ownership check: ensure requesting engineer owns this attempt
+    const requesterId = req.user._id.toString();
+    const ownerId = (attempt.engineer_id || attempt.userId)?.toString();
+
+    if (ownerId !== requesterId) {
+      return res.status(403).json({
+        error: {
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to submit this quiz attempt.',
+        },
+      });
+    }
+
+    // Check if this engineer has already passed this module before (First Passing Score Authority)
+    const targetEngId = attempt.engineer_id || attempt.userId;
+    const targetModId = attempt.module_id || attempt.moduleId;
+
+    const priorPassedAttempt = await QuizAttempt.findOne({
+      $and: [
+        { $or: [{ engineer_id: targetEngId }, { userId: targetEngId }] },
+        { $or: [{ module_id: targetModId }, { moduleId: targetModId }] },
+        { _id: { $ne: attempt._id } },
+        { passed: true },
+        { status: 'completed' },
+      ],
+    });
+    const isPracticeRetake = Boolean(priorPassedAttempt);
+
     let correctCount = 0;
     const responses = [];
 
@@ -250,24 +280,26 @@ const submitQuizAttempt = async (req, res) => {
         explanation: q.explanation,
       });
 
-      // Update concept scores
-      let cScore = await ConceptScore.findOne({
-        $or: [
-          { engineer_id: attempt.engineer_id, concept_tag: q.concept_tag },
-          { userId: attempt.engineer_id, concept_tag: q.concept_tag },
-        ],
-      });
-      if (!cScore) {
-        cScore = new ConceptScore({
-          engineer_id: attempt.engineer_id,
-          concept_tag: q.concept_tag,
-          total_count: 0,
-          correct_count: 0,
+      // Update concept scores ONLY for authoritative attempts (not practice retakes)
+      if (!isPracticeRetake) {
+        let cScore = await ConceptScore.findOne({
+          $or: [
+            { engineer_id: attempt.engineer_id, concept_tag: q.concept_tag },
+            { userId: attempt.engineer_id, concept_tag: q.concept_tag },
+          ],
         });
+        if (!cScore) {
+          cScore = new ConceptScore({
+            engineer_id: attempt.engineer_id,
+            concept_tag: q.concept_tag,
+            total_count: 0,
+            correct_count: 0,
+          });
+        }
+        cScore.total_count += 1;
+        if (was_correct) cScore.correct_count += 1;
+        await cScore.save();
       }
-      cScore.total_count += 1;
-      if (was_correct) cScore.correct_count += 1;
-      await cScore.save();
     }
 
     await AttemptResponse.insertMany(
@@ -287,8 +319,8 @@ const submitQuizAttempt = async (req, res) => {
       const mod = await Module.findById(attempt.module_id);
       attempt.passed = score_percent >= (mod?.pass_threshold || 80);
 
-      // Update Assignment status if passed
-      if (attempt.passed && mod) {
+      // Update Assignment status and check certificates if authoritative pass
+      if (attempt.passed && mod && !isPracticeRetake) {
         await Assignment.updateOne(
           {
             $or: [
@@ -313,7 +345,11 @@ const submitQuizAttempt = async (req, res) => {
               $or: [{ track_id: trackId }, { trackId: trackId }],
               deleted_at: null,
               status: { $ne: 'archived' },
-            }).select('_id tier');
+            }).select('_id');
+
+            // Fetch the Track to get its authoritative tier (no longer on Module)
+            const Track = require('../models/Track');
+            const track = await Track.findById(trackId).select('tier').lean();
 
             const trackModuleIds = trackModules.map((m) => m._id.toString());
 
@@ -356,7 +392,7 @@ const submitQuizAttempt = async (req, res) => {
 
               if (!existingCert) {
                 console.log(`[CERTIFICATE] Triggering auto-issuance for engineer ${engId} on track ${trackId}`);
-                await generateCertificate(engId, trackId, mod.tier || 'L1_CORE');
+                await generateCertificate(engId, trackId, track?.tier || 'EDGE');
               }
             }
           } catch (certErr) {
@@ -378,6 +414,7 @@ const submitQuizAttempt = async (req, res) => {
     res.json({
       score_percent: attempt.score_percent,
       passed: attempt.passed,
+      is_practice_retake: isPracticeRetake,
       responses, // includes correct_option and explanation for immediate feedback
     });
   } catch (error) {

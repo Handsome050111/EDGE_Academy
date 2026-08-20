@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../../../services/api';
+import Pagination from '../../../components/Pagination';
 
 const AssignmentTab = ({ showNotification }) => {
   const { t } = useTranslation();
+
+  // Sub-view Toggle ('dispatch' | 'list')
+  const [activeSubTab, setActiveSubTab] = useState('dispatch');
 
   // Core Options
   const [tracks, setTracks] = useState([]);
@@ -13,6 +17,13 @@ const AssignmentTab = ({ showNotification }) => {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+
+  // Assignment List State
+  const [assignmentsList, setAssignmentsList] = useState([]);
+  const [loadingAssignments, setLoadingAssignments] = useState(false);
+  const [assignmentSearch, setAssignmentSearch] = useState('');
+  const [assignmentStatusFilter, setAssignmentStatusFilter] = useState('all');
+  const [assignmentsPage, setAssignmentsPage] = useState(1);
 
   // Assignment Form State
   const [assignmentScope, setAssignmentScope] = useState('module'); // 'module' | 'track'
@@ -24,7 +35,7 @@ const AssignmentTab = ({ showNotification }) => {
   const [selectedTeamLeadId, setSelectedTeamLeadId] = useState('');
   const [deadlineAt, setDeadlineAt] = useState('');
 
-  // Engineer search
+  // Engineer search in form
   const [engineerSearch, setEngineerSearch] = useState('');
 
   // Result summary
@@ -32,7 +43,21 @@ const AssignmentTab = ({ showNotification }) => {
 
   useEffect(() => {
     loadPrerequisites();
+    fetchAssignments();
   }, []);
+
+  const fetchAssignments = async () => {
+    try {
+      setLoadingAssignments(true);
+      const res = await api.get('/admin/assignments?limit=200');
+      const list = res.data?.assignments || (Array.isArray(res.data) ? res.data : []);
+      setAssignmentsList(list);
+    } catch (err) {
+      console.error('Failed to load assignments list:', err);
+    } finally {
+      setLoadingAssignments(false);
+    }
+  };
 
   const loadPrerequisites = async () => {
     setLoading(true);
@@ -218,22 +243,267 @@ const AssignmentTab = ({ showNotification }) => {
     }
   };
 
+  // Filtered Assignments List
+  const filteredAssignmentsList = useMemo(() => {
+    return assignmentsList.filter((item) => {
+      const eng = item.engineer_id || item.userId || {};
+      const mod = item.module_id || item.moduleId || {};
+      const track = mod.track_id || mod.trackId || {};
+      const assigner = item.assigned_by || item.assignedBy || {};
+
+      const engName = (eng.fullName || eng.full_name || eng.name || '').toLowerCase();
+      const engEmail = (eng.email || '').toLowerCase();
+      const modTitle = (mod.title || '').toLowerCase();
+      const trackTitle = (track.title || track.name || '').toLowerCase();
+      const assignerName = (assigner.fullName || assigner.full_name || assigner.name || '').toLowerCase();
+      const q = assignmentSearch.toLowerCase().trim();
+
+      const matchesSearch =
+        !q ||
+        engName.includes(q) ||
+        engEmail.includes(q) ||
+        modTitle.includes(q) ||
+        trackTitle.includes(q) ||
+        assignerName.includes(q);
+
+      const statusVal = item.computed_status || item.status || 'pending';
+      const matchesStatus =
+        assignmentStatusFilter === 'all'
+          ? true
+          : assignmentStatusFilter === 'overdue'
+          ? Boolean(item.is_overdue || statusVal === 'overdue')
+          : statusVal === assignmentStatusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [assignmentsList, assignmentSearch, assignmentStatusFilter]);
+
+  const paginatedAssignmentsList = useMemo(() => {
+    return filteredAssignmentsList.slice((assignmentsPage - 1) * 10, assignmentsPage * 10);
+  }, [filteredAssignmentsList, assignmentsPage]);
+
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h2 className="text-xl font-bold text-slate-900">Assignment Engine</h2>
-        <p className="text-xs text-slate-500 mt-0.5">
-          Assign modules or full tracks to individual engineers or entire teams with completion deadlines
-        </p>
+    <div className="space-y-6">
+      {/* Header & Sub-Tab Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">Assignment Engine</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Assign modules or full tracks to individual engineers or entire teams with completion deadlines
+          </p>
+        </div>
+
+        {/* Sub-view Toggle */}
+        <div className="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
+          <button
+            type="button"
+            onClick={() => setActiveSubTab('dispatch')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              activeSubTab === 'dispatch'
+                ? 'bg-white text-[#08306B] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Dispatch Assignments</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveSubTab('list');
+              fetchAssignments();
+            }}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              activeSubTab === 'list'
+                ? 'bg-white text-[#08306B] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            <span>View All Assignments ({assignmentsList.length})</span>
+          </button>
+        </div>
       </div>
 
-      {loading ? (
-        <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
-          <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#08306B] border-t-transparent mx-auto" />
-          <p className="text-xs text-slate-500 mt-2 font-medium">Loading teams and curriculum...</p>
+      {activeSubTab === 'list' && (
+        <div className="space-y-4">
+          {/* Search and Filters Bar */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-between">
+            <div className="relative flex-1">
+              <svg className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={assignmentSearch}
+                onChange={(e) => {
+                  setAssignmentSearch(e.target.value);
+                  setAssignmentsPage(1);
+                }}
+                placeholder="Search by engineer name, email, module, or track..."
+                className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition font-medium"
+              />
+            </div>
+
+            <div className="flex items-center gap-2.5 shrink-0">
+              <select
+                value={assignmentStatusFilter}
+                onChange={(e) => {
+                  setAssignmentStatusFilter(e.target.value);
+                  setAssignmentsPage(1);
+                }}
+                className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-700 font-medium outline-none focus:border-[#08306B] cursor-pointer"
+              >
+                <option value="all">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Assignments Table */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+            {loadingAssignments ? (
+              <div className="p-12 text-center text-slate-400">
+                <div className="w-8 h-8 border-3 border-[#08306B] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-xs font-semibold">Loading assignments...</p>
+              </div>
+            ) : filteredAssignmentsList.length === 0 ? (
+              <div className="p-12 text-center text-slate-500 space-y-2">
+                <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <p className="text-sm font-semibold text-slate-800">No assignments found</p>
+                <p className="text-xs text-slate-400">
+                  {assignmentSearch || assignmentStatusFilter !== 'all'
+                    ? 'Try adjusting your search filters.'
+                    : 'No assignments have been dispatched yet.'}
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                    <tr>
+                      <th className="px-5 py-3.5">Engineer</th>
+                      <th className="px-4 py-3.5">Assigned Module & Track</th>
+                      <th className="px-4 py-3.5">Assigned By</th>
+                      <th className="px-4 py-3.5">Assigned Date</th>
+                      <th className="px-4 py-3.5">Deadline</th>
+                      <th className="px-5 py-3.5 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                    {paginatedAssignmentsList.map((item) => {
+                      const eng = item.engineer_id || item.userId || {};
+                      const mod = item.module_id || item.moduleId || {};
+                      const track = mod.track_id || mod.trackId || {};
+                      const assigner = item.assigned_by || item.assignedBy || {};
+                      const statusVal = item.computed_status || item.status || 'pending';
+                      const isOverdue = item.is_overdue || statusVal === 'overdue';
+
+                      return (
+                        <tr key={item._id} className="hover:bg-slate-50/70 transition">
+                          <td className="px-5 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="h-8 w-8 rounded-full bg-[#08306B] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                                {(eng.fullName || eng.full_name || eng.name || eng.email || 'E')[0]?.toUpperCase()}
+                              </div>
+                              <div className="min-w-0">
+                                <p className="font-semibold text-slate-900 truncate">
+                                  {eng.fullName || eng.full_name || eng.name || 'Unknown Engineer'}
+                                </p>
+                                <p className="text-[11px] text-slate-400 truncate">{eng.email || 'No email'}</p>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-4 py-3.5">
+                            <div>
+                              <p className="font-semibold text-slate-900">{mod.title || 'Training Module'}</p>
+                              <p className="text-[11px] text-slate-400">
+                                {track.title || track.name || 'Curriculum Track'} {track.tier ? `· ${track.tier}` : ''}
+                              </p>
+                            </div>
+                          </td>
+
+                          <td className="px-4 py-3.5">
+                            <p className="font-medium text-slate-800">{assigner.fullName || assigner.full_name || 'Administrator'}</p>
+                            <p className="text-[11px] text-slate-400 capitalize">{assigner.role || 'Admin'}</p>
+                          </td>
+
+                          <td className="px-4 py-3.5 text-slate-500">
+                            {new Date(item.assigned_at || item.createdAt || Date.now()).toLocaleDateString()}
+                          </td>
+
+                          <td className="px-4 py-3.5">
+                            {item.deadline_at ? (
+                              <span className={`font-medium ${isOverdue ? 'text-rose-600 font-bold' : 'text-slate-700'}`}>
+                                {new Date(item.deadline_at).toLocaleDateString()}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 italic">No deadline</span>
+                            )}
+                          </td>
+
+                          <td className="px-5 py-3.5 text-right">
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                isOverdue
+                                  ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                  : statusVal === 'completed'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : statusVal === 'in_progress'
+                                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                  : 'bg-amber-50 text-amber-800 border border-amber-200'
+                              }`}
+                            >
+                              {isOverdue && (
+                                <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
+                              )}
+                              {isOverdue ? 'Overdue' : statusVal.replace('_', ' ')}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Pagination Footer */}
+            {!loadingAssignments && filteredAssignmentsList.length > 0 && (
+              <div className="p-3.5 sm:p-4 border-t border-slate-100">
+                <Pagination
+                  currentPage={assignmentsPage}
+                  totalItems={filteredAssignmentsList.length}
+                  pageSize={10}
+                  onPageChange={setAssignmentsPage}
+                  itemLabel="assignments"
+                />
+              </div>
+            )}
+          </div>
         </div>
-      ) : (
+      )}
+
+      {activeSubTab === 'dispatch' && (
+        <>
+          {loading ? (
+            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
+              <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#08306B] border-t-transparent mx-auto" />
+              <p className="text-xs text-slate-500 mt-2 font-medium">Loading teams and curriculum...</p>
+            </div>
+          ) : (
         <form onSubmit={handleSubmitAssignment} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left 2 Cols: Scope & Target Selector */}
           <div className="lg:col-span-2 space-y-6">
@@ -299,7 +569,7 @@ const AssignmentTab = ({ showNotification }) => {
                   >
                     {modules.map((m) => (
                       <option key={m._id} value={m._id}>
-                        {m.title} ({m.tier || 'L1_CORE'})
+                        {m.title}
                       </option>
                     ))}
                   </select>
@@ -587,8 +857,10 @@ const AssignmentTab = ({ showNotification }) => {
           </div>
         </form>
       )}
-    </div>
-  );
+    </>
+  )}
+</div>
+);
 };
 
 export default AssignmentTab;

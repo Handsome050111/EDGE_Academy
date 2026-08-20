@@ -5,26 +5,8 @@ const Track = require('../models/Track');
 const Progress = require('../models/Progress');
 const User = require('../models/User');
 const Team = require('../models/Team');
-const AuditLog = require('../models/AuditLog');
+const { logAudit } = require('../utils/audit');
 const { notifyAssignment } = require('../services/notificationService');
-
-// Helper to log audit actions
-const logAudit = async ({ req, action, resourceType, resourceId, outcome = 'success', description, metadata = {} }) => {
-  try {
-    await AuditLog.create({
-      actorId: req.user?._id,
-      actorRole: req.user?.role || 'Unknown',
-      action,
-      resourceType,
-      resourceId: resourceId ? String(resourceId) : undefined,
-      outcome,
-      description,
-      metadata,
-    });
-  } catch (error) {
-    console.error('AuditLog creation error:', error.message);
-  }
-};
 
 // @desc    Assign module(s) or entire track to engineers or team with deadline
 // @route   POST /api/v1/admin/assignments
@@ -236,6 +218,112 @@ const createAssignments = async (req, res) => {
   }
 };
 
+// @desc    Get assignments listing with squad scoping for TeamLead and full access for Admin
+// @route   GET /api/v1/admin/assignments
+// @access  Private (Admin, TeamLead)
+const getAssignments = async (req, res) => {
+  try {
+    const requesterRole = (req.user?.role || '').toLowerCase().replace('_', '');
+    const isTeamLead = requesterRole === 'teamlead' || requesterRole === 'team_lead';
+    let filter = {};
+
+    if (isTeamLead) {
+      const orClauses = [{ team_lead_id: req.user._id }];
+      if (req.user.team_id) {
+        orClauses.push({ team_id: req.user.team_id }, { teamId: req.user.team_id });
+      }
+      const teamEngineers = await User.find({
+        $or: orClauses,
+        role: { $in: ['engineer', 'Engineer'] },
+        is_active: { $ne: false },
+        deleted_at: null,
+      }).select('_id');
+      const engineerIds = teamEngineers.map((e) => e._id);
+
+      if (engineerIds.length === 0) {
+        return res.json({
+          assignments: [],
+          total: 0,
+          page: 1,
+          pages: 0,
+          limit: 20,
+        });
+      }
+
+      filter = { engineer_id: { $in: engineerIds } };
+    }
+
+    const now = new Date();
+
+    // Status filter
+    if (req.query.status) {
+      const statusParam = req.query.status.toLowerCase();
+      if (statusParam === 'overdue') {
+        filter.status = { $in: ['pending', 'in_progress'] };
+        filter.deadline_at = { $ne: null, $lt: now };
+      } else if (statusParam === 'pending') {
+        filter.status = 'pending';
+      } else if (statusParam === 'in_progress') {
+        filter.status = 'in_progress';
+      } else if (statusParam === 'completed') {
+        filter.status = 'completed';
+      }
+    }
+
+    // Engineer filter
+    if (req.query.engineer_id || req.query.engineerId) {
+      filter.engineer_id = req.query.engineer_id || req.query.engineerId;
+    }
+
+    // Module filter
+    if (req.query.module_id || req.query.moduleId) {
+      filter.module_id = req.query.module_id || req.query.moduleId;
+    }
+
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit, 10) || 20));
+    const skip = (page - 1) * limit;
+
+    const [total, rawAssignments] = await Promise.all([
+      Assignment.countDocuments(filter),
+      Assignment.find(filter)
+        .populate('engineer_id', 'full_name fullName email role status is_active team_id team_lead_id')
+        .populate({
+          path: 'module_id',
+          select: 'title slug pass_threshold track_id display_order',
+          populate: { path: 'track_id', select: 'title name slug tier' },
+        })
+        .populate('assigned_by', 'full_name fullName email role')
+        .sort({ assigned_at: -1, created_at: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+    ]);
+
+    // Compute dynamic effective status on read
+    const assignments = rawAssignments.map((a) => {
+      const isOverdue = a.status !== 'completed' && a.deadline_at && new Date(a.deadline_at) < now;
+      return {
+        ...a,
+        computed_status: isOverdue ? 'overdue' : a.status,
+        is_overdue: Boolean(isOverdue),
+      };
+    });
+
+    return res.json({
+      assignments,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+      limit,
+    });
+  } catch (error) {
+    console.error('Error in getAssignments:', error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createAssignments,
+  getAssignments,
 };

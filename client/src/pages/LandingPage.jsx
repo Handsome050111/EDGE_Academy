@@ -225,7 +225,7 @@ const LandingPage = () => {
   const certificationTiers = useMemo(() => {
     if (tracks.length > 0) {
       return tracks.map((track, idx) => {
-        const isCore = (track.slug || track.code || track.name || '').toUpperCase().includes('CORE') || idx === 1;
+        const isCore = track.tier === 'CORE' || (track.slug || track.code || track.name || '').toUpperCase().includes('CORE') || idx === 1;
         const defaultTier = defaultCertificationTiers[isCore ? 1 : 0];
 
         return {

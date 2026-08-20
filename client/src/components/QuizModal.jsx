@@ -89,16 +89,36 @@ const QuizModal = ({ moduleId, onClose, onComplete }) => {
         </div>
 
         {error ? (
-          <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-            {error}
+          <div className="space-y-4">
+            <div className="rounded-xl bg-red-50 p-4 border border-red-200 text-sm text-red-700 flex items-start gap-3">
+              <svg className="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div>
+                <p className="font-bold">{t('common.error')}</p>
+                <p className="mt-1">{error}</p>
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-xl bg-[#08306B] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#062452] transition cursor-pointer"
+              >
+                {t('common.close')}
+              </button>
+            </div>
           </div>
-        ) : null}
-
-        {result ? (
+        ) : result ? (
           <div className="space-y-4">
             <div className={`rounded-xl p-4 ${result.passed ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
               <h3 className="text-lg font-bold">{result.passed ? t('quizModal.passed') : t('quizModal.failed')}</h3>
               <p className="text-sm mt-1">{t('quizModal.score', { score: result.score_percent, threshold: result.passing_score_percent || 80 })}</p>
+              {result.is_practice_retake && (
+                <p className="text-xs mt-1.5 font-semibold text-blue-800 bg-blue-100/70 px-2.5 py-1 rounded-lg inline-block">
+                  Practice Attempt — Your official completion score from your first passing attempt remains recorded.
+                </p>
+              )}
               {!result.passed && (
                 <p className="text-xs mt-1 text-red-600">{t('quizModal.retakeNotice')}</p>
               )}
@@ -166,7 +186,7 @@ const QuizModal = ({ moduleId, onClose, onComplete }) => {
               </button>
               <button
                 type="submit"
-                disabled={submitting || Object.keys(answers).length < questions.length}
+                disabled={submitting || !attemptId || questions.length === 0 || Object.keys(answers).length < questions.length}
                 className="rounded-lg bg-[#08306B] px-4 py-2 text-sm font-semibold text-white hover:bg-[#062452] disabled:opacity-50 cursor-pointer"
               >
                 {submitting ? t('quizModal.submitting') : t('quizModal.submitQuiz')}

@@ -221,10 +221,21 @@ const LandingPage = () => {
     navigate(`/verify/${verifyInput.trim()}`);
   };
 
-  // Dynamically formatted certification tracks matching official Technonex standards
+  // Dynamically formatted certification tracks matching official Technonex standards (limited to Top 2 Tier Tracks)
   const certificationTiers = useMemo(() => {
     if (tracks.length > 0) {
-      return tracks.map((track, idx) => {
+      // Find top 2 tier tracks (EDGE as Tier 1 and CORE as Tier 2, or top 2 tracks from database)
+      const edgeTrack = tracks.find((t) => (t.tier === 'EDGE' || (t.slug || t.code || t.name || '').toUpperCase().includes('EDGE')));
+      const coreTrack = tracks.find((t) => (t.tier === 'CORE' || (t.slug || t.code || t.name || '').toUpperCase().includes('CORE')));
+
+      let topTracks = [];
+      if (edgeTrack && coreTrack && edgeTrack._id !== coreTrack._id) {
+        topTracks = [edgeTrack, coreTrack];
+      } else {
+        topTracks = tracks.slice(0, 2);
+      }
+
+      return topTracks.slice(0, 2).map((track, idx) => {
         const isCore = track.tier === 'CORE' || (track.slug || track.code || track.name || '').toUpperCase().includes('CORE') || idx === 1;
         const defaultTier = defaultCertificationTiers[isCore ? 1 : 0];
 
@@ -242,7 +253,7 @@ const LandingPage = () => {
         };
       });
     }
-    return defaultCertificationTiers;
+    return defaultCertificationTiers.slice(0, 2);
   }, [tracks]);
 
   return (
@@ -441,9 +452,9 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* 2 Certification Cards: EDGE & CORE */}
+          {/* 2 Certification Cards: Top 2 Tier Tracks (First Row Only) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {certificationTiers.map((cert) => (
+            {certificationTiers.slice(0, 2).map((cert) => (
               <div
                 key={cert.id}
                 className="bg-white rounded-3xl border border-slate-200 p-8 shadow-md hover:shadow-xl transition flex flex-col justify-between"

@@ -2,8 +2,11 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Team = require('../models/Team');
+const Progress = require('../models/Progress');
+const Track = require('../models/Track');
 const { logAudit } = require('../utils/audit');
 const { notifyTeamAssignment, notifyTeamLeadAssignment, notifyUserInvitation } = require('../services/notificationService');
+const { autoEnrollEngineer } = require('../utils/autoEnroll');
 
 // @desc    Direct user creation by Admin / Super Admin
 // @route   POST /api/v1/admin/users
@@ -74,6 +77,17 @@ const createUser = async (req, res) => {
       description: `Created user ${user.email} with role '${user.role}'`,
       metadata: { role: user.role, email: user.email },
     });
+
+    // Auto-enroll engineer into EDGE + CORE tracks on creation (best-effort)
+    if (formattedRole === 'engineer') {
+      const enrollResult = await autoEnrollEngineer(user._id).catch((err) => {
+        console.warn(`[createUser] Auto-enrollment warning for ${user.email}: ${err.message}`);
+        return { enrolled: [], skipped: [], error: err.message };
+      });
+      if (enrollResult.error && enrollResult.enrolled.length === 0) {
+        console.warn(`[createUser] Auto-enrollment incomplete for ${user.email} — run backfill. Error: ${enrollResult.error}`);
+      }
+    }
 
     return res.status(201).json({
       message: 'User created successfully',
@@ -632,6 +646,76 @@ const resendInvite = async (req, res) => {
   }
 };
 
+// @desc    Backfill Progress enrollment records for engineers missing them
+// @route   POST /api/v1/admin/backfill-enrollments
+// @access  Private/Admin/SuperAdmin
+const backfillEnrollments = async (req, res) => {
+  try {
+    // Find all active engineers
+    const engineers = await User.find({
+      role: { $in: ['engineer', 'Engineer'] },
+      $or: [{ deleted_at: null }, { deleted_at: { $exists: false } }],
+    }).select('_id email full_name').lean();
+
+    const tracks = await Track.find({
+      tier: { $in: ['EDGE', 'CORE'] },
+      is_published: true,
+      $or: [{ deleted_at: null }, { deleted_at: { $exists: false } }],
+    }).select('_id tier').sort({ display_order: 1 }).lean();
+
+    if (tracks.length === 0) {
+      return res.status(400).json({ message: 'No published EDGE/CORE tracks found to enroll into. Seed tracks first.' });
+    }
+
+    let totalCreated = 0;
+    let totalSkipped = 0;
+    const errors = [];
+
+    for (const engineer of engineers) {
+      for (const track of tracks) {
+        try {
+          const existing = await Progress.findOne({ userId: engineer._id, trackId: track._id }).lean();
+          if (existing) {
+            totalSkipped++;
+            continue;
+          }
+          await Progress.create({
+            userId: engineer._id,
+            trackId: track._id,
+            completedModules: [],
+            isCompleted: false,
+          });
+          totalCreated++;
+        } catch (err) {
+          if (err.code === 11000) {
+            totalSkipped++;
+          } else {
+            errors.push({ engineer: engineer.email, track: track._id, error: err.message });
+          }
+        }
+      }
+    }
+
+    await logAudit({
+      req,
+      action: 'BACKFILL_ENROLLMENTS',
+      resourceType: 'Progress',
+      outcome: errors.length === 0 ? 'success' : 'partial',
+      description: `Backfilled enrollments: ${totalCreated} created, ${totalSkipped} already existed, ${errors.length} errors`,
+      metadata: { totalCreated, totalSkipped, errorCount: errors.length },
+    });
+
+    return res.json({
+      message: `Backfill complete: ${totalCreated} enrollments created, ${totalSkipped} already existed.`,
+      totalCreated,
+      totalSkipped,
+      errors: errors.length > 0 ? errors : undefined,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createUser,
   inviteUser,
@@ -645,4 +729,5 @@ module.exports = {
   assignEngineerTeamLead,
   assignUserTeam: assignEngineerTeamLead,
   resendInvite,
+  backfillEnrollments,
 };

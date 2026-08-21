@@ -113,7 +113,8 @@
     "completed": "Completed",
     "inProgress": "In Progress",
     "available": "Available",
-    "none": "None"
+    "none": "None",
+    "status": "Status"
   },
 
   "engineerDashboard": {
@@ -134,7 +135,9 @@
     "markAsCompleted": "Mark as Completed",
     "lessonCompleted": "Lesson Completed",
     "takeModuleQuiz": "Take Module Quiz",
+    "retakeQuizPractice": "Retake Quiz (Practice)",
     "quizLockedAlert": "Topic Quiz is locked! You must watch at least 95% of the video before taking the Topic Quiz. Current progress: {{percent}}%",
+    "downloadError": "Failed to download certificate PDF. Please try again.",
     "supportingAttachments": "Supporting Learning Attachments",
     "noAttachments": "No attachments for this lesson.",
     "attachment": "Attachment",

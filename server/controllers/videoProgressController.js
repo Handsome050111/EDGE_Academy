@@ -27,7 +27,7 @@ const saveProgress = async (req, res) => {
           last_watched_at: new Date(),
         },
       },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
 
     // Spec Section 7.2: Auto-transition pending Assignment to in_progress on first video progress

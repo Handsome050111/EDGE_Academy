@@ -89,7 +89,7 @@ const getLearnerDashboard = async (req, res) => {
             _id: track._id,
             title: track.title || track.name,
             code: track.code || track.slug,
-            tier: track.tier || 'Core',
+            tier: track.tier || 'EDGE',
             description: track.description,
             totalModules,
             completedCount,
@@ -105,6 +105,11 @@ const getLearnerDashboard = async (req, res) => {
                 : assignments.some((a) => (a.module_id || a.moduleId)?.toString() === m._id.toString())
                 ? 'in_progress'
                 : 'available',
+              // hasAssignment: true when an active Assignment exists for this engineer+module.
+              // Used by the frontend to show unlock-badge and by the backend override check.
+              hasAssignment: assignments.some(
+                (a) => (a.module_id || a.moduleId)?.toString() === m._id.toString()
+              ),
             })),
           };
         })

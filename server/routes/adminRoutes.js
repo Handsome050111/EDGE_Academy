@@ -53,6 +53,7 @@ const {
   assignEngineerTeamLead,
   assignUserTeam,
   resendInvite,
+  backfillEnrollments,
 } = require('../controllers/adminUserController');
 
 const { protect, authorize } = require('../middleware/authMiddleware');
@@ -208,6 +209,7 @@ router.delete('/users/:id', authorize('Admin'), softDeleteUser);
 router.put('/users/:id/team', authorize('Admin'), assignUserTeam);
 router.put('/users/:id/team-lead', authorize('Admin'), assignEngineerTeamLead);
 router.post('/users/:id/resend-invite', authorize('Admin'), resendInvite);
+router.post('/backfill-enrollments', authorize('Admin'), backfillEnrollments);
 
 // Reporting & Analytics Endpoints (Admin, TeamLead)
 router.get('/reports/team/:id', getTeamReport);

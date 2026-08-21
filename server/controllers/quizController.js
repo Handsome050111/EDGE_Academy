@@ -1,5 +1,6 @@
 const Module = require('../models/Module');
 const ModulePrerequisite = require('../models/ModulePrerequisite');
+const Track = require('../models/Track');
 const Question = require('../models/Question');
 const QuizAttempt = require('../models/QuizAttempt');
 const AttemptResponse = require('../models/AttemptResponse');
@@ -8,6 +9,7 @@ const Assignment = require('../models/Assignment');
 const Certificate = require('../models/Certificate');
 const VideoProgress = require('../models/VideoProgress');
 const { generateCertificate } = require('./certificateController');
+const { hasAssignmentOverride } = require('../utils/assignmentOverride');
 const {
   shuffle,
   formatObfuscatedQuestions,
@@ -25,64 +27,111 @@ const startTopicQuiz = async (req, res) => {
       return res.status(404).json({ error: { message: 'Module not found' } });
     }
 
-    // 1. PREREQUISITE VALIDATION & ADMIN ASSIGNMENT OVERRIDE (Spec Section 4.6 & 7.4)
+    // 1. SINGLE SHARED ASSIGNMENT OVERRIDE CHECK
+    // Computed once here; reused by ALL lock gates below (prerequisite + track-level).
+    // An active (pending/in_progress) Assignment for this engineer+module bypasses all
+    // sequential and track-level locks. A COMPLETED assignment does NOT override (no bypass needed).
+    const isOverridden = await hasAssignmentOverride(engineerId, mod._id);
+
+    // 2. MODULE-LEVEL PREREQUISITE VALIDATION (Spec Section 4.6)
+    // Skipped entirely if an assignment override applies.
     const prerequisites = await ModulePrerequisite.find({
       $or: [{ module_id: mod._id }, { moduleId: mod._id }],
     }).populate('prerequisite_module_id');
 
-    if (prerequisites.length > 0) {
-      // Check if an explicit Assignment exists for this engineer on this module (Admin override)
-      const assignmentOverride = await Assignment.findOne({
-        $or: [
-          { engineer_id: engineerId, module_id: mod._id },
-          { userId: engineerId, moduleId: mod._id },
-        ],
-      });
+    if (prerequisites.length > 0 && !isOverridden) {
+      const missingPrerequisites = [];
 
-      if (!assignmentOverride) {
-        const missingPrerequisites = [];
+      for (const prereq of prerequisites) {
+        const prereqId = prereq.prerequisite_module_id?._id || prereq.prerequisite_module_id;
+        if (!prereqId) continue;
 
-        for (const prereq of prerequisites) {
-          const prereqId = prereq.prerequisite_module_id?._id || prereq.prerequisite_module_id;
-          if (!prereqId) continue;
+        // Check if prerequisite is completed via completed assignment or passed quiz attempt
+        const completedAssign = await Assignment.findOne({
+          $or: [
+            { engineer_id: engineerId, module_id: prereqId, status: 'completed' },
+            { userId: engineerId, moduleId: prereqId, status: 'completed' },
+          ],
+        });
 
-          // Check if prerequisite is completed via completed assignment or passed quiz attempt
-          const completedAssign = await Assignment.findOne({
-            $or: [
-              { engineer_id: engineerId, module_id: prereqId, status: 'completed' },
-              { userId: engineerId, moduleId: prereqId, status: 'completed' },
+        const passedAttempt = completedAssign
+          ? true
+          : await QuizAttempt.findOne({
+              $or: [
+                { engineer_id: engineerId, module_id: prereqId, passed: true, status: 'completed' },
+                { userId: engineerId, moduleId: prereqId, passed: true, status: 'completed' },
+              ],
+            });
+
+        if (!completedAssign && !passedAttempt) {
+          const prereqDoc = prereq.prerequisite_module_id?.title
+            ? prereq.prerequisite_module_id
+            : await Module.findById(prereqId);
+
+          missingPrerequisites.push({
+            id: prereqId,
+            title: prereqDoc ? prereqDoc.title : 'Prerequisite Module',
+          });
+        }
+      }
+
+      if (missingPrerequisites.length > 0) {
+        return res.status(403).json({
+          error: {
+            code: 'PREREQUISITES_NOT_MET',
+            message: 'You must complete all prerequisite modules before taking this quiz.',
+            missing_prerequisites: missingPrerequisites,
+          },
+        });
+      }
+    }
+
+    // 3. TRACK-LEVEL LOCK: CORE requires EDGE to be fully completed (Business Rule)
+    // Skipped if an assignment override applies for this specific module.
+    const modTrack = await Track.findById(mod.track_id || mod.trackId).select('tier _id').lean();
+    if (modTrack && modTrack.tier === 'CORE' && !isOverridden) {
+      // Find the EDGE track
+      const edgeTrack = await Track.findOne({ tier: 'EDGE', is_published: true }).select('_id modules').lean();
+      if (edgeTrack) {
+        // Check each module in the EDGE track — all must be completed
+        const edgeModules = await Module.find({
+          $or: [{ track_id: edgeTrack._id }, { trackId: edgeTrack._id }],
+          deleted_at: null,
+        }).select('_id').lean();
+
+        if (edgeModules.length > 0) {
+          const edgeModuleIds = edgeModules.map((m) => m._id);
+
+          // Count how many EDGE modules this engineer has passed
+          const passedEdgeCount = await QuizAttempt.countDocuments({
+            $and: [
+              { $or: [{ engineer_id: engineerId }, { userId: engineerId }] },
+              { $or: [{ module_id: { $in: edgeModuleIds } }, { moduleId: { $in: edgeModuleIds } }] },
+              { passed: true },
             ],
           });
 
-          const passedAttempt = completedAssign
-            ? true
-            : await QuizAttempt.findOne({
-                $or: [
-                  { engineer_id: engineerId, module_id: prereqId, passed: true, status: 'completed' },
-                  { userId: engineerId, moduleId: prereqId, passed: true, status: 'completed' },
-                ],
-              });
+          // Also count via completed Assignments as an alternative evidence path
+          const completedEdgeAssignCount = await Assignment.countDocuments({
+            $and: [
+              { $or: [{ engineer_id: engineerId }, { userId: engineerId }] },
+              { $or: [{ module_id: { $in: edgeModuleIds } }, { moduleId: { $in: edgeModuleIds } }] },
+              { status: 'completed' },
+            ],
+          });
 
-          if (!completedAssign && !passedAttempt) {
-            const prereqDoc = prereq.prerequisite_module_id?.title
-              ? prereq.prerequisite_module_id
-              : await Module.findById(prereqId);
+          const edgeModulesCompleted = Math.max(passedEdgeCount, completedEdgeAssignCount);
 
-            missingPrerequisites.push({
-              id: prereqId,
-              title: prereqDoc ? prereqDoc.title : 'Prerequisite Module',
+          if (edgeModulesCompleted < edgeModules.length) {
+            return res.status(403).json({
+              error: {
+                code: 'EDGE_TRACK_REQUIRED',
+                message: 'You must complete the EDGE track before starting CORE modules.',
+                edge_modules_total: edgeModules.length,
+                edge_modules_completed: edgeModulesCompleted,
+              },
             });
           }
-        }
-
-        if (missingPrerequisites.length > 0) {
-          return res.status(403).json({
-            error: {
-              code: 'PREREQUISITES_NOT_MET',
-              message: 'You must complete all prerequisite modules before taking this quiz.',
-              missing_prerequisites: missingPrerequisites,
-            },
-          });
         }
       }
     }

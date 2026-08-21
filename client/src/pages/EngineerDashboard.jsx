@@ -70,23 +70,52 @@ const EngineerDashboard = () => {
   const videoRef = useRef(null);
   const throttleRef = useRef(null);
 
-  // Sequential Module Locking calculation
+  // Sequential Module Locking + Track-Level CORE-requires-EDGE locking
   const enrichedTracks = useMemo(() => {
     if (!dashboardData?.enrolledTracks) return [];
-    return dashboardData.enrolledTracks.map((track) => {
+
+    const tracks = dashboardData.enrolledTracks;
+
+    // Determine whether EDGE track is fully complete
+    const edgeTrack = tracks.find((t) => t.tier === 'EDGE');
+    const isEdgeComplete = edgeTrack
+      ? (edgeTrack.modules || []).length > 0 &&
+        (edgeTrack.modules || []).every((m) => m.status === 'completed')
+      : false;
+
+    return tracks.map((track) => {
+      const isCoreTier = track.tier === 'CORE';
+      // CORE track is track-locked if EDGE is not fully complete
+      const isTrackLocked = isCoreTier && !isEdgeComplete;
+
       let previousModulePassed = true;
       const modules = (track.modules || []).map((m, idx) => {
         const isCompleted = m.status === 'completed';
-        const isLocked = idx > 0 && !previousModulePassed;
+        // Assignment override: a module with an active assignment is always accessible
+        const isAssigned = Boolean(m.hasAssignment);
+        // Module-level sequential lock (within-track)
+        const isSequentiallyLocked = idx > 0 && !previousModulePassed;
         previousModulePassed = isCompleted;
+
+        // Final lock determination:
+        //  - Assignment override unlocks both track-level AND sequential locks
+        //  - Otherwise: locked if the track is track-locked OR if sequentially locked
+        const isLocked = !isAssigned && (isTrackLocked || isSequentiallyLocked);
+
         return {
           ...m,
           isLocked,
+          isAssigned,
+          isTrackLocked: isTrackLocked && !isAssigned,
+          lockReason: isTrackLocked && !isAssigned ? 'EDGE_REQUIRED' : null,
           effectiveStatus: isLocked ? 'locked' : m.status,
         };
       });
+
       return {
         ...track,
+        isTrackLocked: isTrackLocked && !modules.some((m) => m.isAssigned),
+        lockReason: isTrackLocked ? 'EDGE_REQUIRED' : null,
         modules,
       };
     });
@@ -248,7 +277,13 @@ const EngineerDashboard = () => {
     await saveVideoProgress(duration, 100);
   }, [saveVideoProgress, videoPosition]);
 
-  const quizUnlocked = percentWatched >= 95;
+  const currentModule = useMemo(() => {
+    return allModulesList.find((m) => m._id === activeModule);
+  }, [allModulesList, activeModule]);
+
+  const hasPassedQuiz = currentModule?.status === 'completed';
+  const isVideoWatched = percentWatched >= 95;
+  const quizUnlocked = isVideoWatched;
 
   const handleLessonChange = (direction) => {
     const currentIndex = allModulesList.findIndex((m) => m._id === activeModule);
@@ -284,7 +319,7 @@ const EngineerDashboard = () => {
   };
 
   const handleStartQuiz = () => {
-    if (!quizUnlocked) {
+    if (!quizUnlocked && !hasPassedQuiz) {
       alert(t('engineerDashboard.quizLockedAlert', { percent: percentWatched }));
       return;
     }
@@ -349,8 +384,6 @@ const EngineerDashboard = () => {
       alert(errorMessage);
     }
   };
-
-  const isCompleted = percentWatched >= 95;
 
   const renderStatusBadge = (effectiveStatus) => {
     switch (effectiveStatus) {
@@ -781,21 +814,21 @@ const EngineerDashboard = () => {
                     <button
                       onClick={handleMarkLessonComplete}
                       className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition cursor-pointer ${
-                        isCompleted
+                        isVideoWatched
                           ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                           : 'bg-[#08306B] hover:bg-[#062452] text-white'
                       }`}
                     >
-                      {isCompleted ? t('engineerDashboard.lessonCompleted') : t('engineerDashboard.markAsCompleted')}
+                      {isVideoWatched ? t('engineerDashboard.lessonCompleted') : t('engineerDashboard.markAsCompleted')}
                     </button>
 
                     <button
                       onClick={handleStartQuiz}
                       className={`flex-1 sm:flex-none text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition cursor-pointer ${
-                        quizUnlocked || isCompleted ? 'bg-amber-500 hover:bg-amber-600' : 'bg-slate-400 cursor-not-allowed opacity-75'
+                        quizUnlocked || hasPassedQuiz ? 'bg-amber-500 hover:bg-amber-600' : 'bg-slate-400 cursor-not-allowed opacity-75'
                       }`}
                     >
-                      {isCompleted ? (t('engineerDashboard.retakeQuizPractice') || 'Retake Quiz (Practice)') : t('engineerDashboard.takeModuleQuiz')} {!quizUnlocked && !isCompleted && `(${percentWatched}%/95%)`}
+                      {hasPassedQuiz ? (t('engineerDashboard.retakeQuizPractice') || 'Retake Quiz (Practice)') : t('engineerDashboard.takeModuleQuiz')} {!quizUnlocked && !hasPassedQuiz && `(${percentWatched}%/95%)`}
                     </button>
                   </div>
                 </div>
@@ -852,8 +885,8 @@ const EngineerDashboard = () => {
                   {t('engineerDashboard.noAssignedTracks')}
                 </div>
               ) : (
-                enrichedTracks.map((track) => (
-                  <div key={track._id} className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+                  enrichedTracks.map((track) => (
+                  <div key={track._id} className={`rounded-3xl border bg-white p-6 sm:p-8 shadow-sm ${track.isTrackLocked ? 'border-amber-200 bg-amber-50/30' : 'border-slate-200'}`}>
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                       <div>
                         <div className="flex items-center gap-3 mb-2">
@@ -861,6 +894,12 @@ const EngineerDashboard = () => {
                           <span className="bg-[#08306B]/10 text-[#08306B] border border-[#08306B]/20 text-xs px-3 py-1 rounded-full font-bold">
                             {track.tier}
                           </span>
+                          {track.isTrackLocked && (
+                            <span className="flex items-center gap-1 bg-amber-100 text-amber-700 border border-amber-300 text-xs px-2.5 py-1 rounded-full font-semibold">
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                              Complete EDGE first
+                            </span>
+                          )}
                         </div>
                         <p className="text-slate-600 text-sm md:text-base">{track.description}</p>
                       </div>
@@ -878,12 +917,16 @@ const EngineerDashboard = () => {
                     <div className="space-y-3">
                       {track.modules.map((m) => {
                         const isLocked = m.isLocked;
+                        const isAssigned = m.isAssigned;
                         return (
                           <div
                             key={m._id}
                             onClick={() => {
                               if (isLocked) {
-                                alert(t('engineerDashboard.lockedModuleAlert'));
+                                const msg = m.lockReason === 'EDGE_REQUIRED'
+                                  ? 'Complete the EDGE track before accessing CORE modules.'
+                                  : t('engineerDashboard.lockedModuleAlert');
+                                alert(msg);
                                 return;
                               }
                               handleModuleSelect(m._id);
@@ -892,6 +935,8 @@ const EngineerDashboard = () => {
                             className={`flex items-center justify-between p-4 rounded-2xl border transition cursor-pointer ${
                               isLocked
                                 ? 'bg-slate-100/70 border-slate-200/80 opacity-70 cursor-not-allowed'
+                                : isAssigned
+                                ? 'border-indigo-300 bg-indigo-50/40 hover:bg-indigo-50/70 hover:border-indigo-400'
                                 : 'border-slate-200 bg-slate-50 hover:bg-blue-50/60 hover:border-blue-300'
                             }`}
                           >
@@ -906,6 +951,12 @@ const EngineerDashboard = () => {
                               <span className={`font-bold text-sm md:text-base ${isLocked ? 'text-slate-500' : 'text-slate-800'}`}>
                                 {m.title}
                               </span>
+                              {isAssigned && !isLocked && (
+                                <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-700 border border-indigo-300 px-2 py-0.5 rounded-full ml-1">
+                                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                  Assigned
+                                </span>
+                              )}
                             </div>
 
                             <div className="flex items-center gap-4">
@@ -919,7 +970,7 @@ const EngineerDashboard = () => {
                                   : 'bg-slate-200 text-slate-600'
                               }`}>
                                 {isLocked
-                                  ? t('engineerDashboard.statusLocked')
+                                  ? m.lockReason === 'EDGE_REQUIRED' ? 'EDGE Required' : t('engineerDashboard.statusLocked')
                                   : m.status === 'completed'
                                   ? t('engineerDashboard.statusCompleted')
                                   : m.status === 'in_progress'

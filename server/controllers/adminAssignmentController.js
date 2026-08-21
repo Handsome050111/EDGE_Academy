@@ -158,7 +158,7 @@ const createAssignments = async (req, res) => {
               isCompleted: false,
             },
           },
-          { upsert: true, new: true }
+          { upsert: true, returnDocument: 'after' }
         );
       }
 

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { validatePasswordStrength, buildAuditEntry } = require('../utils/security');
 const { logAuditEvent } = require('../utils/audit');
 const { notifyPasswordReset } = require('../services/notificationService');
+const { autoEnrollEngineer } = require('../utils/autoEnroll');
 
 // Helper function to generate JWT Token
 const generateToken = (id, rememberMe = false) => {
@@ -328,6 +329,17 @@ const acceptInvite = async (req, res) => {
     user.invite_token = null;
     user.invite_token_expires = null;
     await user.save();
+
+    // Auto-enroll into EDGE + CORE tracks now that account is active (best-effort).
+    // This is the PRIMARY onboarding path for invited engineers.
+    // Awaited inside try-catch: enrollment failure logs a warning but never breaks the response.
+    if (user.role === 'engineer' || user.role === 'Engineer') {
+      try {
+        await autoEnrollEngineer(user._id);
+      } catch (err) {
+        console.warn(`[acceptInvite] Auto-enrollment warning for ${user.email}: ${err.message} — run backfill.`);
+      }
+    }
 
     res.json({
       message: 'Invitation accepted successfully. Account activated.',

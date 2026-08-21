@@ -113,7 +113,8 @@
     "available": "Verfügbar",
     "yes": "Ja",
     "no": "Nein",
-    "none": "Keine"
+    "none": "Keine",
+    "status": "Status"
   },
 
   "engineerDashboard": {
@@ -134,7 +135,9 @@
     "markAsCompleted": "Als abgeschlossen markieren",
     "lessonCompleted": "Lektion abgeschlossen",
     "takeModuleQuiz": "Modulquiz starten",
+    "retakeQuizPractice": "Quiz wiederholen (Übung)",
     "quizLockedAlert": "Das Themenquiz ist gesperrt! Sie müssen mindestens 95% des Videos ansehen, bevor Sie das Themenquiz absolvieren können. Aktueller Fortschritt: {{percent}}%",
+    "downloadError": "Fehler beim Herunterladen des Zertifikats-PDFs. Bitte versuchen Sie es erneut.",
     "supportingAttachments": "Begleitende Lernunterlagen",
     "noAttachments": "Keine Anhänge für diese Lektion vorhanden.",
     "attachment": "Anhang",

@@ -201,7 +201,7 @@ const seedData = async () => {
     const coreL2ModulesData = [
       { title: 'C1: Infrastructure Awareness — CCNA Concepts', description: 'Deep VLANs, trunking, show interfaces, show VLAN, CDP neighbours, IP routing basics.', tier: 'L2_ADVANCED' },
       { title: 'C2: WLAN Fundamentals — Ekahau Concepts', description: 'Ekahau heatmaps, RSSI signal values, AP coverage vs capacity, passive vs active surveys.', tier: 'L2_ADVANCED' },
-      { title: 'C3: Site Survey — Infosys Form', description: 'All 14 sections of Infosys survey, Must vs Good To Have fields, Technonex dual validation model.', tier: 'L2_ADVANCED' },
+      { title: 'C3: Site Survey', description: 'All 14 sections of Infosys survey, Must vs Good To Have fields, Technonex dual validation model.', tier: 'L2_ADVANCED' },
       { title: 'C4: AP Mounting — Full SOP', description: '15-step mounting process, false ceiling/tray/wall/concrete fixing, 5-stage photo checklist.', tier: 'L2_ADVANCED' },
       { title: 'C5: Advanced Switch Reading — CLI Basics', description: 'Read-only CLI show commands, port state analysis, CDP neighbour mapping, log output sharing.', tier: 'L2_ADVANCED' },
       { title: 'C6: Fiber Cabling Advanced — OTDR & Fault Finding', description: 'OTDR traces, loss readings, fiber connector inspection, cleaning procedures, fault isolation.', tier: 'L2_ADVANCED' },

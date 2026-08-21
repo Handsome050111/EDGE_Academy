@@ -267,8 +267,8 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-between">
-        <div className="relative flex-1">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center gap-3 w-full justify-between">
+        <div className="relative flex-1 min-w-[200px] w-full sm:w-auto">
           <svg className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -281,27 +281,27 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
           />
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B]"
+            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer"
           >
-            <option value="all">{t('adminPortal.users.allRoles')}</option>
-            <option value="admin">{t('admin')}</option>
-            <option value="team_lead">{t('teamLead')}</option>
-            <option value="engineer">{t('engineer')}</option>
+            <option value="all" className="truncate">{t('adminPortal.users.allRoles')}</option>
+            <option value="admin" className="truncate">{t('admin')}</option>
+            <option value="team_lead" className="truncate">{t('teamLead')}</option>
+            <option value="engineer" className="truncate">{t('engineer')}</option>
           </select>
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B]"
+            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer"
           >
-            <option value="all">{t('adminPortal.users.allStatuses')}</option>
-            <option value="active">{t('common.active')}</option>
-            <option value="pending">{t('common.pending')}</option>
-            <option value="deactivated">{t('common.deactivated')}</option>
+            <option value="all" className="truncate">{t('adminPortal.users.allStatuses')}</option>
+            <option value="active" className="truncate">{t('common.active')}</option>
+            <option value="pending" className="truncate">{t('common.pending')}</option>
+            <option value="deactivated" className="truncate">{t('common.deactivated')}</option>
           </select>
 
           {(searchQuery || statusFilter !== 'all' || roleFilter !== 'all') && (
@@ -544,10 +544,10 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
                 <select
                   value={editFormData.locale}
                   onChange={(e) => setEditFormData((prev) => ({ ...prev, locale: e.target.value }))}
-                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white"
+                  className="w-full truncate px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium"
                 >
-                  <option value="en">English (EN)</option>
-                  <option value="de">German (DE)</option>
+                  <option value="en" className="truncate">English (EN)</option>
+                  <option value="de" className="truncate">German (DE)</option>
                 </select>
               </div>
 

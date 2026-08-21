@@ -148,13 +148,13 @@ const AssignTeamLeadModal = ({ isOpen, onClose, user, teamLeads = [], onAssigned
             <select
               value={selectedLeadId}
               onChange={(e) => setSelectedLeadId(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 p-3 text-xs bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B]"
+              className="w-full truncate rounded-xl border border-slate-300 p-3 text-xs bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B]"
             >
-              <option value="">-- Unassigned (No Team Lead) --</option>
+              <option value="" className="truncate">-- Unassigned (No Team Lead) --</option>
               {leadsList.map((lead) => {
                 const leadName = lead.fullName || lead.full_name || lead.name || lead.email;
                 return (
-                  <option key={lead._id || lead.id} value={lead._id || lead.id}>
+                  <option key={lead._id || lead.id} value={lead._id || lead.id} className="truncate">
                     {leadName} ({lead.email})
                   </option>
                 );

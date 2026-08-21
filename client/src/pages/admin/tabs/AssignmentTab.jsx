@@ -332,8 +332,8 @@ const AssignmentTab = ({ showNotification }) => {
       {activeSubTab === 'list' && (
         <div className="space-y-4">
           {/* Search and Filters Bar */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-between">
-            <div className="relative flex-1">
+          <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-xs flex flex-wrap items-center gap-3 w-full justify-between">
+            <div className="relative flex-1 min-w-[200px] w-full sm:w-auto">
               <svg className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -349,20 +349,20 @@ const AssignmentTab = ({ showNotification }) => {
               />
             </div>
 
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
               <select
                 value={assignmentStatusFilter}
                 onChange={(e) => {
                   setAssignmentStatusFilter(e.target.value);
                   setAssignmentsPage(1);
                 }}
-                className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-700 font-medium outline-none focus:border-[#08306B] cursor-pointer"
+                className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-700 font-medium outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer"
               >
-                <option value="all">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
-                <option value="overdue">Overdue</option>
+                <option value="all" className="truncate">All Statuses</option>
+                <option value="pending" className="truncate">Pending</option>
+                <option value="in_progress" className="truncate">In Progress</option>
+                <option value="completed" className="truncate">Completed</option>
+                <option value="overdue" className="truncate">Overdue</option>
               </select>
             </div>
           </div>
@@ -565,10 +565,10 @@ const AssignmentTab = ({ showNotification }) => {
                   <select
                     value={selectedModuleId}
                     onChange={(e) => setSelectedModuleId(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-medium"
+                    className="w-full truncate px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium"
                   >
                     {modules.map((m) => (
-                      <option key={m._id} value={m._id}>
+                      <option key={m._id} value={m._id} className="truncate">
                         {m.title}
                       </option>
                     ))}
@@ -580,7 +580,7 @@ const AssignmentTab = ({ showNotification }) => {
                   <select
                     value={selectedTrackId}
                     onChange={(e) => setSelectedTrackId(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-medium"
+                    className="w-full truncate px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium"
                   >
                     {tracks.map((t) => {
                       const count = modules.filter((m) => {
@@ -589,7 +589,7 @@ const AssignmentTab = ({ showNotification }) => {
                       }).length;
 
                       return (
-                        <option key={t._id} value={t._id}>
+                        <option key={t._id} value={t._id} className="truncate">
                           {t.name} ({count} Modules)
                         </option>
                       );
@@ -724,7 +724,7 @@ const AssignmentTab = ({ showNotification }) => {
                       <select
                         value={selectedTeamLeadId}
                         onChange={(e) => setSelectedTeamLeadId(e.target.value)}
-                        className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-semibold text-slate-800"
+                        className="w-full truncate px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-semibold text-slate-800"
                       >
                         {teamLeads.map((lead) => {
                           const leadName = lead.fullName || lead.full_name || lead.email;
@@ -734,7 +734,7 @@ const AssignmentTab = ({ showNotification }) => {
                           const count = getEngineersUnderLead(leadId, leadTeamIdVal).length;
 
                           return (
-                            <option key={leadId} value={leadId}>
+                            <option key={leadId} value={leadId} className="truncate">
                               Team of {leadName} ({leadTeam}) — {count} engineer{count === 1 ? '' : 's'}
                             </option>
                           );

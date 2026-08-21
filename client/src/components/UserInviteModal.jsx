@@ -225,11 +225,11 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                     setRole(newR);
                     if (newR !== 'engineer') setTeamLeadId('');
                   }}
-                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857]"
+                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
                 >
-                  <option value="engineer">Engineer</option>
-                  <option value="team_lead">Team Lead</option>
-                  <option value="admin">Admin</option>
+                  <option value="engineer" className="truncate">Engineer</option>
+                  <option value="team_lead" className="truncate">Team Lead</option>
+                  <option value="admin" className="truncate">Admin</option>
                 </select>
               </div>
 
@@ -240,10 +240,10 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                 <select
                   value={locale}
                   onChange={(e) => setLocale(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857]"
+                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
                 >
-                  <option value="en">English (EN)</option>
-                  <option value="de">German (DE)</option>
+                  <option value="en" className="truncate">English (EN)</option>
+                  <option value="de" className="truncate">German (DE)</option>
                 </select>
               </div>
             </div>
@@ -256,11 +256,11 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                 <select
                   value={teamLeadId}
                   onChange={(e) => setTeamLeadId(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857]"
+                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
                 >
-                  <option value="">-- Unassigned / Assign Later --</option>
+                  <option value="" className="truncate">-- Unassigned / Assign Later --</option>
                   {teamLeads.map((lead) => (
-                    <option key={lead._id} value={lead._id}>
+                    <option key={lead._id} value={lead._id} className="truncate">
                       {lead.fullName || lead.full_name || lead.name} ({lead.email})
                     </option>
                   ))}
@@ -326,11 +326,11 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                     setRole(newR);
                     if (newR !== 'engineer') setTeamLeadId('');
                   }}
-                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857]"
+                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
                 >
-                  <option value="engineer">Engineer</option>
-                  <option value="team_lead">Team Lead</option>
-                  <option value="admin">Admin</option>
+                  <option value="engineer" className="truncate">Engineer</option>
+                  <option value="team_lead" className="truncate">Team Lead</option>
+                  <option value="admin" className="truncate">Admin</option>
                 </select>
               </div>
 
@@ -341,10 +341,10 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                 <select
                   value={locale}
                   onChange={(e) => setLocale(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857]"
+                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
                 >
-                  <option value="en">English (EN)</option>
-                  <option value="de">German (DE)</option>
+                  <option value="en" className="truncate">English (EN)</option>
+                  <option value="de" className="truncate">German (DE)</option>
                 </select>
               </div>
             </div>
@@ -357,11 +357,11 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                 <select
                   value={teamLeadId}
                   onChange={(e) => setTeamLeadId(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857]"
+                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
                 >
-                  <option value="">-- Unassigned / Assign Later --</option>
+                  <option value="" className="truncate">-- Unassigned / Assign Later --</option>
                   {teamLeads.map((lead) => (
-                    <option key={lead._id} value={lead._id}>
+                    <option key={lead._id} value={lead._id} className="truncate">
                       {lead.fullName || lead.full_name || lead.name} ({lead.email})
                     </option>
                   ))}

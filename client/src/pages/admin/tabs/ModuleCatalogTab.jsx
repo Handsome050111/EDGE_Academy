@@ -868,11 +868,11 @@ const ModuleCatalogTab = ({ showNotification }) => {
                       required
                       value={moduleFormData.trackId}
                       onChange={(e) => setModuleFormData((prev) => ({ ...prev, trackId: e.target.value }))}
-                      className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-medium"
+                      className="w-full truncate px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium"
                     >
-                      <option value="">-- Select Track --</option>
+                      <option value="" className="truncate">-- Select Track --</option>
                       {tracks.map((t) => (
-                        <option key={t._id} value={t._id}>{t.name}</option>
+                        <option key={t._id} value={t._id} className="truncate">{t.name}</option>
                       ))}
                     </select>
                   </div>
@@ -1224,10 +1224,10 @@ const ModuleCatalogTab = ({ showNotification }) => {
                 <select
                   value={trackFormData.tier}
                   onChange={(e) => setTrackFormData((prev) => ({ ...prev, tier: e.target.value }))}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-medium"
+                  className="w-full truncate px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium"
                 >
-                  <option value="EDGE">EDGE — Level 1 (Certified Technician)</option>
-                  <option value="CORE">CORE — Level 2 (Certified Engineer)</option>
+                  <option value="EDGE" className="truncate">EDGE — Level 1 (Certified Technician)</option>
+                  <option value="CORE" className="truncate">CORE — Level 2 (Certified Engineer)</option>
                 </select>
               </div>
 

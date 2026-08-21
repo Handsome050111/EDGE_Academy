@@ -217,10 +217,10 @@ const ProfileModal = ({ isOpen, onClose }) => {
                 name="locale"
                 value={formData.locale}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
+                className="w-full truncate px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
               >
-                <option value="en">{t('profileModal.english')}</option>
-                <option value="de">{t('profileModal.german')}</option>
+                <option value="en" className="truncate">{t('profileModal.english')}</option>
+                <option value="de" className="truncate">{t('profileModal.german')}</option>
               </select>
             </div>
 

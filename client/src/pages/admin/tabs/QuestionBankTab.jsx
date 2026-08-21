@@ -258,15 +258,15 @@ const QuestionBankTab = ({ showNotification }) => {
           <p className="text-xs text-slate-500 mt-0.5">Author single questions with immutable versioning or bulk import questions via CSV</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <label className="text-xs font-semibold text-slate-700 shrink-0">Working Module:</label>
           <select
             value={selectedModuleId}
             onChange={(e) => setSelectedModuleId(e.target.value)}
-            className="px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white font-medium min-w-[220px]"
+            className="w-full sm:w-auto min-w-[200px] max-w-full sm:max-w-md md:max-w-lg truncate px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium cursor-pointer"
           >
             {modules.map((m) => (
-              <option key={m._id} value={m._id}>
+              <option key={m._id} value={m._id} className="truncate">
                 {m.title}
               </option>
             ))}
@@ -340,11 +340,11 @@ const QuestionBankTab = ({ showNotification }) => {
                 <select
                   value={questionForm.difficulty}
                   onChange={(e) => setQuestionForm((prev) => ({ ...prev, difficulty: e.target.value }))}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] outline-none bg-white"
+                  className="w-full truncate px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium"
                 >
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
+                  <option value="easy" className="truncate">Easy</option>
+                  <option value="medium" className="truncate">Medium</option>
+                  <option value="hard" className="truncate">Hard</option>
                 </select>
               </div>
 
@@ -616,11 +616,11 @@ const QuestionBankTab = ({ showNotification }) => {
                   <select
                     value={editForm.difficulty}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, difficulty: e.target.value }))}
-                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl outline-none bg-white"
+                    className="w-full truncate px-3 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium"
                   >
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
+                    <option value="easy" className="truncate">Easy</option>
+                    <option value="medium" className="truncate">Medium</option>
+                    <option value="hard" className="truncate">Hard</option>
                   </select>
                 </div>
 

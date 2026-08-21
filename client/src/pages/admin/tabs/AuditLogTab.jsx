@@ -75,25 +75,25 @@ const AuditLogTab = ({ showNotification }) => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           <select
             value={actionFilter}
             onChange={(e) => {
               setActionFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B]"
+            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer"
           >
-            <option value="">All Actions</option>
-            <option value="CREATE_USER">CREATE_USER</option>
-            <option value="INVITE_USER">INVITE_USER</option>
-            <option value="UPDATE_USER">UPDATE_USER</option>
-            <option value="UPDATE_USER_ROLE">UPDATE_USER_ROLE</option>
-            <option value="DELETE_USER">DELETE_USER</option>
-            <option value="PUBLISH_MODULE">PUBLISH_MODULE</option>
-            <option value="UPLOAD_MODULE_VIDEO">UPLOAD_MODULE_VIDEO</option>
-            <option value="REVOKE_CERTIFICATE">REVOKE_CERTIFICATE</option>
-            <option value="CREATE_ASSIGNMENT">CREATE_ASSIGNMENT</option>
+            <option value="" className="truncate">All Actions</option>
+            <option value="CREATE_USER" className="truncate">CREATE_USER</option>
+            <option value="INVITE_USER" className="truncate">INVITE_USER</option>
+            <option value="UPDATE_USER" className="truncate">UPDATE_USER</option>
+            <option value="UPDATE_USER_ROLE" className="truncate">UPDATE_USER_ROLE</option>
+            <option value="DELETE_USER" className="truncate">DELETE_USER</option>
+            <option value="PUBLISH_MODULE" className="truncate">PUBLISH_MODULE</option>
+            <option value="UPLOAD_MODULE_VIDEO" className="truncate">UPLOAD_MODULE_VIDEO</option>
+            <option value="REVOKE_CERTIFICATE" className="truncate">REVOKE_CERTIFICATE</option>
+            <option value="CREATE_ASSIGNMENT" className="truncate">CREATE_ASSIGNMENT</option>
           </select>
 
           <select
@@ -102,11 +102,11 @@ const AuditLogTab = ({ showNotification }) => {
               setOutcomeFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B]"
+            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer"
           >
-            <option value="">All Outcomes</option>
-            <option value="success">Success</option>
-            <option value="failure">Failure</option>
+            <option value="" className="truncate">All Outcomes</option>
+            <option value="success" className="truncate">Success</option>
+            <option value="failure" className="truncate">Failure</option>
           </select>
         </div>
       </div>

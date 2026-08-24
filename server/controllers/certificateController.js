@@ -259,7 +259,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             pointer-events: none;
           }
           .cert-container {
-            position: absolute;
+            position: relative;
             top: 0;
             left: 0;
             width: 297mm;
@@ -571,6 +571,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
       format: 'A4',
       landscape: true,
       printBackground: true,
+      preferCSSPageSize: true,
       margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
     });
     await page.close().catch(() => {});

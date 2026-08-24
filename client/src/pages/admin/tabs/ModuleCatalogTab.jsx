@@ -390,7 +390,9 @@ const ModuleCatalogTab = ({ showNotification }) => {
       setModules((prev) => prev.map((m) => (m._id === selectedModule._id ? updatedMod : m)));
       showNotification('success', `Video attached successfully! Duration: ${formatExactDuration(updatedMod.video_duration_sec || updatedMod.duration_sec)}`);
       await loadTracksAndModules();
-      handleCloseModal();
+      setVideoFile(null);
+      setDetectedDurationSec(null);
+      setCloudflareVideoId('');
     } catch (err) {
       showNotification('error', err.response?.data?.message || err.message || 'Video upload failed');
     } finally {
@@ -429,7 +431,8 @@ const ModuleCatalogTab = ({ showNotification }) => {
       setModules((prev) => prev.map((m) => (m._id === selectedModule._id ? updatedMod : m)));
       showNotification('success', 'Custom thumbnail image uploaded successfully!');
       await loadTracksAndModules();
-      handleCloseModal();
+      setThumbnailFile(null);
+      setThumbnailPreview('');
     } catch (err) {
       showNotification('error', err.response?.data?.message || err.message || 'Thumbnail upload failed');
     } finally {

@@ -306,7 +306,13 @@ const LandingPage = () => {
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-blue-900/60 bg-[#062452]/95 backdrop-blur-md px-6 py-4 space-y-1 animate-in slide-in-from-top-2 duration-200">
+          <>
+            <div
+              className="md:hidden fixed inset-0 z-40 bg-slate-950/40"
+              aria-hidden="true"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <div className="md:hidden fixed left-0 right-0 top-[68px] z-50 border-t border-blue-900/60 bg-[#062452]/95 backdrop-blur-md px-6 py-4 space-y-1 animate-in slide-in-from-top-2 duration-200">
             <a
               href="#modules"
               onClick={() => setMobileMenuOpen(false)}
@@ -335,7 +341,8 @@ const LandingPage = () => {
             >
               Verify Credential
             </a>
-          </div>
+            </div>
+          </>
         )}
       </header>
 

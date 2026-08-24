@@ -86,6 +86,14 @@ const videoUpload = multer({
     },
   }),
   limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['video/mp4', 'video/webm'];
+    const allowedExtensions = ['.mp4', '.webm'];
+    if (allowedTypes.includes(file.mimetype) && allowedExtensions.includes(path.extname(file.originalname).toLowerCase())) {
+      return cb(null, true);
+    }
+    cb(new Error('Only MP4 and WebM video files are allowed'));
+  },
 });
 
 // Configure Multer for Thumbnail Image upload (PNG/JPG/WEBP, up to 10MB)
@@ -117,6 +125,20 @@ const attachmentUpload = multer({
     },
   }),
   limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'image/png',
+      'image/jpeg',
+      'image/webp',
+    ];
+    if (allowedTypes.includes(file.mimetype)) {
+      return cb(null, true);
+    }
+    cb(new Error('Only PDF, DOC, DOCX, PNG, JPG, and WEBP files are allowed'));
+  },
 });
 
 // Flexible middleware to handle CSV file uploaded as 'file' or 'csvFile'

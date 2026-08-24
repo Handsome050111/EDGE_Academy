@@ -21,7 +21,6 @@ const authRoutes = require('./routes/authRoutes');
 const trackRoutes = require('./routes/trackRoutes');
 const moduleRoutes = require('./routes/moduleRoutes');
 const quizRoutes = require('./routes/quizRoutes');
-const progressRoutes = require('./routes/progressRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const certificateRoutes = require('./routes/certificateRoutes');
@@ -34,10 +33,6 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 // Import Cron Services
 const { initCronJobs } = require('./services/cronService');
-
-connectDB().then(() => {
-  initCronJobs();
-});
 
 const app = express();
 
@@ -52,7 +47,7 @@ app.use(
     crossOriginEmbedderPolicy: false,
   })
 );
-app.use(cors()); // Enable CORS
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 
 // Serve uploaded video, attachment static files, and public assets
@@ -83,7 +78,6 @@ app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/tracks', trackRoutes);
 app.use('/api/v1/modules', moduleRoutes);
 app.use('/api/v1', quizRoutes); // handles /modules/:id/quiz/start, /attempts/:id/submit, /review-quiz/start
-app.use('/api/v1/progress', progressRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/certificates', certificateRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
@@ -105,6 +99,14 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+if (require.main === module) {
+  connectDB().then(() => {
+    initCronJobs();
+  });
+
+  app.listen(PORT, () => {
+    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  });
+}
+
+module.exports = app;

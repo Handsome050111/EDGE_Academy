@@ -17,6 +17,10 @@ const quizAttemptSchema = new mongoose.Schema(
       ref: 'Module',
       alias: 'module_id',
     },
+    issuedQuestionIds: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Question',
+    }],
     answers: [
       {
         questionId: {

@@ -11,6 +11,7 @@ const Module = require('../models/Module');
 const QuizAttempt = require('../models/QuizAttempt');
 const Assignment = require('../models/Assignment');
 const { notifyCertificateIssued } = require('../services/notificationService');
+const { logAudit } = require('../utils/audit');
 
 // Multer storage for uploaded signatures
 const signatureStorage = multer.diskStorage({
@@ -71,6 +72,24 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
       : track_id_or_res;
 
     const passedTier = isHttpRequest ? engineer_id_or_req.body?.tier : tier_or_next;
+
+    if (isHttpRequest) {
+      const requestedEngineerId = engineer_id_or_req.body?.engineer_id || engineer_id_or_req.body?.engineerId;
+      const isAdmin = String(engineer_id_or_req.user?.role || '').toLowerCase() === 'admin';
+      if (requestedEngineerId && requestedEngineerId.toString() !== engineer_id_or_req.user?._id?.toString() && !isAdmin) {
+        await logAudit({
+          req: engineer_id_or_req,
+          action: 'GENERATE_CERTIFICATE',
+          resourceType: 'Certificate',
+          resourceId: requestedEngineerId,
+          outcome: 'denied',
+          description: 'Certificate generation denied for another engineer.',
+        });
+        return track_id_or_res.status(403).json({
+          error: { code: 'FORBIDDEN', message: 'You may only generate your own certificate.' },
+        });
+      }
+    }
 
     const track = await Track.findById(track_id);
     const user = await User.findById(engineer_id);

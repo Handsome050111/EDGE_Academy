@@ -256,6 +256,7 @@ const startTopicQuiz = async (req, res) => {
       engineer_id: engineerId,
       quiz_type: 'topic',
       module_id: mod._id,
+      issuedQuestionIds: selectedQuestions.map((question) => question._id),
       started_at: new Date(),
       status: 'in_progress',
     });
@@ -289,6 +290,25 @@ const submitQuizAttempt = async (req, res) => {
           message: 'You do not have permission to submit this quiz attempt.',
         },
       });
+    }
+
+    if (!Array.isArray(answers)) {
+      return res.status(400).json({ error: { code: 'INVALID_ANSWERS', message: 'Answers must be an array.' } });
+    }
+
+    const issuedQuestionIds = new Set((attempt.issuedQuestionIds || []).map((id) => id.toString()));
+    const submittedQuestionIds = new Set();
+    for (const answer of answers) {
+      const questionId = answer?.question_id?.toString();
+      if (!questionId || !issuedQuestionIds.has(questionId) || submittedQuestionIds.has(questionId)) {
+        return res.status(400).json({
+          error: {
+            code: 'INVALID_QUESTION',
+            message: 'Every submitted question must belong to this quiz attempt and may only be submitted once.',
+          },
+        });
+      }
+      submittedQuestionIds.add(questionId);
     }
 
     // Check if this engineer has already passed this module before (First Passing Score Authority)

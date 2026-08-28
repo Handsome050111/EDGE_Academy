@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import Logo from '../components/Logo';
 
 const officialModules = [
   {
@@ -153,7 +154,7 @@ const LandingPage = () => {
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
-      setPwaMessage('EDGE Academy app installed successfully!');
+      setPwaMessage('NexAcademy app installed successfully!');
       setTimeout(() => setPwaMessage(''), 4000);
     };
 
@@ -175,7 +176,7 @@ const LandingPage = () => {
         setDeferredPrompt(null);
       }
     } else if (isInstalled) {
-      setPwaMessage('EDGE Academy is already installed on your device.');
+      setPwaMessage('NexAcademy is already installed on your device.');
       setTimeout(() => setPwaMessage(''), 4000);
     } else {
       setPwaMessage(
@@ -262,7 +263,7 @@ const LandingPage = () => {
           <div className="flex items-center gap-3">
             <div className="flex items-center cursor-pointer group" onClick={() => navigate('/')}>
               <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-none group-hover:text-blue-100 transition">
-                EDGE <span className="text-[#EAB308]">Academy</span>
+                <Logo size="full" variant="light" className="h-8" />
               </span>
             </div>
           </div>
@@ -558,7 +559,7 @@ const LandingPage = () => {
             Built on Site Experience. Validated in Person.
           </h2>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-            Technonex EDGE Academy is a proprietary qualification ecosystem ensuring every deployed field engineer meets strict client benchmarks before stepping on site.
+            Technonex NexAcademy is a proprietary qualification ecosystem ensuring every deployed field engineer meets strict client benchmarks before stepping on site.
           </p>
         </div>
 
@@ -666,7 +667,7 @@ const LandingPage = () => {
             <div className="lg:col-span-2 space-y-4">
               <div className="flex flex-col items-start cursor-pointer group select-none" onClick={() => navigate('/')}>
                 <span className="text-2xl font-extrabold tracking-tight text-white leading-none">
-                  EDGE <span className="text-[#EAB308]">Academy</span>
+                  <Logo size="full" variant="light" className="h-8" />
                 </span>
                 <span className="text-xs font-medium text-blue-200/80 tracking-wide mt-1">
                   A product of Technonex
@@ -687,7 +688,7 @@ const LandingPage = () => {
                   <svg className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                  <span>{isInstalled ? 'App Installed' : 'Install EDGE Academy App'}</span>
+                  <span>{isInstalled ? 'App Installed' : 'Install NexAcademy App'}</span>
                 </button>
               </div>
             </div>
@@ -769,7 +770,7 @@ const LandingPage = () => {
 
           {/* Bottom Divider & Sub-footer */}
           <div className="mt-12 pt-8 border-t border-blue-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-            <p>© {new Date().getFullYear()} Technonex EDGE Academy. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Technonex NexAcademy. All rights reserved.</p>
             <div className="flex flex-wrap items-center gap-6">
               <button
                 type="button"

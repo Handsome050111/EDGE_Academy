@@ -293,7 +293,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                     value={configForm.director_title}
                     onChange={(e) => setConfigForm((prev) => ({ ...prev, director_title: e.target.value }))}
                     className="w-full px-3.5 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:border-[#08306B] outline-none"
-                    placeholder="e.g. Director, Technonex EDGE Academy"
+                    placeholder="e.g. Director, Technonex NexAcademy"
                   />
                 </div>
 

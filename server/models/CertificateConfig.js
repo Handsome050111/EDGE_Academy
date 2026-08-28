@@ -8,7 +8,7 @@ const certificateConfigSchema = new mongoose.Schema(
     },
     director_title: {
       type: String,
-      default: 'Director, Technonex EDGE Academy',
+      default: 'Director, Technonex NexAcademy',
     },
     director_signature_url: {
       type: String,
@@ -28,7 +28,7 @@ const certificateConfigSchema = new mongoose.Schema(
     },
     organization_name: {
       type: String,
-      default: 'TECHNONEX EDGE ACADEMY',
+      default: 'TECHNONEX NEXACADEMY',
     },
     seal_title: {
       type: String,

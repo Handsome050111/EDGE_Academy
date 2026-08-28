@@ -86,7 +86,7 @@ const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
 
     if (transporter) {
       // 1. Dispatch via SMTP (Nodemailer / Gmail / one.com)
-      const senderFrom = cleanEnv(process.env.SMTP_FROM) || cleanEnv(process.env.SMTP_USER) || 'EDGE Academy <khaista.rehman@technonex.de>';
+      const senderFrom = cleanEnv(process.env.SMTP_FROM) || cleanEnv(process.env.SMTP_USER) || 'NexAcademy <khaista.rehman@technonex.de>';
       const replyTo = cleanEnv(process.env.SMTP_REPLY_TO);
 
       const mailOptions = {
@@ -129,7 +129,7 @@ const sendEmail = async ({ to, subject, html, text, attachments = [] }) => {
         });
 
         const { data, error } = await resendClient.emails.send({
-          from: process.env.RESEND_FROM || 'EDGE Academy <onboarding@resend.dev>',
+          from: process.env.RESEND_FROM || 'NexAcademy <onboarding@resend.dev>',
           to: Array.isArray(to) ? to : [to],
           subject,
           text: text || subject,
@@ -185,12 +185,12 @@ const notifyTeamLeadAssignment = async ({ engineer, teamLead }) => {
     const engineerEmailHtml = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 16px; background-color: #ffffff;">
         <div style="background-color: #092857; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
-          <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">EDGE Academy</h1>
+          <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">NexAcademy</h1>
           <p style="color: #93C5FD; margin: 4px 0 0 0; font-size: 13px;">Team Lead Assignment</p>
         </div>
         <div style="padding: 0 8px; color: #1E293B; line-height: 1.6;">
           <p style="font-size: 15px;">Hello <strong>${engineerName}</strong>,</p>
-          <p style="font-size: 14px;">You have been assigned to Team Lead <strong>${leadName}</strong> in EDGE Academy.</p>
+          <p style="font-size: 14px;">You have been assigned to Team Lead <strong>${leadName}</strong> in NexAcademy.</p>
           <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin: 20px 0;">
             <p style="margin: 0 0 8px 0; font-size: 13px; color: #64748B;">Assigned Team Lead: <strong style="color: #0F172A;">${leadName}</strong></p>
             <p style="margin: 0; font-size: 13px; color: #64748B;">Lead Email: <strong style="color: #0F172A;">${teamLead.email}</strong></p>
@@ -202,7 +202,7 @@ const notifyTeamLeadAssignment = async ({ engineer, teamLead }) => {
 
     await sendEmail({
       to: engineer.email,
-      subject: `EDGE Academy — Assigned to Team Lead: ${leadName}`,
+      subject: `NexAcademy — Assigned to Team Lead: ${leadName}`,
       text: `Hello ${engineerName},\n\nYou have been assigned to Team Lead ${leadName} (${teamLead.email}).\n\nAccess your dashboard at: /engineer`,
       html: engineerEmailHtml,
     });
@@ -221,7 +221,7 @@ const notifyTeamLeadAssignment = async ({ engineer, teamLead }) => {
       const leadEmailHtml = `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 16px; background-color: #ffffff;">
           <div style="background-color: #092857; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">EDGE Academy</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">NexAcademy</h1>
             <p style="color: #93C5FD; margin: 4px 0 0 0; font-size: 13px;">Engineer Assignment Notification</p>
           </div>
           <div style="padding: 0 8px; color: #1E293B; line-height: 1.6;">
@@ -238,7 +238,7 @@ const notifyTeamLeadAssignment = async ({ engineer, teamLead }) => {
 
       await sendEmail({
         to: teamLead.email,
-        subject: `EDGE Academy — New Engineer Assigned: ${engineerName}`,
+        subject: `NexAcademy — New Engineer Assigned: ${engineerName}`,
         text: `Hello ${leadName},\n\n${engineerName} (${engineer.email}) has been assigned to you.\n\nTrack progress at: /team-lead`,
         html: leadEmailHtml,
       });
@@ -291,7 +291,7 @@ const notifyAssignment = async ({ engineer, assignedBy, itemType = 'module', ite
       const emailHtml = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
           <div style="background: linear-gradient(135deg, #08306B 0%, #0066CC 100%); padding: 32px 24px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">TECHNONEX EDGE ACADEMY</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">TECHNONEX NEXACADEMY</h1>
             <p style="color: #93C5FD; margin: 6px 0 0 0; font-size: 13px; font-weight: 500;">Field Operations Training & Certification</p>
           </div>
           <div style="padding: 32px 24px;">
@@ -316,7 +316,7 @@ const notifyAssignment = async ({ engineer, assignedBy, itemType = 'module', ite
 
       await sendEmail({
         to: engineer.email,
-        subject: `EDGE Academy — ${titleText}`,
+        subject: `NexAcademy — ${titleText}`,
         text: `Hello ${engineerName},\n\nYou have been assigned: ${itemTitle} (${isTrack ? `${moduleCount} modules` : 'Module'})\nAssigned By: ${assignerName}\nDeadline: ${deadlineStr}\n\nAccess your dashboard: ${frontendUrl}/engineer`,
         html: emailHtml,
       });
@@ -356,7 +356,7 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
       const emailHtml = `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 16px; background-color: #ffffff;">
           <div style="background-color: #0A2540; padding: 24px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">TECHNONEX EDGE ACADEMY</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">TECHNONEX NEXACADEMY</h1>
             <p style="color: #D4AF37; margin: 6px 0 0 0; font-size: 14px; font-weight: 600;">Official Certificate of Achievement</p>
           </div>
           <div style="padding: 0 8px; color: #1E293B; line-height: 1.6;">
@@ -374,7 +374,7 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
                 View & Verify Certificate Online
               </a>
             </div>
-            <p style="font-size: 12px; color: #94A3B8; text-align: center; margin-top: 24px;">Technonex EDGE Academy · Engineering Development & Growth Ecosystem</p>
+            <p style="font-size: 12px; color: #94A3B8; text-align: center; margin-top: 24px;">Technonex NexAcademy · Engineering Development & Growth Ecosystem</p>
           </div>
         </div>
       `;
@@ -390,7 +390,7 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
 
       await sendEmail({
         to: engineer.email,
-        subject: `🎉 Congratulations! Your Technonex Certificate for ${trackTitle} (${certId})`,
+        subject: ` Congratulations! Your Technonex Certificate for ${trackTitle} (${certId})`,
         text: `Dear ${engineerName},\n\nCongratulations! You have completed '${trackTitle}' and earned certificate ${certId} (${tier}).\n\nYour certificate PDF is attached. Verify online: ${verifyUrl}`,
         html: emailHtml,
         attachments,
@@ -418,7 +418,7 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
           // In-App Bell Notification for Active Team Lead
           await createNotification({
             recipient_id: leadUser._id || leadId,
-            title: `🎓 Team Certificate Earned: ${engineerName}`,
+            title: ` Team Certificate Earned: ${engineerName}`,
             message: `Your team engineer ${engineerName} has completed '${trackTitle}' (${tier}) and earned certificate ${certId}.`,
             type: 'certificate',
             link: `/verify/${certId}`,
@@ -430,7 +430,7 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
             const leadEmailHtml = `
               <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 16px; background-color: #ffffff;">
                 <div style="background-color: #0A2540; padding: 24px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">TECHNONEX EDGE ACADEMY</h1>
+                  <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">TECHNONEX NEXACADEMY</h1>
                   <p style="color: #D4AF37; margin: 6px 0 0 0; font-size: 13px; font-weight: 600;">Team Member Certification Alert</p>
                 </div>
                 <div style="padding: 0 8px; color: #1E293B; line-height: 1.6;">
@@ -448,14 +448,14 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
                       View Verified Certificate
                     </a>
                   </div>
-                  <p style="font-size: 12px; color: #94A3B8; text-align: center; margin-top: 24px;">Technonex EDGE Academy · Team Management & Oversight</p>
+                  <p style="font-size: 12px; color: #94A3B8; text-align: center; margin-top: 24px;">Technonex NexAcademy · Team Management & Oversight</p>
                 </div>
               </div>
             `;
 
             await sendEmail({
               to: leadUser.email,
-              subject: `🎓 Team Certification Alert: ${engineerName} earned ${trackTitle} (${certId})`,
+              subject: ` Team Certification Alert: ${engineerName} earned ${trackTitle} (${certId})`,
               text: `Hello ${leadName},\n\nYour team engineer ${engineerName} has completed '${trackTitle}' (${tier}) and earned certificate ${certId}.\n\nView and verify certificate: ${verifyUrl}`,
               html: leadEmailHtml,
             });
@@ -474,7 +474,7 @@ const notifyCertificateIssued = async ({ engineer, certificate, track }) => {
         if (leadId && admin._id.toString() === leadId.toString()) continue;
         await createNotification({
           recipient_id: admin._id,
-          title: `🎓 Certificate Issued: ${engineerName}`,
+          title: ` Certificate Issued: ${engineerName}`,
           message: `Engineer ${engineerName} has completed '${trackTitle}' (${tier}) and was awarded certificate ${certId}.`,
           type: 'certificate',
           link: `/verify/${certId}`,
@@ -503,8 +503,8 @@ const notifyUserInvitation = async ({ user, token, isResend = false }) => {
     // 1. In-App Bell Notification
     await createNotification({
       recipient_id: user._id,
-      title: isResend ? 'Invitation Resent' : 'Welcome to EDGE Academy',
-      message: `You have been invited to join EDGE Academy as '${user.role}'.`,
+      title: isResend ? 'Invitation Resent' : 'Welcome to NexAcademy',
+      message: `You have been invited to join NexAcademy as '${user.role}'.`,
       type: 'invite',
       link: `/invite/accept?token=${token}`,
     });
@@ -513,13 +513,13 @@ const notifyUserInvitation = async ({ user, token, isResend = false }) => {
     const emailHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
         <div style="background: linear-gradient(135deg, #08306B 0%, #0066CC 100%); padding: 32px 24px; text-align: center;">
-          <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">TECHNONEX EDGE ACADEMY</h1>
+          <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">TECHNONEX NEXACADEMY</h1>
           <p style="color: #93C5FD; margin: 6px 0 0 0; font-size: 13px; font-weight: 500;">Field Operations Training & Certification Platform</p>
         </div>
         <div style="padding: 32px 24px;">
           <p style="font-size: 15px; color: #1E293B; margin-top: 0;">Hello <strong>${userName}</strong>,</p>
           <p style="font-size: 14px; color: #475569; line-height: 1.6;">
-            You have been invited to join the <strong>Technonex EDGE Academy</strong> platform as an official <strong>${userRole}</strong>.
+            You have been invited to join the <strong>Technonex NexAcademy</strong> platform as an official <strong>${userRole}</strong>.
           </p>
           <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin: 20px 0;">
             <p style="margin: 0 0 6px 0; font-size: 13px; color: #64748B;">Registered Email: <strong style="color: #0F172A;">${user.email}</strong></p>
@@ -539,8 +539,8 @@ const notifyUserInvitation = async ({ user, token, isResend = false }) => {
 
     await sendEmail({
       to: user.email,
-      subject: isResend ? `EDGE Academy — Invitation Resent` : `Welcome to EDGE Academy — Activate Your Account`,
-      text: `Hello ${userName},\n\nYou have been invited to join EDGE Academy as '${userRole}'.\n\nActivate your account: ${activationLink}\n(Link expires in 48 hours)`,
+      subject: isResend ? `NexAcademy — Invitation Resent` : `Welcome to NexAcademy — Activate Your Account`,
+      text: `Hello ${userName},\n\nYou have been invited to join NexAcademy as '${userRole}'.\n\nActivate your account: ${activationLink}\n(Link expires in 48 hours)`,
       html: emailHtml,
     });
   } catch (error) {
@@ -562,13 +562,13 @@ const notifyPasswordReset = async ({ user, token }) => {
     const emailHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
         <div style="background: linear-gradient(135deg, #08306B 0%, #0066CC 100%); padding: 32px 24px; text-align: center;">
-          <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">TECHNONEX EDGE ACADEMY</h1>
+          <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">TECHNONEX NEXACADEMY</h1>
           <p style="color: #93C5FD; margin: 6px 0 0 0; font-size: 13px; font-weight: 500;">Password Reset Request</p>
         </div>
         <div style="padding: 32px 24px;">
           <p style="font-size: 15px; color: #1E293B; margin-top: 0;">Hello <strong>${userName}</strong>,</p>
           <p style="font-size: 14px; color: #475569; line-height: 1.6;">
-            We received a request to reset your password for your <strong>Technonex EDGE Academy</strong> account.
+            We received a request to reset your password for your <strong>Technonex NexAcademy</strong> account.
           </p>
           <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin: 20px 0;">
             <p style="margin: 0 0 6px 0; font-size: 13px; color: #64748B;">Account Email: <strong style="color: #0F172A;">${user.email}</strong></p>
@@ -587,7 +587,7 @@ const notifyPasswordReset = async ({ user, token }) => {
 
     await sendEmail({
       to: user.email,
-      subject: `EDGE Academy — Password Reset Request`,
+      subject: `NexAcademy — Password Reset Request`,
       text: `Hello ${userName},\n\nWe received a request to reset your password.\n\nSet your new password: ${resetLink}\n(This link expires in 60 minutes)`,
       html: emailHtml,
     });

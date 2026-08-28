@@ -1,5 +1,5 @@
 {
-  "welcome": "Willkommen bei der EDGE Academy",
+  "welcome": "Willkommen bei NexAcademy",
   "tracks": "Lernpfade",
   "profile": "Profil",
   "login": "Anmelden",
@@ -118,7 +118,7 @@
   },
 
   "engineerDashboard": {
-    "title": "EDGE Academy",
+    "title": "NexAcademy",
     "subtitle": "Mein Lern-Dashboard",
     "closeNav": "Navigationsleiste schließen",
     "openNav": "Navigationsleiste öffnen",
@@ -127,7 +127,7 @@
     "noAssignedTracksDesc": "Module, die Ihnen von Ihrem Teamleiter oder Administrator zugewiesen wurden, erscheinen hier.",
     "noModulesInTrack": "Keine Module in diesem Lernpfad.",
     "lockedModuleAlert": "Dieses Modul ist gesperrt! Sie müssen das vorherige Modul abschließen und das Themenquiz mit mindestens 80% bestehen, um es freizuschalten.",
-    "welcomeTitle": "Willkommen bei der EDGE Academy, {{name}}!",
+    "welcomeTitle": "Willkommen bei NexAcademy, {{name}}!",
     "welcomeNoModules": "Ihrem Konto sind derzeit keine Schulungsmodule zugewiesen. Sobald Ihr Administrator oder Teamleiter Ihnen Module oder Lernpfade zuweist, stehen Ihre Schulungsvideos, Lernmaterialien und Themenquizze hier für Sie bereit.",
     "durationLabel": "Dauer: {{duration}}",
     "prevLesson": "← Vorherige Lektion",

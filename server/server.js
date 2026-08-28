@@ -89,7 +89,7 @@ app.get('/verify/:certificate_id', renderPublicVerifyPage);
 
 // Base Route
 app.get('/', (req, res) => {
-  res.send('EDGE Academy API is running securely...');
+  res.send('NexAcademy API is running securely...');
 });
 
 

@@ -1,5 +1,5 @@
 {
-  "welcome": "Welcome to EDGE Academy",
+  "welcome": "Welcome to NexAcademy",
   "tracks": "Tracks",
   "profile": "Profile",
   "login": "Login",
@@ -118,7 +118,7 @@
   },
 
   "engineerDashboard": {
-    "title": "EDGE Academy",
+    "title": "NexAcademy",
     "subtitle": "My Learning Dashboard",
     "closeNav": "Close navigation drawer",
     "openNav": "Open navigation drawer",
@@ -127,7 +127,7 @@
     "noAssignedTracksDesc": "Modules assigned to you by your team lead or admin will appear here.",
     "noModulesInTrack": "No modules in this track.",
     "lockedModuleAlert": "This module is locked! You must complete the previous module and pass its topic quiz with at least 80% to unlock it.",
-    "welcomeTitle": "Welcome to EDGE Academy, {{name}}!",
+    "welcomeTitle": "Welcome to NexAcademy, {{name}}!",
     "welcomeNoModules": "You currently have no training modules assigned to your account. As soon as your administrator or team lead assigns modules or tracks to you, your training videos, study materials, and topic quizzes will be ready for you here.",
     "durationLabel": "Duration: {{duration}}",
     "prevLesson": "← Previous Lesson",

@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "EDGE Academy Backend API",
+  "description": "NexAcademy Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

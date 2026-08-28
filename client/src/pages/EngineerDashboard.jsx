@@ -9,6 +9,7 @@ import ProfileModal from '../components/ProfileModal';
 import VideoPlayer, { formatTime, resolveVideoUrl } from '../components/VideoPlayer';
 import Pagination from '../components/Pagination';
 import api from '../services/api';
+import Logo from '../components/Logo';
 
 export const formatDuration = (mod) => {
   if (!mod) return '0 min';
@@ -439,7 +440,7 @@ const EngineerDashboard = () => {
           <div className="flex items-start justify-between mb-5">
             <div>
               <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                {t('engineerDashboard.title')}
+                <Logo size="full" variant="light" className="h-9" />
               </h1>
               <p className="text-xs text-blue-300/70 font-medium mt-0.5">{t('engineerDashboard.subtitle')}</p>
             </div>

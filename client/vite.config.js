@@ -7,24 +7,24 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.png', 'favicon-32x32.png', 'favicon-16x16.png', 'app-logo.png', 'logo.png'],
+      includeAssets: ['favicon.png', 'favicon-32x32.png', 'favicon-16x16.png', 'apple-touch-icon-180x180.png', 'new-app-logo-192x192.png', 'new-app-logo-512x512.png'],
       manifest: {
-        name: 'EDGE Academy',
-        short_name: 'EDGE',
-        description: 'Technonex EDGE Academy learning platform',
+        name: 'NexAcademy',
+        short_name: 'NexAcademy',
+        description: 'Technonex NexAcademy learning platform',
         theme_color: '#2563eb',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
         icons: [
           {
-            src: '/pwa-192x192.png',
+            src: '/new-app-logo-192x192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any maskable',
           },
           {
-            src: '/pwa-512x512.png',
+            src: '/new-app-logo-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',

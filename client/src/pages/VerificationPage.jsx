@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
+import Logo from '../components/Logo';
 
 const VerificationPage = () => {
   const { id, certificate_id } = useParams();
@@ -82,9 +83,9 @@ const VerificationPage = () => {
       <header className="bg-white border-b border-slate-200 text-slate-900 px-6 py-3.5 shadow-xs flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center">
-            <img src="/logo.png" alt="Technonex" className="h-7 w-auto object-contain" />
+            <img src="/certificate.png" alt="NexAcademy logo" className="h-8 w-auto max-w-[220px] object-contain" />
           </Link>
-          <span className="text-xs text-slate-500 border-l border-slate-200 pl-3 font-medium">EDGE Academy Official Verification Portal</span>
+          <span className="text-xs text-slate-500 border-l border-slate-200 pl-3 font-medium">NexAcademy Official Verification Portal</span>
         </div>
         <Link to="/" className="text-xs font-semibold bg-[#0A2540] hover:bg-[#071a2e] text-white px-4 py-2 rounded-xl transition shadow-xs">
           Portal Home →
@@ -109,7 +110,7 @@ const VerificationPage = () => {
             <p className="text-sm text-slate-600 max-w-md mx-auto">{error || `No certificate record found for ID "${certIdParam}".`}</p>
             <div className="pt-2">
               <Link to="/" className="inline-block bg-[#0A2540] text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-[#071a2e] transition">
-                Return to EDGE Academy Portal
+                Return to NexAcademy Portal
               </Link>
             </div>
           </div>
@@ -188,8 +189,9 @@ const VerificationPage = () => {
                 {/* Certificate Content Grid */}
                 <div className="relative z-10 h-full flex flex-col justify-between px-6 py-2">
                   {/* Header Official Logo */}
-                  <div className="flex items-center justify-start">
-                    <img src="/logo.png" alt="Technonex Logo" className="h-8 sm:h-9 max-w-[200px] object-contain" />
+                  <div className="flex items-center justify-between gap-4">
+                    <img src="/certificate.png" alt="NexAcademy logo" className="h-8 sm:h-9 w-auto max-w-[180px] object-contain" />
+                    <img src="/cert-logo-2.png" alt="Technonex logo" className="h-8 sm:h-9 w-auto max-w-[220px] object-contain" />
                   </div>
 
                   {/* Title & Subtitle */}
@@ -215,7 +217,7 @@ const VerificationPage = () => {
                     <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-sans">
                       This certificate is proudly awarded to <strong>{recipientName}</strong> in recognition of successful completion and proficiency demonstrated within the <strong>{(tier === 'EDGE' || tier === 'L2_ADVANCED') ? 'EDGE' : 'CORE'}</strong> program. This achievement verifies the acquisition of skills and knowledge required for excellence in engineering and development.
                     </p>
-                    <p className="text-xs font-semibold text-slate-900">Issued by Technonex EDGE Academy</p>
+                    <p className="text-xs font-semibold text-slate-900">Issued by Technonex NexAcademy</p>
                   </div>
 
                   {/* Signatures & Embossed Medallion */}
@@ -232,7 +234,7 @@ const VerificationPage = () => {
                           </p>
                         )}
                         <p className="text-xs font-bold text-slate-900 mt-1">{directorName}</p>
-                        <p className="text-[10px] text-slate-500">Director, Technonex EDGE Academy</p>
+                        <p className="text-[10px] text-slate-500">Director, Technonex NexAcademy</p>
                       </div>
 
                       <div>
@@ -296,7 +298,7 @@ const VerificationPage = () => {
 
       {/* Footer */}
       <footer className="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
-        © {new Date().getFullYear()} Technonex EDGE Academy. All rights reserved.
+          © {new Date().getFullYear()} Technonex NexAcademy. All rights reserved.
       </footer>
     </div>
   );

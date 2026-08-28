@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import NotificationBell from '../../components/NotificationBell';
 import ProfileModal from '../../components/ProfileModal';
+import Logo from '../../components/Logo';
 
 // Tab Components
 import UserManagementTab from './tabs/UserManagementTab';
@@ -113,7 +114,7 @@ const AdminPortal = () => {
           <div className="flex items-start justify-between mb-7">
             <div>
               <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                EDGE Academy
+                <Logo size="full" variant="light" className="h-9" />
               </h1>
               <p className="text-xs text-blue-300/70 font-medium mt-0.5">Admin Portal</p>
             </div>

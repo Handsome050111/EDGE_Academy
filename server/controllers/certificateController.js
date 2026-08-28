@@ -173,22 +173,19 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
 
     const dateFormatted = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-    // Load official Technonex logo from public folder
-    let logoBase64 = '';
-    const possibleLogoPaths = [
-      path.join(__dirname, '../public/logo.png'),
-      path.join(__dirname, '../../client/public/logo.png'),
-    ];
-    for (const p of possibleLogoPaths) {
-      if (fs.existsSync(p)) {
-        try {
-          logoBase64 = `data:image/png;base64,${fs.readFileSync(p).toString('base64')}`;
-          break;
-        } catch (e) {
-          console.error('Error reading logo file from ' + p, e);
-        }
+    // Load the two official certificate logos from the client public assets.
+    const loadPngBase64 = (fileName) => {
+      const filePath = path.join(__dirname, '../../client/public', fileName);
+      if (!fs.existsSync(filePath)) return '';
+      try {
+        return `data:image/png;base64,${fs.readFileSync(filePath).toString('base64')}`;
+      } catch (e) {
+        console.error('Error reading certificate logo file from ' + filePath, e);
+        return '';
       }
-    }
+    };
+    const certLogo1Base64 = loadPngBase64('certificate.png');
+    const certLogo2Base64 = loadPngBase64('cert-logo-2.png');
 
     // Convert signature images to Base64 data URLs for Puppeteer embedding
     let directorSigBase64 = '';
@@ -274,15 +271,23 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
           .header-row {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            padding-left: 2mm;
+            justify-content: space-between;
+            padding: 0 2mm;
+            min-height: 42px;
           }
-          .cert-logo-img {
-            height: 36px;
+          .cert-logo-primary,
+          .cert-logo-secondary {
             width: auto;
-            max-width: 200px;
             object-fit: contain;
             display: block;
+          }
+          .cert-logo-primary {
+            height: 38px;
+            max-width: 180px;
+          }
+          .cert-logo-secondary {
+            height: 38px;
+            max-width: 220px;
           }
           .technonex-logo {
             font-family: 'Montserrat', sans-serif;
@@ -455,12 +460,10 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
         </svg>
 
         <div class="cert-container">
-          <!-- Top Left Official Technonex Logo -->
+          <!-- Dual certificate branding -->
           <div class="header-row">
-            ${logoBase64 ? `<img src="${logoBase64}" alt="Technonex Logo" class="cert-logo-img" />` : `
-            <div class="technonex-logo">
-              TECHNO<span>NE</span><span class="logo-x">X</span>
-            </div>`}
+            ${certLogo1Base64 ? `<img src="${certLogo1Base64}" alt="NexAcademy logo" class="cert-logo-primary" />` : ''}
+            ${certLogo2Base64 ? `<img src="${certLogo2Base64}" alt="Technonex logo" class="cert-logo-secondary" />` : ''}
           </div>
 
           <!-- Curriculum Track Title & Subtitle -->
@@ -480,7 +483,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             <p class="citation-text">
               This certificate is proudly awarded to <strong>${recipientName}</strong> in recognition of successful completion and proficiency demonstrated within the <strong>${tierDisplay}</strong> program. This achievement verifies the acquisition of skills and knowledge required for excellence in engineering and development.
             </p>
-            <div class="issued-by">Issued by Technonex EDGE Academy</div>
+            <div class="issued-by">Issued by Technonex NexAcademy</div>
           </div>
 
           <!-- Signatures & Embossed Medallion -->
@@ -495,7 +498,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
                   <div class="signature-script">${config.director_name}</div>
                 `}
                 <div class="signature-name">${config.director_name}</div>
-                <div class="signature-title">${config.director_title || 'Director, Technonex EDGE Academy'}</div>
+                <div class="signature-title">${config.director_title || 'Director, Technonex NexAcademy'}</div>
               </div>
 
               <div class="signature-block">
@@ -679,7 +682,7 @@ const renderPublicVerifyPage = async (req, res) => {
         <html lang="en">
         <head>
           <meta charset="UTF-8">
-          <title>Certificate Not Found - Technonex EDGE Academy</title>
+          <title>Certificate Not Found - Technonex NexAcademy</title>
           <style>
             body { font-family: 'Segoe UI', Arial, sans-serif; background: #0B1120; color: #F1F5F9; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
             .card { background: #1E293B; border: 1px solid #334155; border-radius: 12px; padding: 40px; text-align: center; max-width: 480px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -746,7 +749,7 @@ const renderPublicVerifyPage = async (req, res) => {
       <body>
         <div class="card">
           <div class="header">
-            ${verifyLogoBase64 ? `<img src="${verifyLogoBase64}" alt="Technonex" class="logo-img" />` : `<div class="logo">TECHNO<span>NEX</span> EDGE ACADEMY</div>`}
+            ${verifyLogoBase64 ? `<img src="${verifyLogoBase64}" alt="Technonex" class="logo-img" />` : `<div class="logo">TECHNONEX NEXACADEMY</div>`}
             <div class="status-badge ${isValid ? 'status-valid' : 'status-revoked'}">
               ${isValid ? 'Official Authentic Certificate' : 'Certificate Revoked'}
             </div>

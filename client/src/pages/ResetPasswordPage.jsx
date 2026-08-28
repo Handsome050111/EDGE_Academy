@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
+import Logo from '../components/Logo';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ const ResetPasswordPage = () => {
         <div className="relative z-10">
           <div className="flex items-center cursor-pointer group" onClick={() => navigate('/')}>
             <span className="text-2xl font-extrabold tracking-tight text-white leading-none">
-              EDGE <span className="text-[#EAB308]">Academy</span>
+              <Logo size="full" variant="light" />
             </span>
           </div>
         </div>
@@ -176,7 +177,7 @@ const ResetPasswordPage = () => {
           {/* Mobile-Only Header Brand */}
           <div className="flex lg:hidden items-center mb-8 cursor-pointer group" onClick={() => navigate('/')}>
             <span className="text-2xl font-extrabold tracking-tight text-[#062452] leading-none">
-              EDGE <span className="text-[#EAB308]">Academy</span>
+              <Logo size="compact" variant="dark" />
             </span>
           </div>
 

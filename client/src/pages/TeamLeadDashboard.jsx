@@ -6,6 +6,7 @@ import NotificationBell from '../components/NotificationBell';
 import ProfileModal from '../components/ProfileModal';
 import Pagination from '../components/Pagination';
 import api from '../services/api';
+import Logo from '../components/Logo';
 
 const TeamLeadDashboard = () => {
   const { t } = useTranslation();
@@ -215,6 +216,10 @@ const TeamLeadDashboard = () => {
       return matchesSearch && matchesTrack && matchesStatus;
     });
   }, [squadCertificates, certSearchQuery, certTrackFilter, certStatusFilter]);
+
+  const paginatedCertificates = useMemo(() => {
+    return filteredCertificates.slice((certsPage - 1) * 8, certsPage * 8);
+  }, [filteredCertificates, certsPage]);
 
   // Filtered Squad Assignments
   const filteredSquadAssignments = useMemo(() => {
@@ -486,7 +491,7 @@ const TeamLeadDashboard = () => {
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                EDGE Academy
+                <Logo size="full" variant="light" className="h-9" />
               </h1>
               <p className="text-xs text-blue-300/70 font-medium mt-0.5">Technonex Team Portal</p>
             </div>
@@ -710,7 +715,7 @@ const TeamLeadDashboard = () => {
                   : activeTab === 'concepts'
                   ? 'Aggregated quiz metrics across your squad, sorted from lowest to highest accuracy to pinpoint training opportunities'
                   : activeTab === 'curriculum'
-                  ? 'Read-only view of published EDGE Academy tracks and training modules.'
+                  ? 'Read-only view of published NexAcademy tracks and training modules.'
                   : activeTab === 'assignments'
                   ? 'Monitor pending, in-progress, completed, and overdue training assignments for your squad.'
                   : activeTab === 'certificates'

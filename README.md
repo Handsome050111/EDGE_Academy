@@ -1,4 +1,4 @@
-# Technonex EDGE Academy
+# Technonex NexAcademy
 
 > **Proprietary Operational Qualification & Field Engineer Certification Ecosystem**  
 > Certifying deployment-ready field engineers for high-stakes enterprise IT infrastructure and live data center environments across EMEA.
@@ -7,7 +7,7 @@
 
 ## 🏗️ Architecture Overview
 
-EDGE Academy is built on a high-concurrency **MERN Stack** (MongoDB, Express, React, Node.js) with Tailwind CSS, PWA support, and automated certificate generation.
+NexAcademy is built on a high-concurrency **MERN Stack** (MongoDB, Express, React, Node.js) with Tailwind CSS, PWA support, and automated certificate generation.
 
 - **Frontend (`/client`)**: React 18, Vite 5, Tailwind CSS, Lucide Icons, React Router v6, PWA Service Worker.
 - **Backend (`/server`)**: Node.js, Express 5, Mongoose 9 (MongoDB Atlas), JWT Authentication, Helmet, Multer, Node-Cron, Resend Email Service, Puppeteer PDF rendering.
@@ -17,7 +17,7 @@ EDGE Academy is built on a high-concurrency **MERN Stack** (MongoDB, Express, Re
 ## 📂 Project Structure
 
 ```
-EDGE Academy/
+NexAcademy/
 ├── client/                     # Frontend Vite + React application
 │   ├── public/                 # Static assets, branding, icons, manifest
 │   ├── src/
@@ -45,7 +45,7 @@ EDGE Academy/
 
 ---
 
-## 🚀 Getting Started Locally
+## Getting Started Locally
 
 ### 1. Prerequisites
 - Node.js >= 18.x
@@ -74,7 +74,7 @@ npm run dev       # Starts Vite dev server on http://localhost:5173
 
 ---
 
-## ⚡ Automated Load & Performance Testing
+## Automated Load & Performance Testing
 
 To execute the 75-concurrent user load test suite:
 ```bash
@@ -84,7 +84,7 @@ npm run test:load
 
 ---
 
-## 🌐 Deployment Guidelines
+##  Deployment Guidelines
 
 ### Backend (Railway / Render / AWS)
 - Set Environment Variables: `PORT`, `MONGO_URI`, `JWT_SECRET`, `NODE_ENV=production`, `FRONTEND_URL`, `RESEND_API_KEY`, `RESEND_FROM`.
@@ -98,5 +98,5 @@ npm run test:load
 
 ---
 
-## 📄 License
+##  License
 Proprietary & Confidential - Technonex GmbH. All rights reserved.

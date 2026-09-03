@@ -70,7 +70,7 @@ const AuditLogTab = ({ showNotification }) => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Security Audit Logs</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-sm font-normal text-slate-500 mt-1">
             Immutable system logs tracking administrative actions, user changes, and governance events
           </p>
         </div>
@@ -126,7 +126,7 @@ const AuditLogTab = ({ showNotification }) => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-slate-50 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th className="px-5 py-3.5">Action</th>
                   <th className="px-4 py-3.5">Actor</th>
@@ -147,32 +147,32 @@ const AuditLogTab = ({ showNotification }) => {
                   return (
                     <tr key={log._id} className="hover:bg-slate-50/70 transition">
                       <td className="px-5 py-3.5">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase border ${getActionBadge(log.action)}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-medium uppercase border ${getActionBadge(log.action)}`}>
                           {log.action}
                         </span>
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <p className="font-semibold text-slate-900">{actorName}</p>
-                        {actorEmail && <p className="text-[11px] text-slate-500 truncate">{actorEmail}</p>}
+                        <p className="text-sm font-semibold text-slate-900">{actorName}</p>
+                        {actorEmail && <p className="text-xs font-normal text-slate-500 truncate">{actorEmail}</p>}
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <span className="font-medium text-slate-800">{log.resourceType || 'Resource'}</span>
+                        <span className="text-sm font-medium text-slate-800">{log.resourceType || 'Resource'}</span>
                         {log.resourceId && (
-                          <p className="text-[10px] text-slate-400 font-mono truncate max-w-[120px]">
+                          <p className="text-xs text-slate-400 font-mono truncate max-w-[120px]">
                             {String(log.resourceId)}
                           </p>
                         )}
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${getOutcomeBadge(outcome)}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase border ${getOutcomeBadge(outcome)}`}>
                           {outcome}
                         </span>
                       </td>
 
-                      <td className="px-4 py-3.5 text-slate-500 text-[11px] whitespace-nowrap">
+                      <td className="px-4 py-3.5 text-slate-500 text-xs font-normal whitespace-nowrap">
                         {timestamp ? new Date(timestamp).toLocaleString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -186,7 +186,7 @@ const AuditLogTab = ({ showNotification }) => {
                       <td className="px-5 py-3.5 text-right">
                         <button
                           onClick={() => setSelectedLog(log)}
-                          className="px-2.5 py-1 text-[11px] font-semibold text-[#08306B] hover:bg-blue-50 rounded-lg transition cursor-pointer"
+                          className="px-2.5 py-1 text-xs font-medium text-[#08306B] hover:bg-blue-50 rounded-lg transition cursor-pointer"
                         >
                           Inspect
                         </button>

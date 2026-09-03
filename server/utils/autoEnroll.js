@@ -1,5 +1,7 @@
 const Track = require('../models/Track');
 const Progress = require('../models/Progress');
+const User = require('../models/User');
+const { notifyNewTrackAssigned } = require('../services/notificationService');
 
 /**
  * Auto-enrolls an engineer into all published EDGE and CORE tracks by creating
@@ -71,4 +73,71 @@ async function autoEnrollEngineer(userId) {
   return result;
 }
 
-module.exports = { autoEnrollEngineer };
+/**
+ * Auto-enrolls all active engineers into a newly created or published track,
+ * and notifies each engineer via in-app notification.
+ *
+ * @param {object|string} trackOrId - Track document or track ID
+ * @returns {Promise<{ enrolledCount: number, error: string|null }>}
+ */
+async function autoEnrollAllEngineersInTrack(trackOrId) {
+  const result = { enrolledCount: 0, error: null };
+  try {
+    let track = trackOrId;
+    if (!track || !track._id) {
+      track = await Track.findById(trackOrId).lean();
+    }
+    if (!track) {
+      result.error = 'TRACK_NOT_FOUND';
+      return result;
+    }
+
+    // Only auto-enroll for published tracks
+    if (!track.is_published && !track.isPublished) {
+      return result;
+    }
+
+    // Find all active engineers
+    const engineers = await User.find({
+      role: { $in: ['engineer', 'Engineer'] },
+      $or: [{ deleted_at: null }, { deleted_at: { $exists: false } }],
+      is_active: { $ne: false },
+    }).select('_id email fullName');
+
+    for (const engineer of engineers) {
+      try {
+        const existing = await Progress.findOne({
+          $or: [{ userId: engineer._id }, { user_id: engineer._id }],
+          $or: [{ trackId: track._id }, { track_id: track._id }],
+        }).lean();
+
+        if (!existing) {
+          await Progress.create({
+            userId: engineer._id,
+            trackId: track._id,
+            completedModules: [],
+            isCompleted: false,
+          });
+          result.enrolledCount++;
+        }
+
+        // Notify engineer of new track assignment
+        await notifyNewTrackAssigned(engineer._id, track);
+      } catch (err) {
+        if (err.code !== 11000) {
+          console.warn(`[AutoEnroll] Error enrolling engineer ${engineer._id} in track ${track._id}: ${err.message}`);
+        }
+      }
+    }
+  } catch (err) {
+    console.error(`[AutoEnroll] Fatal error in autoEnrollAllEngineersInTrack: ${err.message}`);
+    result.error = err.message;
+  }
+  return result;
+}
+
+module.exports = {
+  autoEnrollEngineer,
+  autoEnrollAllEngineersInTrack,
+};
+

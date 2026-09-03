@@ -179,6 +179,7 @@
     "title": "Admin-Portal",
     "subtitle": "Lehrplanverwaltung, Zugriffskontrolle und Zertifikatskonfiguration",
     "tabs": {
+      "overview": "Übersicht",
       "userManagement": "Benutzerverwaltung",
       "curriculum": "Lehrplan",
       "questionBank": "Fragenkatalog",

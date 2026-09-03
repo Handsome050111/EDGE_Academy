@@ -1,5 +1,4 @@
 const Module = require('../models/Module');
-const ModulePrerequisite = require('../models/ModulePrerequisite');
 const Track = require('../models/Track');
 const Question = require('../models/Question');
 const QuizAttempt = require('../models/QuizAttempt');
@@ -8,8 +7,9 @@ const ConceptScore = require('../models/ConceptScore');
 const Assignment = require('../models/Assignment');
 const Certificate = require('../models/Certificate');
 const VideoProgress = require('../models/VideoProgress');
+const Progress = require('../models/Progress');
 const { generateCertificate } = require('./certificateController');
-const { hasAssignmentOverride } = require('../utils/assignmentOverride');
+const { getCompletedModuleIds } = require('../utils/progressUtils');
 const {
   shuffle,
   formatObfuscatedQuestions,
@@ -27,114 +27,6 @@ const startTopicQuiz = async (req, res) => {
       return res.status(404).json({ error: { message: 'Module not found' } });
     }
 
-    // 1. SINGLE SHARED ASSIGNMENT OVERRIDE CHECK
-    // Computed once here; reused by ALL lock gates below (prerequisite + track-level).
-    // An active (pending/in_progress) Assignment for this engineer+module bypasses all
-    // sequential and track-level locks. A COMPLETED assignment does NOT override (no bypass needed).
-    const isOverridden = await hasAssignmentOverride(engineerId, mod._id);
-
-    // 2. MODULE-LEVEL PREREQUISITE VALIDATION (Spec Section 4.6)
-    // Skipped entirely if an assignment override applies.
-    const prerequisites = await ModulePrerequisite.find({
-      $or: [{ module_id: mod._id }, { moduleId: mod._id }],
-    }).populate('prerequisite_module_id');
-
-    if (prerequisites.length > 0 && !isOverridden) {
-      const missingPrerequisites = [];
-
-      for (const prereq of prerequisites) {
-        const prereqId = prereq.prerequisite_module_id?._id || prereq.prerequisite_module_id;
-        if (!prereqId) continue;
-
-        // Check if prerequisite is completed via completed assignment or passed quiz attempt
-        const completedAssign = await Assignment.findOne({
-          $or: [
-            { engineer_id: engineerId, module_id: prereqId, status: 'completed' },
-            { userId: engineerId, moduleId: prereqId, status: 'completed' },
-          ],
-        });
-
-        const passedAttempt = completedAssign
-          ? true
-          : await QuizAttempt.findOne({
-              $or: [
-                { engineer_id: engineerId, module_id: prereqId, passed: true, status: 'completed' },
-                { userId: engineerId, moduleId: prereqId, passed: true, status: 'completed' },
-              ],
-            });
-
-        if (!completedAssign && !passedAttempt) {
-          const prereqDoc = prereq.prerequisite_module_id?.title
-            ? prereq.prerequisite_module_id
-            : await Module.findById(prereqId);
-
-          missingPrerequisites.push({
-            id: prereqId,
-            title: prereqDoc ? prereqDoc.title : 'Prerequisite Module',
-          });
-        }
-      }
-
-      if (missingPrerequisites.length > 0) {
-        return res.status(403).json({
-          error: {
-            code: 'PREREQUISITES_NOT_MET',
-            message: 'You must complete all prerequisite modules before taking this quiz.',
-            missing_prerequisites: missingPrerequisites,
-          },
-        });
-      }
-    }
-
-    // 3. TRACK-LEVEL LOCK: CORE requires EDGE to be fully completed (Business Rule)
-    // Skipped if an assignment override applies for this specific module.
-    const modTrack = await Track.findById(mod.track_id || mod.trackId).select('tier _id').lean();
-    if (modTrack && modTrack.tier === 'CORE' && !isOverridden) {
-      // Find the EDGE track
-      const edgeTrack = await Track.findOne({ tier: 'EDGE', is_published: true }).select('_id modules').lean();
-      if (edgeTrack) {
-        // Check each module in the EDGE track — all must be completed
-        const edgeModules = await Module.find({
-          $or: [{ track_id: edgeTrack._id }, { trackId: edgeTrack._id }],
-          deleted_at: null,
-        }).select('_id').lean();
-
-        if (edgeModules.length > 0) {
-          const edgeModuleIds = edgeModules.map((m) => m._id);
-
-          // Count how many EDGE modules this engineer has passed
-          const passedEdgeCount = await QuizAttempt.countDocuments({
-            $and: [
-              { $or: [{ engineer_id: engineerId }, { userId: engineerId }] },
-              { $or: [{ module_id: { $in: edgeModuleIds } }, { moduleId: { $in: edgeModuleIds } }] },
-              { passed: true },
-            ],
-          });
-
-          // Also count via completed Assignments as an alternative evidence path
-          const completedEdgeAssignCount = await Assignment.countDocuments({
-            $and: [
-              { $or: [{ engineer_id: engineerId }, { userId: engineerId }] },
-              { $or: [{ module_id: { $in: edgeModuleIds } }, { moduleId: { $in: edgeModuleIds } }] },
-              { status: 'completed' },
-            ],
-          });
-
-          const edgeModulesCompleted = Math.max(passedEdgeCount, completedEdgeAssignCount);
-
-          if (edgeModulesCompleted < edgeModules.length) {
-            return res.status(403).json({
-              error: {
-                code: 'EDGE_TRACK_REQUIRED',
-                message: 'You must complete the EDGE track before starting CORE modules.',
-                edge_modules_total: edgeModules.length,
-                edge_modules_completed: edgeModulesCompleted,
-              },
-            });
-          }
-        }
-      }
-    }
 
     // 2. VIDEO 95% WATCH GUARD (Spec Section 4.2)
     const videoProgress = await VideoProgress.findOne({
@@ -315,6 +207,9 @@ const submitQuizAttempt = async (req, res) => {
     const targetEngId = attempt.engineer_id || attempt.userId;
     const targetModId = attempt.module_id || attempt.moduleId;
 
+    // Declare mod in outer scope so it's accessible in the Progress update block below
+    let mod = null;
+
     const priorPassedAttempt = await QuizAttempt.findOne({
       $and: [
         { $or: [{ engineer_id: targetEngId }, { userId: targetEngId }] },
@@ -385,7 +280,7 @@ const submitQuizAttempt = async (req, res) => {
     const score_percent = answers.length > 0 ? Math.round((correctCount / answers.length) * 100) : 0;
 
     if (attempt.quiz_type === 'topic') {
-      const mod = await Module.findById(attempt.module_id);
+      mod = await Module.findById(attempt.module_id);
       attempt.passed = score_percent >= (mod?.pass_threshold || 80);
 
       // Update Assignment status and check certificates if authoritative pass
@@ -409,11 +304,13 @@ const submitQuizAttempt = async (req, res) => {
         const trackId = mod.track_id || mod.trackId;
         if (trackId) {
           try {
-            // Find all active/published modules for this track
+            // Only published modules count toward track completion.
+            // Draft modules have no quiz, so requiring them would make
+            // allTrackModulesCompleted permanently false.
             const trackModules = await Module.find({
               $or: [{ track_id: trackId }, { trackId: trackId }],
               deleted_at: null,
-              status: { $ne: 'archived' },
+              status: 'published',
             }).select('_id');
 
             // Fetch the Track to get its authoritative tier (no longer on Module)
@@ -422,28 +319,26 @@ const submitQuizAttempt = async (req, res) => {
 
             const trackModuleIds = trackModules.map((m) => m._id.toString());
 
-            // Collect all passed module IDs for this engineer
-            const passedAttempts = await QuizAttempt.distinct('module_id', {
+            const passedAttempts = await QuizAttempt.find({
               $or: [{ engineer_id: attempt.engineer_id }, { userId: attempt.engineer_id }],
               passed: true,
-              module_id: { $in: trackModules.map((m) => m._id) },
-            });
+              status: 'completed',
+            }).select('module_id moduleId');
 
-            const passedModuleSet = new Set([
-              ...passedAttempts.map((id) => id.toString()),
-              mod._id.toString(), // Current quiz attempt passed
-            ]);
-
-            // Include any assignments marked completed
             const completedAssignments = await Assignment.find({
               $or: [{ engineer_id: attempt.engineer_id }, { userId: attempt.engineer_id }],
               status: 'completed',
             }).select('module_id moduleId');
 
-            completedAssignments.forEach((a) => {
-              const mId = a.module_id || a.moduleId;
-              if (mId) passedModuleSet.add(mId.toString());
-            });
+            const passedModuleSet = new Set(
+              getCompletedModuleIds({
+                assignments: completedAssignments,
+                progressRecords: [],
+                quizAttempts: passedAttempts,
+              })
+            );
+
+            passedModuleSet.add(mod._id.toString());
 
             const allTrackModulesCompleted =
               trackModuleIds.length > 0 &&
@@ -480,6 +375,42 @@ const submitQuizAttempt = async (req, res) => {
     attempt.completed_at = new Date();
     await attempt.save();
 
+    if (attempt.passed && !isPracticeRetake) {
+      const targetTrackId = mod?.track_id || mod?.trackId;
+      const targetUserId = attempt.engineer_id || attempt.userId;
+
+      if (targetTrackId && targetUserId) {
+        const progressDoc = await Progress.findOne({ userId: targetUserId, trackId: targetTrackId });
+
+        if (progressDoc) {
+          const alreadyCompleted = progressDoc.completedModules.some(
+            (entry) => (entry.moduleId || entry.module_id)?.toString() === (mod?._id || mod?.id)?.toString()
+          );
+
+          if (!alreadyCompleted) {
+            progressDoc.completedModules.push({
+              moduleId: mod._id,
+              completedAt: new Date(),
+              quizScore: score_percent,
+            });
+            progressDoc.isCompleted = progressDoc.completedModules.length > 0;
+            await progressDoc.save();
+          }
+        } else {
+          await Progress.create({
+            userId: targetUserId,
+            trackId: targetTrackId,
+            completedModules: [{
+              moduleId: mod._id,
+              completedAt: new Date(),
+              quizScore: score_percent,
+            }],
+            isCompleted: false,
+          });
+        }
+      }
+    }
+
     res.json({
       score_percent: attempt.score_percent,
       passed: attempt.passed,
@@ -491,7 +422,67 @@ const submitQuizAttempt = async (req, res) => {
   }
 };
 
+// @desc    Get the engineer's best passed quiz attempt for a module with full question detail
+// @route   GET /api/v1/modules/:id/quiz-result
+// @access  Private (Engineer)
+const getModuleQuizResult = async (req, res) => {
+  try {
+    const moduleId = req.params.id;
+    const engineerId = req.user._id;
+
+    // Find the first (authoritative) passing attempt for this engineer + module
+    const attempt = await QuizAttempt.findOne({
+      $and: [
+        { $or: [{ engineer_id: engineerId }, { userId: engineerId }] },
+        { $or: [{ module_id: moduleId }, { moduleId: moduleId }] },
+        { passed: true },
+        { status: 'completed' },
+      ],
+    }).sort({ completed_at: 1, createdAt: 1 }); // earliest = authoritative first pass
+
+    if (!attempt) {
+      return res.status(404).json({ error: { code: 'NO_RESULT', message: 'No passed quiz attempt found for this module.' } });
+    }
+
+    // Fetch all responses for this attempt, populated with full question data
+    const responses = await AttemptResponse.find({ attempt_id: attempt._id })
+      .populate({
+        path: 'question_id',
+        select: 'question_text options correct_option explanation concept_tag difficulty',
+      })
+      .sort({ displayed_order: 1 });
+
+    const formattedResponses = responses.map((r) => {
+      const q = r.question_id;
+      return {
+        displayed_order: r.displayed_order,
+        question_text: q?.question_text || '',
+        options: q?.options || [],
+        selected_option: r.selected_option,
+        correct_option: q?.correct_option || '',
+        was_correct: r.was_correct,
+        explanation: q?.explanation || '',
+        concept_tag: q?.concept_tag || '',
+        difficulty: q?.difficulty || 'medium',
+      };
+    });
+
+    return res.json({
+      attempt_id: attempt._id,
+      score_percent: attempt.score_percent ?? attempt.scorePercentage ?? 0,
+      passed: attempt.passed,
+      completed_at: attempt.completed_at || attempt.completedAt || attempt.createdAt,
+      total_questions: formattedResponses.length,
+      correct_count: formattedResponses.filter((r) => r.was_correct).length,
+      responses: formattedResponses,
+    });
+  } catch (error) {
+    res.status(500).json({ error: { code: 'SERVER_ERROR', message: error.message } });
+  }
+};
+
 module.exports = {
   startTopicQuiz,
   submitQuizAttempt,
+  getModuleQuizResult,
 };

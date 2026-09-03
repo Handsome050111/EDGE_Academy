@@ -119,10 +119,17 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
       return existingCert;
     }
 
-    // Load admin certificate template configuration with explicit signatory validation
-    let config = await CertificateConfig.findOne();
+    // Load admin certificate template configuration.
+    // Upsert: if no config document exists yet (fresh deployment), create one
+    // using the schema's built-in defaults so issuance works without requiring
+    // a manual admin setup step first.
+    let config = await CertificateConfig.findOneAndUpdate(
+      {},
+      {},
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
     if (!config || !config.director_name || !config.director_name.trim()) {
-      const errMsg = 'Certificate generation failed: CertificateConfig is missing or director_name signatory is not configured.';
+      const errMsg = 'Certificate generation failed: director_name signatory is not configured.';
       console.error(`[Certificate Engine Error] ${errMsg}`);
       if (isHttpRequest) {
         return track_id_or_res.status(500).json({ error: { code: 'CONFIG_MISSING', message: errMsg } });
@@ -184,7 +191,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
         return '';
       }
     };
-    const certLogo1Base64 = loadPngBase64('certificate.png');
+    const certLogo1Base64 = loadPngBase64('NexLogo-3.png') || loadPngBase64('certificate.png');
     const certLogo2Base64 = loadPngBase64('cert-logo-2.png');
 
     // Convert signature images to Base64 data URLs for Puppeteer embedding
@@ -224,7 +231,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
         <meta charset="utf-8">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <style>
           @page {
             size: A4 landscape;
@@ -271,9 +278,9 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
           .header-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             padding: 0 2mm;
-            min-height: 42px;
+            min-height: 48px;
           }
           .cert-logo-primary,
           .cert-logo-secondary {
@@ -282,15 +289,15 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             display: block;
           }
           .cert-logo-primary {
-            height: 38px;
-            max-width: 180px;
+            height: 48px;
+            max-width: 230px;
           }
           .cert-logo-secondary {
-            height: 38px;
+            height: 42px;
             max-width: 220px;
           }
           .technonex-logo {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-weight: 900;
             font-size: 22px;
             letter-spacing: 1.5px;
@@ -309,21 +316,21 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             margin-top: 0px;
           }
           .track-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 26px;
-            font-weight: 900;
+            font-family: 'Inter', sans-serif;
+            font-size: 21px;
+            font-weight: 800;
             color: #0A2540;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
             line-height: 1.15;
           }
           .ecosystem-subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            color: #B58D3D;
+            font-family: 'Inter', sans-serif;
+            font-size: 9.5px;
+            font-weight: 600;
+            color: #0A2540;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.2px;
             margin-top: 4px;
           }
           .recipient-section {
@@ -331,17 +338,17 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             margin-top: 2px;
           }
           .recipient-name {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 34px;
+            font-family: 'Inter', sans-serif;
+            font-size: 32px;
             font-weight: 700;
             color: #0A1C30;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.3px;
             line-height: 1.2;
           }
           .gold-divider {
-            width: 320px;
+            width: 300px;
             height: 2px;
-            background: #C59B27;
+            background: #064f99;
             margin: 8px auto 0 auto;
           }
           .body-section {
@@ -377,7 +384,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
           .signatures-group {
             display: flex;
             align-items: flex-end;
-            gap: 32mm;
+            gap: 28mm;
           }
           .signature-block {
             text-align: left;
@@ -423,21 +430,39 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             color: #64748B;
             margin-top: 1px;
           }
-          .seal-container {
-            position: absolute;
-            bottom: 35px;
-            right: 40px;
-            width: 92px;
-            height: 92px;
-            z-index: 20;
+          .seal-wrapper {
+            width: 82px;
+            height: 82px;
           }
-          .footer-meta {
-            text-align: center;
-            margin-top: 20px;
+          .footer-meta-row {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #E2E8F0;
             font-family: 'Inter', sans-serif;
             font-size: 11px;
             color: #64748B;
             letter-spacing: 0.2px;
+            min-height: 48px;
+          }
+          .footer-meta-text {
+            text-align: center;
+          }
+          .technonex-bottom-logo-wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+          .technonex-bottom-logo {
+            height: 48px;
+            width: auto;
+            max-width: 220px;
+            object-fit: contain;
+            display: block;
           }
         </style>
       </head>
@@ -460,10 +485,9 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
         </svg>
 
         <div class="cert-container">
-          <!-- Dual certificate branding -->
+          <!-- Top Left certificate branding -->
           <div class="header-row">
             ${certLogo1Base64 ? `<img src="${certLogo1Base64}" alt="NexAcademy logo" class="cert-logo-primary" />` : ''}
-            ${certLogo2Base64 ? `<img src="${certLogo2Base64}" alt="Technonex logo" class="cert-logo-secondary" />` : ''}
           </div>
 
           <!-- Curriculum Track Title & Subtitle -->
@@ -472,7 +496,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             <div class="ecosystem-subtitle">Engineering Development & Growth Ecosystem</div>
           </div>
 
-          <!-- Recipient Name & Gold Divider -->
+          <!-- Recipient Name & Divider -->
           <div class="recipient-section">
             <div class="recipient-name">${recipientName}</div>
             <div class="gold-divider"></div>
@@ -513,49 +537,56 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
                 <div class="signature-title">${config.instructor_title || 'Lead Instructor'}</div>
               </div>
             </div>
+
+            <!-- Embossed Gold Medallion Seal -->
+            <div class="seal-wrapper">
+              <svg viewBox="0 0 160 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="goldGrad" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
+                    <stop offset="0%" stop-color="#FDF0CD" />
+                    <stop offset="35%" stop-color="#D4AF37" />
+                    <stop offset="70%" stop-color="#B8860B" />
+                    <stop offset="100%" stop-color="#8C6510" />
+                  </radialGradient>
+                  <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFF2B2" />
+                    <stop offset="50%" stop-color="#B8860B" />
+                    <stop offset="100%" stop-color="#5B3D06" />
+                  </linearGradient>
+                  <path id="topArc" d="M 40 78 A 42 42 0 0 1 120 78" fill="none" />
+                  <path id="bottomArc" d="M 40 82 A 42 42 0 0 0 120 82" fill="none" />
+                </defs>
+                <circle cx="80" cy="80" r="76" fill="url(#goldGrad)" stroke="url(#goldRim)" stroke-width="2" />
+                <circle cx="80" cy="80" r="72" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6" stroke-dasharray="2 2" />
+                <circle cx="80" cy="80" r="62" fill="url(#goldGrad)" stroke="#784F07" stroke-width="1.2" />
+                <circle cx="80" cy="80" r="58" fill="none" stroke="#FFF0B0" stroke-width="1" opacity="0.7" />
+
+                <!-- Text Around Top Arc -->
+                <text font-family="'Inter', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
+                  <textPath href="#topArc" startOffset="50%" text-anchor="middle">TECHNONEX</textPath>
+                </text>
+
+                <!-- Center Large EDGE Text -->
+                <text x="80" y="86" font-family="'Inter', sans-serif" font-size="20" font-weight="900" fill="#422903" text-anchor="middle" letter-spacing="1.5">EDGE</text>
+
+                <!-- Text Around Bottom Arc -->
+                <text font-family="'Inter', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
+                  <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">CERTIFIED</textPath>
+                </text>
+              </svg>
+            </div>
           </div>
 
-          <!-- Embossed Gold Medallion Seal -->
-          <div class="seal-container">
-            <svg viewBox="0 0 160 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <radialGradient id="goldGrad" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
-                  <stop offset="0%" stop-color="#FDF0CD" />
-                  <stop offset="35%" stop-color="#D4AF37" />
-                  <stop offset="70%" stop-color="#B8860B" />
-                  <stop offset="100%" stop-color="#8C6510" />
-                </radialGradient>
-                <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#FFF2B2" />
-                  <stop offset="50%" stop-color="#B8860B" />
-                  <stop offset="100%" stop-color="#5B3D06" />
-                </linearGradient>
-                <path id="topArc" d="M 40 78 A 42 42 0 0 1 120 78" fill="none" />
-                <path id="bottomArc" d="M 40 82 A 42 42 0 0 0 120 82" fill="none" />
-              </defs>
-              <circle cx="80" cy="80" r="76" fill="url(#goldGrad)" stroke="url(#goldRim)" stroke-width="2" />
-              <circle cx="80" cy="80" r="72" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6" stroke-dasharray="2 2" />
-              <circle cx="80" cy="80" r="62" fill="url(#goldGrad)" stroke="#784F07" stroke-width="1.2" />
-              <circle cx="80" cy="80" r="58" fill="none" stroke="#FFF0B0" stroke-width="1" opacity="0.7" />
-
-              <!-- Text Around Top Arc -->
-              <text font-family="'Montserrat', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
-                <textPath href="#topArc" startOffset="50%" text-anchor="middle">TECHNONEX</textPath>
-              </text>
-
-              <!-- Center Large EDGE Text -->
-              <text x="80" y="86" font-family="'Montserrat', sans-serif" font-size="20" font-weight="900" fill="#422903" text-anchor="middle" letter-spacing="1.5">EDGE</text>
-
-              <!-- Text Around Bottom Arc -->
-              <text font-family="'Montserrat', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
-                <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">CERTIFIED</textPath>
-              </text>
-            </svg>
-          </div>
-
-          <!-- Centered Footer Metadata -->
-          <div class="footer-meta">
-            Date issued: ${dateFormatted} &nbsp;|&nbsp; Certificate ID: ${certificate_id}
+          <!-- Footer Metadata Row with Date & ID in center, Technonex Logo below seal on right -->
+          <div class="footer-meta-row">
+            <div class="footer-meta-text">
+              Date issued: ${dateFormatted} &nbsp;|&nbsp; Certificate ID: ${certificate_id}
+            </div>
+            ${certLogo2Base64 ? `
+              <div class="technonex-bottom-logo-wrap">
+                <img src="${certLogo2Base64}" alt="Technonex logo" class="technonex-bottom-logo" />
+              </div>
+            ` : ''}
           </div>
         </div>
       </body>
@@ -711,6 +742,7 @@ const renderPublicVerifyPage = async (req, res) => {
 
     let verifyLogoBase64 = '';
     const possibleLogoPaths = [
+      path.join(__dirname, '../../client/public/NexLogo-3.png'),
       path.join(__dirname, '../public/logo.png'),
       path.join(__dirname, '../../client/public/logo.png'),
     ];

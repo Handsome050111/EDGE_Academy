@@ -7,6 +7,7 @@ import ProfileModal from '../../components/ProfileModal';
 import Logo from '../../components/Logo';
 
 // Tab Components
+import AdminDashboardTab from './tabs/AdminDashboardTab';
 import UserManagementTab from './tabs/UserManagementTab';
 import ModuleCatalogTab from './tabs/ModuleCatalogTab';
 import QuestionBankTab from './tabs/QuestionBankTab';
@@ -18,8 +19,8 @@ const AdminPortal = () => {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
 
-  // Active Tab State ('users' | 'curriculum' | 'questions' | 'assignments' | 'audit' | 'certificates')
-  const [activeTab, setActiveTab] = useState('users');
+  // Active Tab State ('overview' | 'users' | 'curriculum' | 'questions' | 'assignments' | 'audit' | 'certificates')
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Modals & Navigation Drawer
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -37,11 +38,20 @@ const AdminPortal = () => {
 
   const navTabs = [
     {
+      id: 'overview',
+      label: t('adminPortal.tabs.overview') || 'Overview',
+      icon: (
+        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+        </svg>
+      ),
+    },
+    {
       id: 'users',
       label: t('adminPortal.tabs.userManagement'),
       icon: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
       ),
     },
@@ -49,8 +59,8 @@ const AdminPortal = () => {
       id: 'curriculum',
       label: t('adminPortal.tabs.curriculum'),
       icon: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
       ),
     },
@@ -58,8 +68,8 @@ const AdminPortal = () => {
       id: 'questions',
       label: t('adminPortal.tabs.questionBank'),
       icon: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
     },
@@ -67,8 +77,8 @@ const AdminPortal = () => {
       id: 'assignments',
       label: t('adminPortal.tabs.assignmentEngine'),
       icon: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
         </svg>
       ),
     },
@@ -76,8 +86,8 @@ const AdminPortal = () => {
       id: 'audit',
       label: t('adminPortal.tabs.auditLog'),
       icon: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       ),
     },
@@ -85,8 +95,8 @@ const AdminPortal = () => {
       id: 'certificates',
       label: t('adminPortal.tabs.certificateGovernance'),
       icon: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
         </svg>
       ),
     },
@@ -105,7 +115,7 @@ const AdminPortal = () => {
 
       {/* Slide-Out Navigation Drawer on Mobile / Fixed Sidebar on Desktop */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[80vw] max-w-xs lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 h-screen overflow-y-auto shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[80vw] max-w-xs lg:w-72 bg-[#092857] text-white p-5 flex flex-col justify-between border-r border-blue-900/40 shrink-0 h-screen overflow-y-auto shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -113,10 +123,10 @@ const AdminPortal = () => {
           {/* Brand Header */}
           <div className="flex items-start justify-between mb-7">
             <div>
-              <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <Logo size="full" variant="light" className="h-9" />
-              </h1>
-              <p className="text-xs text-blue-300/70 font-medium mt-0.5">Admin Portal</p>
+              </div>
+              <p className="text-xs font-normal text-slate-400 tracking-normal mt-0.5">Admin Portal</p>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -130,7 +140,7 @@ const AdminPortal = () => {
           </div>
 
           {/* 6 Navigation Tabs */}
-          <nav className="space-y-1.5">
+          <nav className="space-y-1">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -140,13 +150,13 @@ const AdminPortal = () => {
                     setActiveTab(tab.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm tracking-normal transition cursor-pointer ${
                     isActive
-                      ? 'bg-white/15 text-white border border-white/20 shadow-xs'
-                      : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+                      ? 'bg-white/10 text-white font-medium'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 font-normal'
                   }`}
                 >
-                  <span className={isActive ? 'text-white' : 'text-blue-300'}>{tab.icon}</span>
+                  <span className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-300'}`}>{tab.icon}</span>
                   <span>{tab.label}</span>
                 </button>
               );
@@ -154,38 +164,36 @@ const AdminPortal = () => {
           </nav>
         </div>
 
-        {/* Sidebar Footer: Profile & Logout */}
-        <div className="pt-6 border-t border-blue-900/50 space-y-3 mt-auto">
+        {/* Compact Enterprise Sidebar Footer */}
+        <div className="pt-3.5 border-t border-white/10 mt-auto flex items-center justify-between gap-1.5">
           <button
             onClick={() => {
               setShowProfileModal(true);
               setMobileMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-white/10 transition cursor-pointer text-left group"
+            className="flex-1 flex items-center gap-2.5 p-1.5 -ml-1 rounded-xl hover:bg-white/5 transition cursor-pointer text-left min-w-0 group"
             title="Open Profile Settings"
           >
-            <div className="h-9 w-9 rounded-xl bg-[#08306B] border border-blue-400/30 flex items-center justify-center font-bold text-white text-sm shadow-sm shrink-0 group-hover:border-white/50 transition">
+            <div className="h-8 w-8 rounded-lg bg-[#08306B] border border-blue-400/30 flex items-center justify-center font-medium text-white text-xs shadow-xs shrink-0 group-hover:border-white/50 transition">
               {(user?.fullName || 'A')[0]}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white truncate group-hover:text-blue-200 transition">
+              <p className="text-xs font-medium text-white truncate group-hover:text-slate-200 transition">
                 {user?.fullName || 'Admin User'}
               </p>
-              <p className="text-xs text-blue-300/60 truncate capitalize">Administrator</p>
+              <p className="text-[11px] font-normal text-slate-400 truncate capitalize">Administrator</p>
             </div>
-            <svg className="w-4 h-4 text-blue-300/50 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
           </button>
 
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-2 py-2 text-xs font-medium text-blue-200/80 hover:text-white hover:bg-white/5 rounded-xl transition-colors group cursor-pointer"
+            className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition cursor-pointer shrink-0"
+            title="Logout"
+            aria-label="Logout"
           >
-            <svg className="w-4 h-4 text-blue-300 group-hover:text-white transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <svg className="w-4 h-4 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span>Logout</span>
           </button>
         </div>
       </aside>
@@ -216,7 +224,7 @@ const AdminPortal = () => {
               <div className="h-8 w-8 rounded-full bg-[#08306B] text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
                 {(user?.fullName || 'A')[0]}
               </div>
-              <span className="text-xs font-semibold text-slate-800 hidden sm:inline truncate max-w-[140px]">
+              <span className="text-sm font-medium text-slate-700 hidden sm:inline truncate max-w-[140px]">
                 {user?.fullName || 'Admin User'}
               </span>
             </div>
@@ -245,6 +253,9 @@ const AdminPortal = () => {
           )}
 
           {/* Active Tab Router */}
+          {activeTab === 'overview' && (
+            <AdminDashboardTab showNotification={showNotification} />
+          )}
           {activeTab === 'users' && (
             <UserManagementTab currentUser={user} showNotification={showNotification} />
           )}

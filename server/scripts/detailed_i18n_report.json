@@ -1,0 +1,3052 @@
+{
+  "client/src/pages/EngineerDashboard.jsx": {
+    "hardcoded": [],
+    "missingKeys": [
+      {
+        "line": 1016,
+        "key": "noDescription",
+        "inEn": false,
+        "inDe": false,
+        "snippet": "<p className=\"text-xs text-slate-500 line-clamp-1\">{m.description || t('noDescription')}</p>"
+      },
+      {
+        "line": 1042,
+        "key": "locked",
+        "inEn": false,
+        "inDe": false,
+        "snippet": "{isLocked ? t('locked') : m.isCompleted ? t('review') : t('start')}"
+      },
+      {
+        "line": 1042,
+        "key": "review",
+        "inEn": false,
+        "inDe": false,
+        "snippet": "{isLocked ? t('locked') : m.isCompleted ? t('review') : t('start')}"
+      },
+      {
+        "line": 1042,
+        "key": "start",
+        "inEn": false,
+        "inDe": false,
+        "snippet": "{isLocked ? t('locked') : m.isCompleted ? t('review') : t('start')}"
+      }
+    ],
+    "backendSourced": [
+      {
+        "line": 548,
+        "expression": "track.title",
+        "snippet": "{track.title}"
+      },
+      {
+        "line": 640,
+        "expression": "m.title",
+        "snippet": "<p className=\"text-xs font-medium text-white leading-snug break-words line-clamp-2\" title={m.title}>"
+      },
+      {
+        "line": 641,
+        "expression": "m.title",
+        "snippet": "{m.title}"
+      },
+      {
+        "line": 752,
+        "expression": "activeLessonData.title",
+        "snippet": "<h1 className=\"text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mt-2\">{activeLessonData.title}</h1>"
+      },
+      {
+        "line": 766,
+        "expression": "activeLessonData.title",
+        "snippet": "title={activeLessonData.title}"
+      },
+      {
+        "line": 850,
+        "expression": "chap.title",
+        "snippet": "{chap.title}"
+      },
+      {
+        "line": 854,
+        "expression": "chap.description",
+        "snippet": "{chap.description}"
+      },
+      {
+        "line": 915,
+        "expression": "att.filename",
+        "snippet": "{att.filename}"
+      },
+      {
+        "line": 950,
+        "expression": "track.title",
+        "snippet": "<h2 className=\"text-xl font-bold text-slate-900\">{track.title}</h2>"
+      },
+      {
+        "line": 952,
+        "expression": "track.tier",
+        "snippet": "{track.tier}"
+      },
+      {
+        "line": 961,
+        "expression": "track.description",
+        "snippet": "<p className=\"text-slate-600 text-sm font-normal\">{track.description}</p>"
+      },
+      {
+        "line": 1015,
+        "expression": "m.title",
+        "snippet": "<h4 className=\"font-semibold text-slate-900 text-sm\">{m.title}</h4>"
+      }
+    ]
+  },
+  "client/src/pages/TeamLeadDashboard.jsx": {
+    "hardcoded": [
+      {
+        "line": 496,
+        "type": "JSX text",
+        "text": "Technonex Team Portal",
+        "snippet": "<p className=\"text-xs font-normal text-slate-400 tracking-normal mt-0.5\">Technonex Team Portal</p>"
+      },
+      {
+        "line": 572,
+        "type": "JSX text",
+        "text": "Curriculum Browser",
+        "snippet": "<span>Curriculum Browser</span>"
+      },
+      {
+        "line": 745,
+        "type": "JSX text",
+        "text": "Assign Curriculum",
+        "snippet": "<span>Assign Curriculum</span>"
+      },
+      {
+        "line": 756,
+        "type": "JSX text",
+        "text": "Active Squad Members",
+        "snippet": "<span className=\"mt-1 inline-block text-xs font-medium text-emerald-600\">Active Squad Members</span>"
+      },
+      {
+        "line": 766,
+        "type": "JSX text",
+        "text": "Active Assignments",
+        "snippet": "<p className=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Active Assignments</p>"
+      },
+      {
+        "line": 768,
+        "type": "JSX text",
+        "text": "Pending / In Progress",
+        "snippet": "<span className=\"mt-1 inline-block text-xs font-medium text-blue-600\">Pending / In Progress</span>"
+      },
+      {
+        "line": 771,
+        "type": "JSX text",
+        "text": "Earned Certificates",
+        "snippet": "<p className=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Earned Certificates</p>"
+      },
+      {
+        "line": 775,
+        "type": "JSX text",
+        "text": "Verified Credentials",
+        "snippet": "<span className=\"mt-1 inline-block text-xs font-medium text-amber-600\">Verified Credentials</span>"
+      },
+      {
+        "line": 796,
+        "type": "Input placeholder",
+        "text": "Search squad engineers by name or email...",
+        "snippet": "placeholder=\"Search squad engineers by name or email...\""
+      },
+      {
+        "line": 810,
+        "type": "JSX text",
+        "text": "All Statuses",
+        "snippet": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+      },
+      {
+        "line": 811,
+        "type": "JSX text",
+        "text": "Active",
+        "snippet": "<option value=\"active\" className=\"truncate\">Active</option>"
+      },
+      {
+        "line": 812,
+        "type": "JSX text",
+        "text": "Inactive",
+        "snippet": "<option value=\"inactive\" className=\"truncate\">Inactive</option>"
+      },
+      {
+        "line": 835,
+        "type": "JSX text",
+        "text": "Loading squad engineers...",
+        "snippet": "<p className=\"text-xs text-slate-500 font-medium\">Loading squad engineers...</p>"
+      },
+      {
+        "line": 844,
+        "type": "JSX text",
+        "text": "No squad engineers found",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-800\">No squad engineers found</p>"
+      },
+      {
+        "line": 857,
+        "type": "JSX text",
+        "text": "Track Progress",
+        "snippet": "<th className=\"px-4 py-3.5\">Track Progress</th>"
+      },
+      {
+        "line": 858,
+        "type": "JSX text",
+        "text": "Active Assignments",
+        "snippet": "<th className=\"px-4 py-3.5\">Active Assignments</th>"
+      },
+      {
+        "line": 859,
+        "type": "JSX text",
+        "text": "Earned Certificates",
+        "snippet": "<th className=\"px-4 py-3.5\">Earned Certificates</th>"
+      },
+      {
+        "line": 860,
+        "type": "JSX text",
+        "text": "Avg Quiz Score",
+        "snippet": "<th className=\"px-4 py-3.5\">Avg Quiz Score</th>"
+      },
+      {
+        "line": 861,
+        "type": "JSX text",
+        "text": "Primary Weak Concept",
+        "snippet": "<th className=\"px-4 py-3.5\">Primary Weak Concept</th>"
+      },
+      {
+        "line": 931,
+        "type": "JSX text",
+        "text": "No quiz data",
+        "snippet": ": <span className=\"text-slate-400 font-normal italic\">No quiz data</span>}"
+      },
+      {
+        "line": 940,
+        "type": "JSX text",
+        "text": "None",
+        "snippet": "<span className=\"text-slate-400 italic\">None</span>"
+      },
+      {
+        "line": 994,
+        "type": "Input placeholder",
+        "text": "Search concept tags (e.g. FIBER, OTDR, SAFETY)...",
+        "snippet": "placeholder=\"Search concept tags (e.g. FIBER, OTDR, SAFETY)...\""
+      },
+      {
+        "line": 1008,
+        "type": "JSX text",
+        "text": "All Proficiency Levels",
+        "snippet": "<option value=\"all\" className=\"truncate\">All Proficiency Levels</option>"
+      },
+      {
+        "line": 1009,
+        "type": "JSX text",
+        "text": "Critical Need (&lt; 60%)",
+        "snippet": "<option value=\"critical\" className=\"truncate\">Critical Need (&lt; 60%)</option>"
+      },
+      {
+        "line": 1010,
+        "type": "JSX text",
+        "text": "Needs Focus (60 - 79%)",
+        "snippet": "<option value=\"needs_focus\" className=\"truncate\">Needs Focus (60 - 79%)</option>"
+      },
+      {
+        "line": 1034,
+        "type": "JSX text",
+        "text": "Aggregating squad concept accuracy...",
+        "snippet": "<p className=\"text-xs text-slate-500 font-medium\">Aggregating squad concept accuracy...</p>"
+      },
+      {
+        "line": 1057,
+        "type": "JSX text",
+        "text": "Concept Tag",
+        "snippet": "<th className=\"px-5 py-3.5\">Concept Tag</th>"
+      },
+      {
+        "line": 1058,
+        "type": "JSX text",
+        "text": "Proficiency Status",
+        "snippet": "<th className=\"px-4 py-3.5\">Proficiency Status</th>"
+      },
+      {
+        "line": 1059,
+        "type": "JSX text",
+        "text": "Accuracy Rate",
+        "snippet": "<th className=\"px-4 py-3.5\">Accuracy Rate</th>"
+      },
+      {
+        "line": 1060,
+        "type": "JSX text",
+        "text": "Questions Correct / Total",
+        "snippet": "<th className=\"px-4 py-3.5\">Questions Correct / Total</th>"
+      },
+      {
+        "line": 1061,
+        "type": "JSX text",
+        "text": "Engineers Tested",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Engineers Tested</th>"
+      },
+      {
+        "line": 1170,
+        "type": "JSX text",
+        "text": "No curriculum tracks available.",
+        "snippet": "<p className=\"text-slate-400 text-sm\">No curriculum tracks available.</p>"
+      },
+      {
+        "line": 1197,
+        "type": "JSX text",
+        "text": "No modules published in this track yet.",
+        "snippet": "<p className=\"text-xs text-slate-400 italic\">No modules published in this track yet.</p>"
+      },
+      {
+        "line": 1241,
+        "type": "Input placeholder",
+        "text": "Search by engineer name, email, module, or track...",
+        "snippet": "placeholder=\"Search by engineer name, email, module, or track...\""
+      },
+      {
+        "line": 1255,
+        "type": "JSX text",
+        "text": "All Statuses",
+        "snippet": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+      },
+      {
+        "line": 1256,
+        "type": "JSX text",
+        "text": "Pending",
+        "snippet": "<option value=\"pending\" className=\"truncate\">Pending</option>"
+      },
+      {
+        "line": 1257,
+        "type": "JSX text",
+        "text": "In Progress",
+        "snippet": "<option value=\"in_progress\" className=\"truncate\">In Progress</option>"
+      },
+      {
+        "line": 1258,
+        "type": "JSX text",
+        "text": "Completed",
+        "snippet": "<option value=\"completed\" className=\"truncate\">Completed</option>"
+      },
+      {
+        "line": 1259,
+        "type": "JSX text",
+        "text": "Overdue",
+        "snippet": "<option value=\"overdue\" className=\"truncate\">Overdue</option>"
+      },
+      {
+        "line": 1269,
+        "type": "JSX text",
+        "text": "Loading squad assignments...",
+        "snippet": "<p className=\"text-xs font-semibold\">Loading squad assignments...</p>"
+      },
+      {
+        "line": 1278,
+        "type": "JSX text",
+        "text": "No assignments found",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-800\">No assignments found</p>"
+      },
+      {
+        "line": 1290,
+        "type": "JSX text",
+        "text": "Engineer",
+        "snippet": "<th className=\"px-5 py-3.5\">Engineer</th>"
+      },
+      {
+        "line": 1291,
+        "type": "JSX text",
+        "text": "Assigned Module & Track",
+        "snippet": "<th className=\"px-4 py-3.5\">Assigned Module & Track</th>"
+      },
+      {
+        "line": 1292,
+        "type": "JSX text",
+        "text": "Assigned By",
+        "snippet": "<th className=\"px-4 py-3.5\">Assigned By</th>"
+      },
+      {
+        "line": 1293,
+        "type": "JSX text",
+        "text": "Assigned Date",
+        "snippet": "<th className=\"px-4 py-3.5\">Assigned Date</th>"
+      },
+      {
+        "line": 1294,
+        "type": "JSX text",
+        "text": "Deadline",
+        "snippet": "<th className=\"px-4 py-3.5\">Deadline</th>"
+      },
+      {
+        "line": 1295,
+        "type": "JSX text",
+        "text": "Status",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Status</th>"
+      },
+      {
+        "line": 1347,
+        "type": "JSX text",
+        "text": "No deadline",
+        "snippet": "<span className=\"text-slate-400 italic\">No deadline</span>"
+      },
+      {
+        "line": 1407,
+        "type": "Input placeholder",
+        "text": "Search by engineer name, email, or certificate ID...",
+        "snippet": "placeholder=\"Search by engineer name, email, or certificate ID...\""
+      },
+      {
+        "line": 1421,
+        "type": "JSX text",
+        "text": "All Tracks",
+        "snippet": "<option value=\"all\" className=\"truncate\">All Tracks</option>"
+      },
+      {
+        "line": 1437,
+        "type": "JSX text",
+        "text": "All Statuses",
+        "snippet": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+      },
+      {
+        "line": 1438,
+        "type": "JSX text",
+        "text": "Active",
+        "snippet": "<option value=\"active\" className=\"truncate\">Active</option>"
+      },
+      {
+        "line": 1439,
+        "type": "JSX text",
+        "text": "Revoked",
+        "snippet": "<option value=\"revoked\" className=\"truncate\">Revoked</option>"
+      },
+      {
+        "line": 1449,
+        "type": "JSX text",
+        "text": "Loading squad certificates...",
+        "snippet": "<p className=\"text-xs font-semibold\">Loading squad certificates...</p>"
+      },
+      {
+        "line": 1458,
+        "type": "JSX text",
+        "text": "No certificates found",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-800\">No certificates found</p>"
+      },
+      {
+        "line": 1470,
+        "type": "JSX text",
+        "text": "Recipient Engineer",
+        "snippet": "<th className=\"px-5 py-3.5\">Recipient Engineer</th>"
+      },
+      {
+        "line": 1471,
+        "type": "JSX text",
+        "text": "Certificate ID",
+        "snippet": "<th className=\"px-4 py-3.5\">Certificate ID</th>"
+      },
+      {
+        "line": 1472,
+        "type": "JSX text",
+        "text": "Curriculum Track",
+        "snippet": "<th className=\"px-4 py-3.5\">Curriculum Track</th>"
+      },
+      {
+        "line": 1473,
+        "type": "JSX text",
+        "text": "Tier",
+        "snippet": "<th className=\"px-4 py-3.5\">Tier</th>"
+      },
+      {
+        "line": 1474,
+        "type": "JSX text",
+        "text": "Issued Date",
+        "snippet": "<th className=\"px-4 py-3.5\">Issued Date</th>"
+      },
+      {
+        "line": 1475,
+        "type": "JSX text",
+        "text": "Status",
+        "snippet": "<th className=\"px-4 py-3.5\">Status</th>"
+      },
+      {
+        "line": 1476,
+        "type": "JSX text",
+        "text": "Actions",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+      },
+      {
+        "line": 1558,
+        "type": "JSX text",
+        "text": "Saving...",
+        "snippet": "<span>Saving...</span>"
+      },
+      {
+        "line": 1565,
+        "type": "JSX text",
+        "text": "PDF",
+        "snippet": "<span>PDF</span>"
+      },
+      {
+        "line": 1604,
+        "type": "JSX text",
+        "text": "Assign Curriculum to Team",
+        "snippet": "<span>Assign Curriculum to Team</span>"
+      },
+      {
+        "line": 1606,
+        "type": "JSX text",
+        "text": "Assign a single module or entire certification track to your squad.",
+        "snippet": "<p className=\"text-sm font-normal text-slate-500 mt-1\">Assign a single module or entire certification track to your squad.</p>"
+      },
+      {
+        "line": 1656,
+        "type": "JSX text",
+        "text": "Single Module",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Single Module</p>"
+      },
+      {
+        "line": 1657,
+        "type": "JSX text",
+        "text": "Assign a specific topic",
+        "snippet": "<p className=\"text-[10px] text-slate-500\">Assign a specific topic</p>"
+      },
+      {
+        "line": 1677,
+        "type": "JSX text",
+        "text": "Entire Track",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Entire Track</p>"
+      },
+      {
+        "line": 1678,
+        "type": "JSX text",
+        "text": "Sequential modules",
+        "snippet": "<p className=\"text-[10px] text-slate-500\">Sequential modules</p>"
+      },
+      {
+        "line": 1750,
+        "type": "JSX text",
+        "text": "Select Engineers",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Select Engineers</p>"
+      },
+      {
+        "line": 1751,
+        "type": "JSX text",
+        "text": "Pick squad members",
+        "snippet": "<p className=\"text-[10px] text-slate-500\">Pick squad members</p>"
+      },
+      {
+        "line": 1771,
+        "type": "JSX text",
+        "text": "Entire Team",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Entire Team</p>"
+      },
+      {
+        "line": 1782,
+        "type": "JSX text",
+        "text": "Team Engineers",
+        "snippet": "<label className=\"text-xs font-bold text-slate-700\">Team Engineers</label>"
+      },
+      {
+        "line": 1793,
+        "type": "JSX text",
+        "text": "No engineers assigned to your team squad yet.",
+        "snippet": "<p className=\"text-xs text-slate-400\">No engineers assigned to your team squad yet.</p>"
+      },
+      {
+        "line": 1834,
+        "type": "JSX text",
+        "text": "Assigned engineers will receive an automated in-app bell notification and email.",
+        "snippet": "<span>Assigned engineers will receive an automated in-app bell notification and email.</span>"
+      },
+      {
+        "line": 1892,
+        "type": "JSX text",
+        "text": "No certificates issued yet",
+        "snippet": "<p className=\"text-xs font-semibold text-slate-700\">No certificates issued yet</p>"
+      },
+      {
+        "line": 1893,
+        "type": "JSX text",
+        "text": "This engineer has not completed all modules required for a certificate.",
+        "snippet": "<p className=\"text-[11px] text-slate-400\">This engineer has not completed all modules required for a certificate.</p>"
+      },
+      {
+        "line": 1954,
+        "type": "JSX text",
+        "text": "Saving...",
+        "snippet": "<span>Saving...</span>"
+      },
+      {
+        "line": 1961,
+        "type": "JSX text",
+        "text": "Download PDF",
+        "snippet": "<span>Download PDF</span>"
+      },
+      {
+        "line": 2020,
+        "type": "JSX text",
+        "text": "No active assignments found",
+        "snippet": "<p className=\"text-xs font-semibold text-slate-700\">No active assignments found</p>"
+      },
+      {
+        "line": 2021,
+        "type": "JSX text",
+        "text": "This engineer has not been assigned any modules yet.",
+        "snippet": "<p className=\"text-[11px] text-slate-400\">This engineer has not been assigned any modules yet.</p>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 683,
+        "expression": "error",
+        "snippet": "<span>{error}</span>"
+      },
+      {
+        "line": 875,
+        "expression": "eng.email",
+        "snippet": "<p className=\"text-[11px] text-slate-400 truncate\">{eng.email}</p>"
+      },
+      {
+        "line": 1105,
+        "expression": "statusBadgeClass",
+        "snippet": "<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusBadgeClass}`}>"
+      },
+      {
+        "line": 1106,
+        "expression": "statusLabel",
+        "snippet": "{statusLabel}"
+      },
+      {
+        "line": 1189,
+        "expression": "track.tier",
+        "snippet": "{track.tier}"
+      },
+      {
+        "line": 1203,
+        "expression": "mod.title",
+        "snippet": "<h5 className=\"text-xs font-bold text-slate-900\">{mod.title}</h5>"
+      },
+      {
+        "line": 1327,
+        "expression": "track.tier",
+        "snippet": "{track.title || track.name || 'Curriculum Track'} {track.tier ? `· ${track.tier}` : ''}"
+      },
+      {
+        "line": 1520,
+        "expression": "tierVal",
+        "snippet": "{tierVal}"
+      },
+      {
+        "line": 1702,
+        "expression": "mod.title",
+        "snippet": "[{mod.trackTitle}] {mod.title}"
+      },
+      {
+        "line": 1804,
+        "expression": "eng.email",
+        "snippet": "<span className=\"text-slate-400 text-[11px]\">({eng.email})</span>"
+      },
+      {
+        "line": 1873,
+        "expression": "selectedEngineerForCerts.email",
+        "snippet": "<p className=\"text-xs text-slate-500\">{selectedEngineerForCerts.email}</p>"
+      },
+      {
+        "line": 1919,
+        "expression": "tierVal",
+        "snippet": "{tierVal}"
+      },
+      {
+        "line": 1999,
+        "expression": "selectedEngineerForAssignments.email",
+        "snippet": "<p className=\"text-xs text-slate-500\">{selectedEngineerForAssignments.email}</p>"
+      },
+      {
+        "line": 2048,
+        "expression": "track.tier",
+        "snippet": "{track.tier}"
+      }
+    ]
+  },
+  "client/src/pages/admin/AdminPortal.jsx": {
+    "hardcoded": [
+      {
+        "line": 119,
+        "type": "JSX text",
+        "text": "Admin Portal",
+        "snippet": "<p className=\"text-xs font-normal text-slate-400 tracking-normal mt-0.5\">Admin Portal</p>"
+      },
+      {
+        "line": 174,
+        "type": "JSX text",
+        "text": "Administrator",
+        "snippet": "<p className=\"text-[11px] font-normal text-slate-400 truncate capitalize\">Administrator</p>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 150,
+        "expression": "tab.label",
+        "snippet": "<span>{tab.label}</span>"
+      },
+      {
+        "line": 235,
+        "expression": "toast.message",
+        "snippet": "<span>{toast.message}</span>"
+      }
+    ]
+  },
+  "client/src/pages/admin/tabs/UserManagementTab.jsx": {
+    "hardcoded": [
+      {
+        "line": 180,
+        "type": "Notification Toast",
+        "text": "User ",
+        "snippet": "showNotification('success', `User '${u.fullName || u.email}' ${currentlyActive ? 'deactivated' : 'reactivated'} successfully.`);"
+      },
+      {
+        "line": 207,
+        "type": "Notification Toast",
+        "text": "You cannot delete your own active Admin account.",
+        "snippet": "showNotification('error', 'You cannot delete your own active Admin account.');"
+      },
+      {
+        "line": 500,
+        "type": "Notification Toast",
+        "text": "User invitation / account creation completed",
+        "snippet": "showNotification('success', 'User invitation / account creation completed');"
+      },
+      {
+        "line": 518,
+        "type": "Notification Toast",
+        "text": "Team Lead assignment updated successfully",
+        "snippet": "showNotification('success', 'Team Lead assignment updated successfully');"
+      },
+      {
+        "line": 527,
+        "type": "JSX text",
+        "text": "Edit User Details",
+        "snippet": "<h3 className=\"text-base font-bold text-slate-900\">Edit User Details</h3>"
+      },
+      {
+        "line": 532,
+        "type": "JSX text",
+        "text": "Full Name",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Full Name</label>"
+      },
+      {
+        "line": 543,
+        "type": "JSX text",
+        "text": "Language Preference",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Language Preference</label>"
+      },
+      {
+        "line": 549,
+        "type": "JSX text",
+        "text": "English (EN)",
+        "snippet": "<option value=\"en\" className=\"truncate\">English (EN)</option>"
+      },
+      {
+        "line": 550,
+        "type": "JSX text",
+        "text": "German (DE)",
+        "snippet": "<option value=\"de\" className=\"truncate\">German (DE)</option>"
+      },
+      {
+        "line": 579,
+        "type": "JSX text",
+        "text": "Change User Role",
+        "snippet": "<h3 className=\"text-base font-bold text-slate-900\">Change User Role</h3>"
+      },
+      {
+        "line": 584,
+        "type": "JSX text",
+        "text": "Select Role",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1.5\">Select Role</label>"
+      },
+      {
+        "line": 644,
+        "type": "JSX text",
+        "text": "Delete User Account",
+        "snippet": "<h3 className=\"text-base font-bold text-slate-900\">Delete User Account</h3>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 173,
+        "expression": "actionText",
+        "snippet": "if (!window.confirm(`Are you sure you want to ${actionText} user '${u.fullName || u.email}'?`)) return;"
+      },
+      {
+        "line": 183,
+        "expression": "actionText",
+        "snippet": "showNotification('error', err.response?.data?.message || err.message || `Failed to ${actionText} user`);"
+      },
+      {
+        "line": 194,
+        "expression": "u.email",
+        "snippet": "showNotification('success', res.data?.message || `Invitation resent successfully to ${u.email}`);"
+      },
+      {
+        "line": 286,
+        "expression": "roleFilter",
+        "snippet": "value={roleFilter}"
+      },
+      {
+        "line": 297,
+        "expression": "statusFilter",
+        "snippet": "value={statusFilter}"
+      },
+      {
+        "line": 368,
+        "expression": "name",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-900 truncate\">{name}</p>"
+      },
+      {
+        "line": 369,
+        "expression": "u.email",
+        "snippet": "<p className=\"text-xs font-normal text-slate-500 truncate\">{u.email}</p>"
+      },
+      {
+        "line": 528,
+        "expression": "editingUser.email",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-0.5\">{editingUser.email}</p>"
+      },
+      {
+        "line": 564,
+        "expression": "actionLoading",
+        "snippet": "disabled={actionLoading}"
+      },
+      {
+        "line": 592,
+        "expression": "r.role",
+        "snippet": "key={r.role}"
+      },
+      {
+        "line": 600,
+        "expression": "r.role",
+        "snippet": "value={r.role}"
+      },
+      {
+        "line": 606,
+        "expression": "r.label",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">{r.label}</p>"
+      },
+      {
+        "line": 624,
+        "expression": "actionLoading",
+        "snippet": "disabled={actionLoading}"
+      },
+      {
+        "line": 660,
+        "expression": "actionLoading",
+        "snippet": "disabled={actionLoading}"
+      }
+    ]
+  },
+  "client/src/pages/admin/tabs/ModuleCatalogTab.jsx": {
+    "hardcoded": [
+      {
+        "line": 187,
+        "type": "Notification Toast",
+        "text": "Failed to load module details",
+        "snippet": "showNotification('error', 'Failed to load module details');"
+      },
+      {
+        "line": 260,
+        "type": "Notification Toast",
+        "text": "Track name is required",
+        "snippet": "showNotification('error', 'Track name is required');"
+      },
+      {
+        "line": 278,
+        "type": "Notification Toast",
+        "text": "Track ",
+        "snippet": "showNotification('success', `Track '${res.data.name}' updated successfully!`);"
+      },
+      {
+        "line": 284,
+        "type": "Notification Toast",
+        "text": "Track ",
+        "snippet": "showNotification('success', `Track '${res.data.name}' created successfully!`);"
+      },
+      {
+        "line": 298,
+        "type": "Notification Toast",
+        "text": "Parent track and module title are required.",
+        "snippet": "showNotification('error', 'Parent track and module title are required.');"
+      },
+      {
+        "line": 316,
+        "type": "Notification Toast",
+        "text": "Module ",
+        "snippet": "showNotification('success', `Module '${updated.title}' updated successfully!`);"
+      },
+      {
+        "line": 325,
+        "type": "Notification Toast",
+        "text": "Module ",
+        "snippet": "showNotification('success', `Module '${created.title}' created successfully!`);"
+      },
+      {
+        "line": 362,
+        "type": "Notification Toast",
+        "text": "Please select or create a module first.",
+        "snippet": "showNotification('error', 'Please select or create a module first.');"
+      },
+      {
+        "line": 367,
+        "type": "Notification Toast",
+        "text": "Please select a video file or enter a Cloudflare Stream ID.",
+        "snippet": "showNotification('error', 'Please select a video file or enter a Cloudflare Stream ID.');"
+      },
+      {
+        "line": 414,
+        "type": "Notification Toast",
+        "text": "Please select or create a module first.",
+        "snippet": "showNotification('error', 'Please select or create a module first.');"
+      },
+      {
+        "line": 418,
+        "type": "Notification Toast",
+        "text": "Please select an image file (PNG, JPG, WEBP).",
+        "snippet": "showNotification('error', 'Please select an image file (PNG, JPG, WEBP).');"
+      },
+      {
+        "line": 432,
+        "type": "Notification Toast",
+        "text": "Custom thumbnail image uploaded successfully!",
+        "snippet": "showNotification('success', 'Custom thumbnail image uploaded successfully!');"
+      },
+      {
+        "line": 446,
+        "type": "Notification Toast",
+        "text": "Please select or create a module first.",
+        "snippet": "showNotification('error', 'Please select or create a module first.');"
+      },
+      {
+        "line": 450,
+        "type": "Notification Toast",
+        "text": "Please select a document file (PDF/DOCX/Images).",
+        "snippet": "showNotification('error', 'Please select a document file (PDF/DOCX/Images).');"
+      },
+      {
+        "line": 461,
+        "type": "Notification Toast",
+        "text": "Attachment ",
+        "snippet": "showNotification('success', `Attachment '${res.data.attachment?.filename || 'Document'}' uploaded!`);"
+      },
+      {
+        "line": 475,
+        "type": "Dialog / Alert",
+        "text": "Are you sure you want to delete this supporting document?",
+        "snippet": "if (!window.confirm('Are you sure you want to delete this supporting document?')) return;"
+      },
+      {
+        "line": 481,
+        "type": "Notification Toast",
+        "text": "Attachment deleted successfully.",
+        "snippet": "showNotification('success', 'Attachment deleted successfully.');"
+      },
+      {
+        "line": 499,
+        "type": "Notification Toast",
+        "text": "Module published successfully and is now active for learners.",
+        "snippet": "showNotification('success', 'Module published successfully and is now active for learners.');"
+      },
+      {
+        "line": 525,
+        "type": "Notification Toast",
+        "text": "Track ",
+        "snippet": "showNotification('success', `Track '${item.name}' deleted successfully.`);"
+      },
+      {
+        "line": 532,
+        "type": "Notification Toast",
+        "text": "Module ",
+        "snippet": "showNotification('success', `Module '${item.title}' deleted successfully.`);"
+      },
+      {
+        "line": 553,
+        "type": "JSX text",
+        "text": "Module & Curriculum CMS",
+        "snippet": "<h2 className=\"text-xl font-bold text-slate-900\">Module & Curriculum CMS</h2>"
+      },
+      {
+        "line": 554,
+        "type": "JSX text",
+        "text": "Manage learning tracks, instructional modules, custom video thumbnails, and study documents",
+        "snippet": "<p className=\"text-sm font-normal text-slate-500 mt-1\">Manage learning tracks, instructional modules, custom video thumbnails, and study documents</p>"
+      },
+      {
+        "line": 565,
+        "type": "JSX text",
+        "text": "Add Track",
+        "snippet": "<span>Add Track</span>"
+      },
+      {
+        "line": 575,
+        "type": "JSX text",
+        "text": "New Module",
+        "snippet": "<span>New Module</span>"
+      },
+      {
+        "line": 583,
+        "type": "JSX text",
+        "text": "Filter by Track:",
+        "snippet": "<span className=\"text-xs font-semibold uppercase tracking-wider text-slate-500 shrink-0\">Filter by Track:</span>"
+      },
+      {
+        "line": 667,
+        "type": "JSX text",
+        "text": "Loading curriculum catalog...",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading curriculum catalog...</p>"
+      },
+      {
+        "line": 671,
+        "type": "JSX text",
+        "text": "No modules found",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-800\">No modules found</p>"
+      },
+      {
+        "line": 672,
+        "type": "JSX text",
+        "text": "Create your first module or select a different track filter.",
+        "snippet": "<p className=\"text-xs text-slate-500\">Create your first module or select a different track filter.</p>"
+      },
+      {
+        "line": 679,
+        "type": "JSX text",
+        "text": "Module Title",
+        "snippet": "<th className=\"px-5 py-3.5\">Module Title</th>"
+      },
+      {
+        "line": 680,
+        "type": "JSX text",
+        "text": "Parent Track",
+        "snippet": "<th className=\"px-4 py-3.5\">Parent Track</th>"
+      },
+      {
+        "line": 681,
+        "type": "JSX text",
+        "text": "Tier",
+        "snippet": "<th className=\"px-4 py-3.5\">Tier</th>"
+      },
+      {
+        "line": 682,
+        "type": "JSX text",
+        "text": "Duration",
+        "snippet": "<th className=\"px-4 py-3.5\">Duration</th>"
+      },
+      {
+        "line": 683,
+        "type": "JSX text",
+        "text": "Status",
+        "snippet": "<th className=\"px-4 py-3.5\">Status</th>"
+      },
+      {
+        "line": 684,
+        "type": "JSX text",
+        "text": "Actions",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+      },
+      {
+        "line": 825,
+        "type": "JSX text",
+        "text": "Quality Guard",
+        "snippet": "<p className=\"text-[10px] font-bold uppercase tracking-wider text-slate-500\">Quality Guard</p>"
+      },
+      {
+        "line": 890,
+        "type": "Input placeholder",
+        "text": "e.g. M1: Cable Types & Connectors",
+        "snippet": "placeholder=\"e.g. M1: Cable Types & Connectors\""
+      },
+      {
+        "line": 896,
+        "type": "JSX text",
+        "text": "Passing Threshold (%)",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Passing Threshold (%)</label>"
+      },
+      {
+        "line": 910,
+        "type": "JSX text",
+        "text": "Description / Learning Objectives",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Description / Learning Objectives</label>"
+      },
+      {
+        "line": 915,
+        "type": "Input placeholder",
+        "text": "Outline what engineers will master in this module...",
+        "snippet": "placeholder=\"Outline what engineers will master in this module...\""
+      },
+      {
+        "line": 929,
+        "type": "JSX text",
+        "text": "Manage video, thumbnail poster, and supplementary files",
+        "snippet": "<span className=\"text-[11px] text-slate-400\">Manage video, thumbnail poster, and supplementary files</span>"
+      },
+      {
+        "line": 960,
+        "type": "JSX text",
+        "text": "Option A: Upload MP4 / WebM File",
+        "snippet": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Option A: Upload MP4 / WebM File</label>"
+      },
+      {
+        "line": 975,
+        "type": "JSX text",
+        "text": "Option B: Cloudflare Stream Video UID",
+        "snippet": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Option B: Cloudflare Stream Video UID</label>"
+      },
+      {
+        "line": 980,
+        "type": "Input placeholder",
+        "text": "e.g. 5d537f14a468d955f654da5de0f8bc41",
+        "snippet": "placeholder=\"e.g. 5d537f14a468d955f654da5de0f8bc41\""
+      },
+      {
+        "line": 1020,
+        "type": "JSX text",
+        "text": "No custom thumbnail uploaded",
+        "snippet": "<p className=\"text-[11px]\">No custom thumbnail uploaded</p>"
+      },
+      {
+        "line": 1026,
+        "type": "JSX text",
+        "text": "Select Image (PNG, JPG, WEBP)",
+        "snippet": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Select Image (PNG, JPG, WEBP)</label>"
+      },
+      {
+        "line": 1057,
+        "type": "JSX text",
+        "text": "Upload PDF / DOCX / Diagram",
+        "snippet": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Upload PDF / DOCX / Diagram</label>"
+      },
+      {
+        "line": 1141,
+        "type": "JSX text",
+        "text": "Save basic module details first to enable video attachment, custom thumbnails, and document uploads.",
+        "snippet": "<span>Save basic module details first to enable video attachment, custom thumbnails, and document uploads.</span>"
+      },
+      {
+        "line": 1198,
+        "type": "Input placeholder",
+        "text": "e.g. EDGE Certified Technician",
+        "snippet": "placeholder=\"e.g. EDGE Certified Technician\""
+      },
+      {
+        "line": 1209,
+        "type": "Input placeholder",
+        "text": "e.g. EDGE-L1",
+        "snippet": "placeholder=\"e.g. EDGE-L1\""
+      },
+      {
+        "line": 1215,
+        "type": "JSX text",
+        "text": "Track Description",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Track Description</label>"
+      },
+      {
+        "line": 1220,
+        "type": "Input placeholder",
+        "text": "Overview of this certification pathway...",
+        "snippet": "placeholder=\"Overview of this certification pathway...\""
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 278,
+        "expression": "res.data.name",
+        "snippet": "showNotification('success', `Track '${res.data.name}' updated successfully!`);"
+      },
+      {
+        "line": 284,
+        "expression": "res.data.name",
+        "snippet": "showNotification('success', `Track '${res.data.name}' created successfully!`);"
+      },
+      {
+        "line": 316,
+        "expression": "updated.title",
+        "snippet": "showNotification('success', `Module '${updated.title}' updated successfully!`);"
+      },
+      {
+        "line": 325,
+        "expression": "created.title",
+        "snippet": "showNotification('success', `Module '${created.title}' created successfully!`);"
+      },
+      {
+        "line": 525,
+        "expression": "item.name",
+        "snippet": "showNotification('success', `Track '${item.name}' deleted successfully.`);"
+      },
+      {
+        "line": 532,
+        "expression": "item.title",
+        "snippet": "showNotification('success', `Module '${item.title}' deleted successfully.`);"
+      },
+      {
+        "line": 615,
+        "expression": "tr.name",
+        "snippet": "{tr.name} ({count})"
+      },
+      {
+        "line": 715,
+        "expression": "m.title",
+        "snippet": "<p className=\"font-semibold text-slate-900\">{m.title}</p>"
+      },
+      {
+        "line": 813,
+        "expression": "selectedModule.title",
+        "snippet": "{selectedModule ? `Editing: ${selectedModule.title}` : 'Create New Module'}"
+      },
+      {
+        "line": 878,
+        "expression": "t.name",
+        "snippet": "<option key={t._id} value={t._id} className=\"truncate\">{t.name}</option>"
+      },
+      {
+        "line": 888,
+        "expression": "moduleFormData.title",
+        "snippet": "value={moduleFormData.title}"
+      },
+      {
+        "line": 913,
+        "expression": "moduleFormData.description",
+        "snippet": "value={moduleFormData.description}"
+      },
+      {
+        "line": 1196,
+        "expression": "trackFormData.name",
+        "snippet": "value={trackFormData.name}"
+      },
+      {
+        "line": 1218,
+        "expression": "trackFormData.description",
+        "snippet": "value={trackFormData.description}"
+      },
+      {
+        "line": 1228,
+        "expression": "trackFormData.tier",
+        "snippet": "value={trackFormData.tier}"
+      }
+    ]
+  },
+  "client/src/pages/admin/tabs/QuestionBankTab.jsx": {
+    "hardcoded": [
+      {
+        "line": 66,
+        "type": "Notification Toast",
+        "text": "Failed to load modules",
+        "snippet": "showNotification('error', 'Failed to load modules');"
+      },
+      {
+        "line": 85,
+        "type": "Notification Toast",
+        "text": "Failed to load questions for module",
+        "snippet": "showNotification('error', 'Failed to load questions for module');"
+      },
+      {
+        "line": 101,
+        "type": "Notification Toast",
+        "text": "Please select a module first.",
+        "snippet": "showNotification('error', 'Please select a module first.');"
+      },
+      {
+        "line": 106,
+        "type": "Notification Toast",
+        "text": "Question text and options are required.",
+        "snippet": "showNotification('error', 'Question text and options are required.');"
+      },
+      {
+        "line": 125,
+        "type": "Notification Toast",
+        "text": "MCQ Question created and added to question bank!",
+        "snippet": "showNotification('success', 'MCQ Question created and added to question bank!');"
+      },
+      {
+        "line": 171,
+        "type": "Dialog / Alert",
+        "text": "Are you sure you want to delete this question?",
+        "snippet": "if (!window.confirm(`Are you sure you want to delete this question?`)) return;"
+      },
+      {
+        "line": 177,
+        "type": "Notification Toast",
+        "text": "Question deleted successfully.",
+        "snippet": "showNotification('success', 'Question deleted successfully.');"
+      },
+      {
+        "line": 189,
+        "type": "Notification Toast",
+        "text": "Please select a CSV file to import.",
+        "snippet": "showNotification('error', 'Please select a CSV file to import.');"
+      },
+      {
+        "line": 257,
+        "type": "JSX text",
+        "text": "Question Bank & MCQ Engine",
+        "snippet": "<h2 className=\"text-xl font-bold text-slate-900\">Question Bank & MCQ Engine</h2>"
+      },
+      {
+        "line": 258,
+        "type": "JSX text",
+        "text": "Author single questions with immutable versioning or bulk import questions via CSV",
+        "snippet": "<p className=\"text-sm font-normal text-slate-500 mt-1\">Author single questions with immutable versioning or bulk import questions via CSV</p>"
+      },
+      {
+        "line": 262,
+        "type": "JSX text",
+        "text": "Working Module:",
+        "snippet": "<label className=\"text-xs font-medium text-slate-700 shrink-0\">Working Module:</label>"
+      },
+      {
+        "line": 281,
+        "type": "JSX text",
+        "text": "Single MCQ Builder",
+        "snippet": "<h3 className=\"text-base font-semibold text-slate-900\">Single MCQ Builder</h3>"
+      },
+      {
+        "line": 291,
+        "type": "Input placeholder",
+        "text": "Type question prompt (supports technical terms & codes)...",
+        "snippet": "placeholder=\"Type question prompt (supports technical terms & codes)...\""
+      },
+      {
+        "line": 320,
+        "type": "JSX text",
+        "text": "Correct Answer",
+        "snippet": "<span>Correct Answer</span>"
+      },
+      {
+        "line": 339,
+        "type": "JSX text",
+        "text": "Difficulty",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Difficulty</label>"
+      },
+      {
+        "line": 345,
+        "type": "JSX text",
+        "text": "Easy",
+        "snippet": "<option value=\"easy\" className=\"truncate\">Easy</option>"
+      },
+      {
+        "line": 346,
+        "type": "JSX text",
+        "text": "Medium",
+        "snippet": "<option value=\"medium\" className=\"truncate\">Medium</option>"
+      },
+      {
+        "line": 347,
+        "type": "JSX text",
+        "text": "Hard",
+        "snippet": "<option value=\"hard\" className=\"truncate\">Hard</option>"
+      },
+      {
+        "line": 358,
+        "type": "Input placeholder",
+        "text": "e.g. cable_types or safety_dguv",
+        "snippet": "placeholder=\"e.g. cable_types or safety_dguv\""
+      },
+      {
+        "line": 365,
+        "type": "JSX text",
+        "text": "Post-Attempt Explanation",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Post-Attempt Explanation</label>"
+      },
+      {
+        "line": 370,
+        "type": "Input placeholder",
+        "text": "Explain why the correct answer is right for post-quiz review...",
+        "snippet": "placeholder=\"Explain why the correct answer is right for post-quiz review...\""
+      },
+      {
+        "line": 391,
+        "type": "JSX text",
+        "text": "CSV Bulk Importer",
+        "snippet": "<h3 className=\"text-base font-bold text-slate-900\">CSV Bulk Importer</h3>"
+      },
+      {
+        "line": 405,
+        "type": "JSX text",
+        "text": "question_text, option_a, option_b, option_c, option_d, correct_option, difficulty, concept_tag, explanation",
+        "snippet": "Upload multiple questions in bulk. Columns: <code className=\"text-[10px] bg-slate-100 p-0.5 rounded\">question_text, option_a, option_b, option_c, option_d, correct_option, difficulty, concept_tag, explanation</code>."
+      },
+      {
+        "line": 437,
+        "type": "JSX text",
+        "text": "Errors encountered:",
+        "snippet": "<p className=\"font-semibold text-rose-800\">Errors encountered:</p>"
+      },
+      {
+        "line": 458,
+        "type": "JSX text",
+        "text": "Learner quizzes pull random active questions from this bank",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-0.5\">Learner quizzes pull random active questions from this bank</p>"
+      },
+      {
+        "line": 465,
+        "type": "JSX text",
+        "text": "Loading questions...",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading questions...</p>"
+      },
+      {
+        "line": 469,
+        "type": "JSX text",
+        "text": "No questions in this module yet.",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-700\">No questions in this module yet.</p>"
+      },
+      {
+        "line": 470,
+        "type": "JSX text",
+        "text": "Add at least 5 questions to satisfy the Publish Quality Guard.",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-1\">Add at least 5 questions to satisfy the Publish Quality Guard.</p>"
+      },
+      {
+        "line": 477,
+        "type": "JSX text",
+        "text": "Version",
+        "snippet": "<th className=\"px-5 py-3.5\">Version</th>"
+      },
+      {
+        "line": 478,
+        "type": "JSX text",
+        "text": "Question Prompt",
+        "snippet": "<th className=\"px-4 py-3.5\">Question Prompt</th>"
+      },
+      {
+        "line": 479,
+        "type": "JSX text",
+        "text": "Correct Answer",
+        "snippet": "<th className=\"px-4 py-3.5\">Correct Answer</th>"
+      },
+      {
+        "line": 480,
+        "type": "JSX text",
+        "text": "Concept Tag",
+        "snippet": "<th className=\"px-4 py-3.5\">Concept Tag</th>"
+      },
+      {
+        "line": 481,
+        "type": "JSX text",
+        "text": "Difficulty",
+        "snippet": "<th className=\"px-4 py-3.5\">Difficulty</th>"
+      },
+      {
+        "line": 482,
+        "type": "JSX text",
+        "text": "Actions",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+      },
+      {
+        "line": 574,
+        "type": "JSX text",
+        "text": "Question Prompt",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Question Prompt</label>"
+      },
+      {
+        "line": 607,
+        "type": "JSX text",
+        "text": "Correct",
+        "snippet": "<span>Correct</span>"
+      },
+      {
+        "line": 615,
+        "type": "JSX text",
+        "text": "Difficulty",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Difficulty</label>"
+      },
+      {
+        "line": 621,
+        "type": "JSX text",
+        "text": "Easy",
+        "snippet": "<option value=\"easy\" className=\"truncate\">Easy</option>"
+      },
+      {
+        "line": 622,
+        "type": "JSX text",
+        "text": "Medium",
+        "snippet": "<option value=\"medium\" className=\"truncate\">Medium</option>"
+      },
+      {
+        "line": 623,
+        "type": "JSX text",
+        "text": "Hard",
+        "snippet": "<option value=\"hard\" className=\"truncate\">Hard</option>"
+      },
+      {
+        "line": 628,
+        "type": "JSX text",
+        "text": "Concept Tag",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Concept Tag</label>"
+      },
+      {
+        "line": 640,
+        "type": "JSX text",
+        "text": "Explanation",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Explanation</label>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 270,
+        "expression": "m.title",
+        "snippet": "{m.title}"
+      },
+      {
+        "line": 289,
+        "expression": "questionForm.question_text",
+        "snippet": "value={questionForm.question_text}"
+      },
+      {
+        "line": 378,
+        "expression": "actionLoading",
+        "snippet": "disabled={actionLoading}"
+      },
+      {
+        "line": 440,
+        "expression": "err.row",
+        "snippet": "Row {err.row}: {err.error}"
+      },
+      {
+        "line": 440,
+        "expression": "err.error",
+        "snippet": "Row {err.row}: {err.error}"
+      },
+      {
+        "line": 578,
+        "expression": "editForm.question_text",
+        "snippet": "value={editForm.question_text}"
+      },
+      {
+        "line": 659,
+        "expression": "actionLoading",
+        "snippet": "disabled={actionLoading}"
+      }
+    ]
+  },
+  "client/src/pages/admin/tabs/AssignmentTab.jsx": {
+    "hardcoded": [
+      {
+        "line": 101,
+        "type": "Notification Toast",
+        "text": "Failed to load assignment dependencies",
+        "snippet": "showNotification('error', 'Failed to load assignment dependencies');"
+      },
+      {
+        "line": 155,
+        "type": "Notification Toast",
+        "text": "Please select at least one engineer.",
+        "snippet": "showNotification('error', 'Please select at least one engineer.');"
+      },
+      {
+        "line": 161,
+        "type": "Notification Toast",
+        "text": "Please select a Team Lead.",
+        "snippet": "showNotification('error', 'Please select a Team Lead.');"
+      },
+      {
+        "line": 171,
+        "type": "Notification Toast",
+        "text": "Please select a module.",
+        "snippet": "showNotification('error', 'Please select a module.');"
+      },
+      {
+        "line": 176,
+        "type": "Notification Toast",
+        "text": "Please select a track.",
+        "snippet": "showNotification('error', 'Please select a track.');"
+      },
+      {
+        "line": 193,
+        "type": "Notification Toast",
+        "text": "Selected track contains no modules.",
+        "snippet": "showNotification('error', 'Selected track contains no modules.');"
+      },
+      {
+        "line": 290,
+        "type": "JSX text",
+        "text": "Assignment Engine",
+        "snippet": "<h2 className=\"text-xl font-bold text-slate-900\">Assignment Engine</h2>"
+      },
+      {
+        "line": 310,
+        "type": "JSX text",
+        "text": "Dispatch Assignments",
+        "snippet": "<span className=\"hidden sm:inline\">Dispatch Assignments</span>"
+      },
+      {
+        "line": 311,
+        "type": "JSX text",
+        "text": "Dispatch",
+        "snippet": "<span className=\"sm:hidden\">Dispatch</span>"
+      },
+      {
+        "line": 349,
+        "type": "Input placeholder",
+        "text": "Search by engineer name, email, module, or track...",
+        "snippet": "placeholder=\"Search by engineer name, email, module, or track...\""
+      },
+      {
+        "line": 363,
+        "type": "JSX text",
+        "text": "All Statuses",
+        "snippet": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+      },
+      {
+        "line": 364,
+        "type": "JSX text",
+        "text": "Pending",
+        "snippet": "<option value=\"pending\" className=\"truncate\">Pending</option>"
+      },
+      {
+        "line": 365,
+        "type": "JSX text",
+        "text": "In Progress",
+        "snippet": "<option value=\"in_progress\" className=\"truncate\">In Progress</option>"
+      },
+      {
+        "line": 366,
+        "type": "JSX text",
+        "text": "Completed",
+        "snippet": "<option value=\"completed\" className=\"truncate\">Completed</option>"
+      },
+      {
+        "line": 367,
+        "type": "JSX text",
+        "text": "Overdue",
+        "snippet": "<option value=\"overdue\" className=\"truncate\">Overdue</option>"
+      },
+      {
+        "line": 377,
+        "type": "JSX text",
+        "text": "Loading assignments...",
+        "snippet": "<p className=\"text-xs font-semibold\">Loading assignments...</p>"
+      },
+      {
+        "line": 386,
+        "type": "JSX text",
+        "text": "No assignments found",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-800\">No assignments found</p>"
+      },
+      {
+        "line": 398,
+        "type": "JSX text",
+        "text": "Engineer",
+        "snippet": "<th className=\"px-5 py-3.5\">Engineer</th>"
+      },
+      {
+        "line": 399,
+        "type": "JSX text",
+        "text": "Assigned Module & Track",
+        "snippet": "<th className=\"px-4 py-3.5\">Assigned Module & Track</th>"
+      },
+      {
+        "line": 400,
+        "type": "JSX text",
+        "text": "Assigned By",
+        "snippet": "<th className=\"px-4 py-3.5\">Assigned By</th>"
+      },
+      {
+        "line": 401,
+        "type": "JSX text",
+        "text": "Assigned Date",
+        "snippet": "<th className=\"px-4 py-3.5\">Assigned Date</th>"
+      },
+      {
+        "line": 402,
+        "type": "JSX text",
+        "text": "Deadline",
+        "snippet": "<th className=\"px-4 py-3.5\">Deadline</th>"
+      },
+      {
+        "line": 403,
+        "type": "JSX text",
+        "text": "Status",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Status</th>"
+      },
+      {
+        "line": 455,
+        "type": "JSX text",
+        "text": "No deadline",
+        "snippet": "<span className=\"text-slate-400 text-xs font-normal\">No deadline</span>"
+      },
+      {
+        "line": 506,
+        "type": "JSX text",
+        "text": "Loading teams and curriculum...",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading teams and curriculum...</p>"
+      },
+      {
+        "line": 536,
+        "type": "JSX text",
+        "text": "Single Module",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Single Module</p>"
+      },
+      {
+        "line": 537,
+        "type": "JSX text",
+        "text": "Assign a specific individual module",
+        "snippet": "<p className=\"text-[11px] text-slate-500\">Assign a specific individual module</p>"
+      },
+      {
+        "line": 557,
+        "type": "JSX text",
+        "text": "Entire Track (Sequential)",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Entire Track (Sequential)</p>"
+      },
+      {
+        "line": 558,
+        "type": "JSX text",
+        "text": "Assign all modules within a track",
+        "snippet": "<p className=\"text-[11px] text-slate-500\">Assign all modules within a track</p>"
+      },
+      {
+        "line": 628,
+        "type": "JSX text",
+        "text": "Specific Engineers",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Specific Engineers</p>"
+      },
+      {
+        "line": 629,
+        "type": "JSX text",
+        "text": "Choose one or more individuals",
+        "snippet": "<p className=\"text-[11px] text-slate-500\">Choose one or more individuals</p>"
+      },
+      {
+        "line": 649,
+        "type": "JSX text",
+        "text": "Entire Team (by Team Lead)",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900\">Entire Team (by Team Lead)</p>"
+      },
+      {
+        "line": 650,
+        "type": "JSX text",
+        "text": "Assign to overall team of selected lead",
+        "snippet": "<p className=\"text-[11px] text-slate-500\">Assign to overall team of selected lead</p>"
+      },
+      {
+        "line": 663,
+        "type": "Input placeholder",
+        "text": "Search engineers by name, email, or team...",
+        "snippet": "placeholder=\"Search engineers by name, email, or team...\""
+      },
+      {
+        "line": 677,
+        "type": "JSX text",
+        "text": "No engineers found matching query.",
+        "snippet": "<p className=\"p-4 text-center text-xs text-slate-500\">No engineers found matching query.</p>"
+      },
+      {
+        "line": 720,
+        "type": "JSX text",
+        "text": "No Team Leads Found",
+        "snippet": "<p className=\"font-semibold\">No Team Leads Found</p>"
+      },
+      {
+        "line": 722,
+        "type": "JSX text",
+        "text": "Team Lead",
+        "snippet": "Create or promote a user to the <strong>Team Lead</strong> role in User Management to assign by team."
+      },
+      {
+        "line": 764,
+        "type": "JSX text",
+        "text": "Team Members:",
+        "snippet": "<p className=\"text-[11px] font-medium text-slate-500 mb-1\">Team Members:</p>"
+      },
+      {
+        "line": 797,
+        "type": "JSX text",
+        "text": "Completion Deadline (Optional)",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Completion Deadline (Optional)</label>"
+      },
+      {
+        "line": 804,
+        "type": "JSX text",
+        "text": "If set, automated reminder notifications will trigger before deadline.",
+        "snippet": "<p className=\"text-[11px] text-slate-500 mt-1\">If set, automated reminder notifications will trigger before deadline.</p>"
+      },
+      {
+        "line": 808,
+        "type": "JSX text",
+        "text": "Automated Dispatch Actions:",
+        "snippet": "<p className=\"font-bold text-slate-800\">Automated Dispatch Actions:</p>"
+      },
+      {
+        "line": 814,
+        "type": "JSX text",
+        "text": "In-app notification bell dispatched",
+        "snippet": "<span>In-app notification bell dispatched</span>"
+      },
+      {
+        "line": 820,
+        "type": "JSX text",
+        "text": "Email notification queued with direct link",
+        "snippet": "<span>Email notification queued with direct link</span>"
+      },
+      {
+        "line": 826,
+        "type": "JSX text",
+        "text": "Audit log entry recorded",
+        "snippet": "<span>Audit log entry recorded</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 435,
+        "expression": "track.tier",
+        "snippet": "{track.title || track.name || 'Curriculum Track'} {track.tier ? `· ${track.tier}` : ''}"
+      },
+      {
+        "line": 574,
+        "expression": "m.title",
+        "snippet": "{m.title}"
+      },
+      {
+        "line": 595,
+        "expression": "t.name",
+        "snippet": "{t.name} ({count} Modules)"
+      },
+      {
+        "line": 697,
+        "expression": "eng.email",
+        "snippet": "<p className=\"text-[11px] text-slate-500\">{eng.email}</p>"
+      }
+    ]
+  },
+  "client/src/pages/admin/tabs/AuditLogTab.jsx": {
+    "hardcoded": [
+      {
+        "line": 72,
+        "type": "JSX text",
+        "text": "Security Audit Logs",
+        "snippet": "<h2 className=\"text-xl font-bold text-slate-900\">Security Audit Logs</h2>"
+      },
+      {
+        "line": 87,
+        "type": "JSX text",
+        "text": "All Actions",
+        "snippet": "<option value=\"\" className=\"truncate\">All Actions</option>"
+      },
+      {
+        "line": 88,
+        "type": "JSX text",
+        "text": "CREATE_USER",
+        "snippet": "<option value=\"CREATE_USER\" className=\"truncate\">CREATE_USER</option>"
+      },
+      {
+        "line": 89,
+        "type": "JSX text",
+        "text": "INVITE_USER",
+        "snippet": "<option value=\"INVITE_USER\" className=\"truncate\">INVITE_USER</option>"
+      },
+      {
+        "line": 90,
+        "type": "JSX text",
+        "text": "UPDATE_USER",
+        "snippet": "<option value=\"UPDATE_USER\" className=\"truncate\">UPDATE_USER</option>"
+      },
+      {
+        "line": 91,
+        "type": "JSX text",
+        "text": "UPDATE_USER_ROLE",
+        "snippet": "<option value=\"UPDATE_USER_ROLE\" className=\"truncate\">UPDATE_USER_ROLE</option>"
+      },
+      {
+        "line": 92,
+        "type": "JSX text",
+        "text": "DELETE_USER",
+        "snippet": "<option value=\"DELETE_USER\" className=\"truncate\">DELETE_USER</option>"
+      },
+      {
+        "line": 93,
+        "type": "JSX text",
+        "text": "PUBLISH_MODULE",
+        "snippet": "<option value=\"PUBLISH_MODULE\" className=\"truncate\">PUBLISH_MODULE</option>"
+      },
+      {
+        "line": 94,
+        "type": "JSX text",
+        "text": "UPLOAD_MODULE_VIDEO",
+        "snippet": "<option value=\"UPLOAD_MODULE_VIDEO\" className=\"truncate\">UPLOAD_MODULE_VIDEO</option>"
+      },
+      {
+        "line": 95,
+        "type": "JSX text",
+        "text": "REVOKE_CERTIFICATE",
+        "snippet": "<option value=\"REVOKE_CERTIFICATE\" className=\"truncate\">REVOKE_CERTIFICATE</option>"
+      },
+      {
+        "line": 96,
+        "type": "JSX text",
+        "text": "CREATE_ASSIGNMENT",
+        "snippet": "<option value=\"CREATE_ASSIGNMENT\" className=\"truncate\">CREATE_ASSIGNMENT</option>"
+      },
+      {
+        "line": 107,
+        "type": "JSX text",
+        "text": "All Outcomes",
+        "snippet": "<option value=\"\" className=\"truncate\">All Outcomes</option>"
+      },
+      {
+        "line": 108,
+        "type": "JSX text",
+        "text": "Success",
+        "snippet": "<option value=\"success\" className=\"truncate\">Success</option>"
+      },
+      {
+        "line": 109,
+        "type": "JSX text",
+        "text": "Failure",
+        "snippet": "<option value=\"failure\" className=\"truncate\">Failure</option>"
+      },
+      {
+        "line": 119,
+        "type": "JSX text",
+        "text": "Fetching immutable audit records...",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Fetching immutable audit records...</p>"
+      },
+      {
+        "line": 123,
+        "type": "JSX text",
+        "text": "No audit log entries found.",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-700\">No audit log entries found.</p>"
+      },
+      {
+        "line": 124,
+        "type": "JSX text",
+        "text": "Actions performed on the platform will be automatically recorded here.",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-1\">Actions performed on the platform will be automatically recorded here.</p>"
+      },
+      {
+        "line": 131,
+        "type": "JSX text",
+        "text": "Action",
+        "snippet": "<th className=\"px-5 py-3.5\">Action</th>"
+      },
+      {
+        "line": 132,
+        "type": "JSX text",
+        "text": "Actor",
+        "snippet": "<th className=\"px-4 py-3.5\">Actor</th>"
+      },
+      {
+        "line": 133,
+        "type": "JSX text",
+        "text": "Resource",
+        "snippet": "<th className=\"px-4 py-3.5\">Resource</th>"
+      },
+      {
+        "line": 134,
+        "type": "JSX text",
+        "text": "Outcome",
+        "snippet": "<th className=\"px-4 py-3.5\">Outcome</th>"
+      },
+      {
+        "line": 135,
+        "type": "JSX text",
+        "text": "Timestamp",
+        "snippet": "<th className=\"px-4 py-3.5\">Timestamp</th>"
+      },
+      {
+        "line": 136,
+        "type": "JSX text",
+        "text": "Details",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Details</th>"
+      },
+      {
+        "line": 228,
+        "type": "JSX text",
+        "text": "Description:",
+        "snippet": "<p className=\"text-[11px] font-semibold text-slate-500\">Description:</p>"
+      },
+      {
+        "line": 234,
+        "type": "JSX text",
+        "text": "Actor Role:",
+        "snippet": "<p className=\"text-[11px] font-semibold text-slate-500\">Actor Role:</p>"
+      },
+      {
+        "line": 238,
+        "type": "JSX text",
+        "text": "Resource:",
+        "snippet": "<p className=\"text-[11px] font-semibold text-slate-500\">Resource:</p>"
+      },
+      {
+        "line": 245,
+        "type": "JSX text",
+        "text": "Metadata Payload:",
+        "snippet": "<p className=\"text-[11px] font-semibold text-slate-500 mb-1\">Metadata Payload:</p>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 32,
+        "expression": "actionFilter",
+        "snippet": "if (actionFilter) url += `&action=${actionFilter}`;"
+      },
+      {
+        "line": 80,
+        "expression": "actionFilter",
+        "snippet": "value={actionFilter}"
+      },
+      {
+        "line": 151,
+        "expression": "log.action",
+        "snippet": "{log.action}"
+      },
+      {
+        "line": 219,
+        "expression": "selectedLog.action",
+        "snippet": "{selectedLog.action}"
+      }
+    ]
+  },
+  "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx": {
+    "hardcoded": [
+      {
+        "line": 84,
+        "type": "Notification Toast",
+        "text": "Failed to load issued certificates list",
+        "snippet": "showNotification('error', 'Failed to load issued certificates list');"
+      },
+      {
+        "line": 220,
+        "type": "Notification Toast",
+        "text": "Mandatory revocation reason is required.",
+        "snippet": "showNotification('error', 'Mandatory revocation reason is required.');"
+      },
+      {
+        "line": 230,
+        "type": "Notification Toast",
+        "text": "Certificate ",
+        "snippet": "showNotification('success', `Certificate '${selectedCert.certificate_id}' revoked successfully.`);"
+      },
+      {
+        "line": 247,
+        "type": "JSX text",
+        "text": "Certificate Governance & Signatories",
+        "snippet": "<h2 className=\"text-xl font-bold text-slate-900\">Certificate Governance & Signatories</h2>"
+      },
+      {
+        "line": 259,
+        "type": "JSX text",
+        "text": "Certificate Template Signatories",
+        "snippet": "<h3 className=\"text-base font-semibold text-slate-900\">Certificate Template Signatories</h3>"
+      },
+      {
+        "line": 260,
+        "type": "JSX text",
+        "text": "Signatures rendered dynamically onto generated PDF certificates",
+        "snippet": "<p className=\"text-xs font-normal text-slate-500 mt-0.5\">Signatures rendered dynamically onto generated PDF certificates</p>"
+      },
+      {
+        "line": 262,
+        "type": "JSX text",
+        "text": "Official Signatures",
+        "snippet": "<span className=\"text-xs font-mono px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700\">Official Signatures</span>"
+      },
+      {
+        "line": 270,
+        "type": "JSX text",
+        "text": "Director Credentials",
+        "snippet": "<span className=\"text-xs font-semibold text-slate-800 uppercase tracking-wider\">Director Credentials</span>"
+      },
+      {
+        "line": 277,
+        "type": "JSX text",
+        "text": "Director Full Name",
+        "snippet": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Director Full Name</label>"
+      },
+      {
+        "line": 284,
+        "type": "Input placeholder",
+        "text": "e.g. Anya Sharma",
+        "snippet": "placeholder=\"e.g. Anya Sharma\""
+      },
+      {
+        "line": 289,
+        "type": "JSX text",
+        "text": "Director Title / Role",
+        "snippet": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Director Title / Role</label>"
+      },
+      {
+        "line": 296,
+        "type": "Input placeholder",
+        "text": "e.g. Director, Technonex NexAcademy",
+        "snippet": "placeholder=\"e.g. Director, Technonex NexAcademy\""
+      },
+      {
+        "line": 302,
+        "type": "JSX text",
+        "text": "Original Handwritten Signature",
+        "snippet": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Original Handwritten Signature</label>"
+      },
+      {
+        "line": 314,
+        "type": "JSX text",
+        "text": "Custom Signature Uploaded",
+        "snippet": "<p className=\"text-xs font-semibold text-emerald-700 truncate\">Custom Signature Uploaded</p>"
+      },
+      {
+        "line": 315,
+        "type": "JSX text",
+        "text": "Rendered dynamically on certificate",
+        "snippet": "<p className=\"text-xs font-normal text-slate-400\">Rendered dynamically on certificate</p>"
+      },
+      {
+        "line": 333,
+        "type": "JSX text",
+        "text": "Upload Signature File (PNG/JPG/SVG)",
+        "snippet": "<span className=\"text-xs font-semibold\">Upload Signature File (PNG/JPG/SVG)</span>"
+      },
+      {
+        "line": 335,
+        "type": "JSX text",
+        "text": "Transparent PNG recommended",
+        "snippet": "<span className=\"text-xs text-slate-400 mt-0.5\">Transparent PNG recommended</span>"
+      },
+      {
+        "line": 354,
+        "type": "JSX text",
+        "text": "Instructor Credentials",
+        "snippet": "<span className=\"text-xs font-semibold text-slate-800 uppercase tracking-wider\">Instructor Credentials</span>"
+      },
+      {
+        "line": 361,
+        "type": "JSX text",
+        "text": "Lead Instructor Full Name",
+        "snippet": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Lead Instructor Full Name</label>"
+      },
+      {
+        "line": 368,
+        "type": "Input placeholder",
+        "text": "e.g. James Chen",
+        "snippet": "placeholder=\"e.g. James Chen\""
+      },
+      {
+        "line": 373,
+        "type": "JSX text",
+        "text": "Instructor Title / Role",
+        "snippet": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Instructor Title / Role</label>"
+      },
+      {
+        "line": 380,
+        "type": "Input placeholder",
+        "text": "e.g. Lead Instructor",
+        "snippet": "placeholder=\"e.g. Lead Instructor\""
+      },
+      {
+        "line": 386,
+        "type": "JSX text",
+        "text": "Original Handwritten Signature",
+        "snippet": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Original Handwritten Signature</label>"
+      },
+      {
+        "line": 398,
+        "type": "JSX text",
+        "text": "Custom Signature Uploaded",
+        "snippet": "<p className=\"text-xs font-semibold text-emerald-700 truncate\">Custom Signature Uploaded</p>"
+      },
+      {
+        "line": 399,
+        "type": "JSX text",
+        "text": "Rendered dynamically on certificate",
+        "snippet": "<p className=\"text-[10px] text-slate-400\">Rendered dynamically on certificate</p>"
+      },
+      {
+        "line": 417,
+        "type": "JSX text",
+        "text": "Upload Signature File (PNG/JPG/SVG)",
+        "snippet": "<span className=\"text-xs font-semibold\">Upload Signature File (PNG/JPG/SVG)</span>"
+      },
+      {
+        "line": 419,
+        "type": "JSX text",
+        "text": "Transparent PNG recommended",
+        "snippet": "<span className=\"text-[10px] text-slate-400 mt-0.5\">Transparent PNG recommended</span>"
+      },
+      {
+        "line": 445,
+        "type": "JSX text",
+        "text": "Saving Changes...",
+        "snippet": "<span>Saving Changes...</span>"
+      },
+      {
+        "line": 448,
+        "type": "JSX text",
+        "text": "Save Signatory Configuration & Signatures",
+        "snippet": "<span>Save Signatory Configuration & Signatures</span>"
+      },
+      {
+        "line": 458,
+        "type": "JSX text",
+        "text": "Credential Metrics",
+        "snippet": "<h3 className=\"text-base font-bold text-slate-900 mb-1\">Credential Metrics</h3>"
+      },
+      {
+        "line": 459,
+        "type": "JSX text",
+        "text": "Live platform certification counts",
+        "snippet": "<p className=\"text-xs text-slate-500\">Live platform certification counts</p>"
+      },
+      {
+        "line": 464,
+        "type": "JSX text",
+        "text": "Active Certificates",
+        "snippet": "<p className=\"text-xs font-semibold text-emerald-800\">Active Certificates</p>"
+      },
+      {
+        "line": 478,
+        "type": "JSX text",
+        "text": "Revoked Credentials",
+        "snippet": "<p className=\"text-xs font-semibold text-rose-800\">Revoked Credentials</p>"
+      },
+      {
+        "line": 505,
+        "type": "JSX text",
+        "text": "Search credentials and manage administrative revocations",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-0.5\">Search credentials and manage administrative revocations</p>"
+      },
+      {
+        "line": 512,
+        "type": "Input placeholder",
+        "text": "Search by ID, engineer name, or track...",
+        "snippet": "placeholder=\"Search by ID, engineer name, or track...\""
+      },
+      {
+        "line": 520,
+        "type": "JSX text",
+        "text": "Loading credentials registry...",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading credentials registry...</p>"
+      },
+      {
+        "line": 524,
+        "type": "JSX text",
+        "text": "No certificates found.",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-700\">No certificates found.</p>"
+      },
+      {
+        "line": 525,
+        "type": "JSX text",
+        "text": "Certificates are automatically awarded when engineers achieve 100% track completion.",
+        "snippet": "<p className=\"text-xs text-slate-500 mt-1\">Certificates are automatically awarded when engineers achieve 100% track completion.</p>"
+      },
+      {
+        "line": 532,
+        "type": "JSX text",
+        "text": "Certificate ID",
+        "snippet": "<th className=\"px-5 py-3.5\">Certificate ID</th>"
+      },
+      {
+        "line": 533,
+        "type": "JSX text",
+        "text": "Recipient Engineer",
+        "snippet": "<th className=\"px-4 py-3.5\">Recipient Engineer</th>"
+      },
+      {
+        "line": 534,
+        "type": "JSX text",
+        "text": "Certified Track",
+        "snippet": "<th className=\"px-4 py-3.5\">Certified Track</th>"
+      },
+      {
+        "line": 535,
+        "type": "JSX text",
+        "text": "Issued Date",
+        "snippet": "<th className=\"px-4 py-3.5\">Issued Date</th>"
+      },
+      {
+        "line": 536,
+        "type": "JSX text",
+        "text": "Status",
+        "snippet": "<th className=\"px-4 py-3.5\">Status</th>"
+      },
+      {
+        "line": 537,
+        "type": "JSX text",
+        "text": "Actions",
+        "snippet": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+      },
+      {
+        "line": 636,
+        "type": "JSX text",
+        "text": "Revoke Certificate",
+        "snippet": "<h3 className=\"text-base font-bold text-slate-900\">Revoke Certificate</h3>"
+      },
+      {
+        "line": 651,
+        "type": "Input placeholder",
+        "text": "State the justification for revoking this certificate (e.g. academic integrity breach, employment termination)...",
+        "snippet": "placeholder=\"State the justification for revoking this certificate (e.g. academic integrity breach, employment termination)...\""
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 281,
+        "expression": "configForm.director_name",
+        "snippet": "value={configForm.director_name}"
+      },
+      {
+        "line": 293,
+        "expression": "configForm.director_title",
+        "snippet": "value={configForm.director_title}"
+      },
+      {
+        "line": 365,
+        "expression": "configForm.instructor_name",
+        "snippet": "value={configForm.instructor_name}"
+      },
+      {
+        "line": 377,
+        "expression": "configForm.instructor_title",
+        "snippet": "value={configForm.instructor_title}"
+      },
+      {
+        "line": 581,
+        "expression": "cert.revocation_reason",
+        "snippet": "<p className=\"text-xs text-rose-600 mt-0.5 italic truncate max-w-[140px]\" title={cert.revocation_reason}>"
+      },
+      {
+        "line": 582,
+        "expression": "cert.revocation_reason",
+        "snippet": "Reason: {cert.revocation_reason}"
+      }
+    ]
+  },
+  "client/src/pages/LandingPage.jsx": {
+    "hardcoded": [
+      {
+        "line": 323,
+        "type": "JSX text",
+        "text": "Curriculum Tracks",
+        "snippet": "<span className=\"text-xs font-extrabold text-[#E62E52] uppercase tracking-widest block mb-2\">Curriculum Tracks</span>"
+      },
+      {
+        "line": 324,
+        "type": "JSX text",
+        "text": "Featured Training Modules",
+        "snippet": "<h2 className=\"text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight\">Featured Training Modules</h2>"
+      },
+      {
+        "line": 375,
+        "type": "JSX text",
+        "text": "Industry Credentials",
+        "snippet": "<span className=\"text-xs font-extrabold text-[#E62E52] uppercase tracking-widest block mb-2\">Industry Credentials</span>"
+      },
+      {
+        "line": 406,
+        "type": "JSX text",
+        "text": "Certification Requirements:",
+        "snippet": "<p className=\"text-xs font-bold text-slate-800 uppercase tracking-wider\">Certification Requirements:</p>"
+      },
+      {
+        "line": 442,
+        "type": "JSX text",
+        "text": "TECHNONEX",
+        "snippet": "<textPath href={`#topArcLanding-${cert.id}`} startOffset=\"50%\" textAnchor=\"middle\">TECHNONEX</textPath>"
+      },
+      {
+        "line": 448,
+        "type": "JSX text",
+        "text": "CERTIFIED",
+        "snippet": "<textPath href={`#bottomArcLanding-${cert.id}`} startOffset=\"50%\" textAnchor=\"middle\">CERTIFIED</textPath>"
+      },
+      {
+        "line": 559,
+        "type": "Input placeholder",
+        "text": "e.g. TNX-2026-EDGE-0142 or TNX-2026-CORE-0089",
+        "snippet": "placeholder=\"e.g. TNX-2026-EDGE-0142 or TNX-2026-CORE-0089\""
+      },
+      {
+        "line": 614,
+        "type": "JSX text",
+        "text": "Curriculum Modules",
+        "snippet": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Curriculum Modules</a>"
+      },
+      {
+        "line": 617,
+        "type": "JSX text",
+        "text": "Certification Tiers",
+        "snippet": "<a href=\"#certifications\" className=\"hover:text-gray-400 transition\">Certification Tiers</a>"
+      },
+      {
+        "line": 620,
+        "type": "JSX text",
+        "text": "About Framework",
+        "snippet": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">About Framework</a>"
+      },
+      {
+        "line": 623,
+        "type": "JSX text",
+        "text": "Verify Credential",
+        "snippet": "<a href=\"#verification\" className=\"hover:text-gray-400 transition\">Verify Credential</a>"
+      },
+      {
+        "line": 640,
+        "type": "JSX text",
+        "text": "EDGE Technician (L1)",
+        "snippet": "<a href=\"#certifications\" className=\"hover:text-gray-400 transition\">EDGE Technician (L1)</a>"
+      },
+      {
+        "line": 643,
+        "type": "JSX text",
+        "text": "CORE Lead Engineer (L2)",
+        "snippet": "<a href=\"#certifications\" className=\"hover:text-gray-400 transition\">CORE Lead Engineer (L2)</a>"
+      },
+      {
+        "line": 646,
+        "type": "JSX text",
+        "text": "Enterprise Rack Standards",
+        "snippet": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Enterprise Rack Standards</a>"
+      },
+      {
+        "line": 649,
+        "type": "JSX text",
+        "text": "Client 14-Section Site Survey",
+        "snippet": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Client 14-Section Site Survey</a>"
+      },
+      {
+        "line": 652,
+        "type": "JSX text",
+        "text": "Fiber Optics & Ekahau WLAN",
+        "snippet": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Fiber Optics & Ekahau WLAN</a>"
+      },
+      {
+        "line": 664,
+        "type": "JSX text",
+        "text": "Instant ID Lookup",
+        "snippet": "<a href=\"#verification\" className=\"hover:text-gray-400 transition\">Instant ID Lookup</a>"
+      },
+      {
+        "line": 667,
+        "type": "JSX text",
+        "text": "Live Viva Assessment",
+        "snippet": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">Live Viva Assessment</a>"
+      },
+      {
+        "line": 670,
+        "type": "JSX text",
+        "text": "DGUV V3 Electrical Safety",
+        "snippet": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">DGUV V3 Electrical Safety</a>"
+      },
+      {
+        "line": 673,
+        "type": "JSX text",
+        "text": "OTDR Tier-2 Fiber Testing",
+        "snippet": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">OTDR Tier-2 Fiber Testing</a>"
+      },
+      {
+        "line": 676,
+        "type": "JSX text",
+        "text": "Regional Lead Sign-Off",
+        "snippet": "<span className=\"text-slate-500\">Regional Lead Sign-Off</span>"
+      },
+      {
+        "line": 686,
+        "type": "JSX text",
+        "text": "Privacy Policy",
+        "snippet": "<a href=\"/privacy-policy\" className=\"hover:text-slate-300 transition\">Privacy Policy</a>"
+      },
+      {
+        "line": 687,
+        "type": "JSX text",
+        "text": "Terms and Conditions",
+        "snippet": "<a href=\"/terms\" className=\"hover:text-slate-300 transition\">Terms and Conditions</a>"
+      },
+      {
+        "line": 688,
+        "type": "JSX text",
+        "text": "Cookies",
+        "snippet": "<a href=\"/cookies\" className=\"hover:text-slate-300 transition\">Cookies</a>"
+      },
+      {
+        "line": 689,
+        "type": "JSX text",
+        "text": "Legal Notice",
+        "snippet": "<a href=\"/legal-notice\" className=\"hover:text-slate-300 transition\">Legal Notice</a>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 338,
+        "expression": "mod.title",
+        "snippet": "alt={mod.title}"
+      },
+      {
+        "line": 350,
+        "expression": "mod.title",
+        "snippet": "{mod.title}"
+      },
+      {
+        "line": 353,
+        "expression": "mod.description",
+        "snippet": "{mod.description}"
+      },
+      {
+        "line": 394,
+        "expression": "cert.tierBadge",
+        "snippet": "{cert.tierPill || `Tier ${cert.tierBadge}`}"
+      },
+      {
+        "line": 398,
+        "expression": "cert.tierTitle",
+        "snippet": "<h3 className=\"text-2xl font-extrabold text-slate-900 mb-1\">{cert.tierTitle}</h3>"
+      },
+      {
+        "line": 399,
+        "expression": "cert.subtitle",
+        "snippet": "<p className=\"text-xs font-bold text-[#08306B] mb-4\">{cert.subtitle}</p>"
+      },
+      {
+        "line": 402,
+        "expression": "cert.description",
+        "snippet": "{cert.description}"
+      },
+      {
+        "line": 734,
+        "expression": "selectedModule.title",
+        "snippet": "{selectedModule.title}"
+      }
+    ]
+  },
+  "client/src/pages/AuthPage.jsx": {
+    "hardcoded": [
+      {
+        "line": 227,
+        "type": "Input placeholder",
+        "text": "name@company.com",
+        "snippet": "placeholder=\"name@company.com\""
+      },
+      {
+        "line": 276,
+        "type": "JSX text",
+        "text": "Remember me",
+        "snippet": "<span>Remember me</span>"
+      },
+      {
+        "line": 321,
+        "type": "JSX text",
+        "text": "Protected enterprise access",
+        "snippet": "<span>Protected enterprise access</span>"
+      },
+      {
+        "line": 331,
+        "type": "JSX text",
+        "text": "Forgot Password?",
+        "snippet": "<h3 className=\"text-xl font-extrabold text-slate-900 tracking-tight\">Forgot Password?</h3>"
+      },
+      {
+        "line": 381,
+        "type": "Input placeholder",
+        "text": "name@company.com",
+        "snippet": "placeholder=\"name@company.com\""
+      },
+      {
+        "line": 402,
+        "type": "JSX text",
+        "text": "Sending Link...",
+        "snippet": "<span>Sending Link...</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 223,
+        "expression": "form.email",
+        "snippet": "value={form.email}"
+      },
+      {
+        "line": 294,
+        "expression": "error",
+        "snippet": "{error}"
+      }
+    ]
+  },
+  "client/src/pages/AcceptInvitePage.jsx": {
+    "hardcoded": [
+      {
+        "line": 185,
+        "type": "JSX text",
+        "text": "Verifying invitation token...",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-600\">Verifying invitation token...</p>"
+      },
+      {
+        "line": 217,
+        "type": "JSX text",
+        "text": "Invalid or Expired Link",
+        "snippet": "<h2 className=\"text-2xl font-bold text-slate-900 tracking-tight\">Invalid or Expired Link</h2>"
+      },
+      {
+        "line": 337,
+        "type": "JSX text",
+        "text": "Security Requirements:",
+        "snippet": "<p className=\"font-semibold text-slate-700 mb-1 text-[11px] uppercase tracking-wider\">Security Requirements:</p>"
+      },
+      {
+        "line": 371,
+        "type": "JSX text",
+        "text": "Activating Account...",
+        "snippet": "<span>Activating Account...</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 218,
+        "expression": "error",
+        "snippet": "<p className=\"text-sm text-slate-500 mt-2 leading-relaxed\">{error}</p>"
+      },
+      {
+        "line": 243,
+        "expression": "inviteInfo.email",
+        "snippet": "Activating corporate account for <span className=\"font-semibold text-slate-700\">{inviteInfo.email}</span>"
+      },
+      {
+        "line": 256,
+        "expression": "error",
+        "snippet": "<span>{error}</span>"
+      }
+    ]
+  },
+  "client/src/pages/ResetPasswordPage.jsx": {
+    "hardcoded": [
+      {
+        "line": 190,
+        "type": "JSX text",
+        "text": "Verifying reset token...",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-600\">Verifying reset token...</p>"
+      },
+      {
+        "line": 226,
+        "type": "JSX text",
+        "text": "Invalid or Expired Link",
+        "snippet": "<h2 className=\"text-2xl font-bold text-slate-900 tracking-tight\">Invalid or Expired Link</h2>"
+      },
+      {
+        "line": 340,
+        "type": "JSX text",
+        "text": "Security Requirements:",
+        "snippet": "<p className=\"font-semibold text-slate-700 mb-1 text-[11px] uppercase tracking-wider\">Security Requirements:</p>"
+      },
+      {
+        "line": 374,
+        "type": "JSX text",
+        "text": "Updating Password...",
+        "snippet": "<span>Updating Password...</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 227,
+        "expression": "error",
+        "snippet": "<p className=\"text-sm text-slate-500 mt-2 leading-relaxed\">{error}</p>"
+      },
+      {
+        "line": 246,
+        "expression": "userInfo.email",
+        "snippet": "Updating credentials for <span className=\"font-semibold text-slate-700\">{userInfo.email}</span>"
+      },
+      {
+        "line": 259,
+        "expression": "error",
+        "snippet": "<span>{error}</span>"
+      }
+    ]
+  },
+  "client/src/pages/VerificationPage.jsx": {
+    "hardcoded": [
+      {
+        "line": 88,
+        "type": "JSX text",
+        "text": "NexAcademy Official Verification Portal",
+        "snippet": "<span className=\"text-xs text-slate-500 border-l border-slate-200 pl-3 font-medium\">NexAcademy Official Verification Portal</span>"
+      },
+      {
+        "line": 100,
+        "type": "JSX text",
+        "text": "Verifying certificate authenticity...",
+        "snippet": "<p className=\"text-sm font-semibold text-slate-600\">Verifying certificate authenticity...</p>"
+      },
+      {
+        "line": 109,
+        "type": "JSX text",
+        "text": "Certificate Verification Failed",
+        "snippet": "<h2 className=\"text-2xl font-extrabold text-slate-900\">Certificate Verification Failed</h2>"
+      },
+      {
+        "line": 167,
+        "type": "JSX text",
+        "text": "Download PDF",
+        "snippet": "<span>Download PDF</span>"
+      },
+      {
+        "line": 217,
+        "type": "JSX text",
+        "text": "in recognition of successful completion and proficiency demonstrated within the",
+        "snippet": "This certificate is proudly awarded to <strong>{recipientName}</strong> in recognition of successful completion and proficiency demonstrated within the <strong>{(tier === 'EDGE' || tier === 'L2_ADVANCED') ? 'EDGE' : 'CORE'}</strong> program. This achievement verifies the acquisition of skills and knowledge required for excellence in engineering and development."
+      },
+      {
+        "line": 219,
+        "type": "JSX text",
+        "text": "Issued by Technonex NexAcademy",
+        "snippet": "<p className=\"text-xs font-semibold text-slate-900 font-sans\">Issued by Technonex NexAcademy</p>"
+      },
+      {
+        "line": 236,
+        "type": "JSX text",
+        "text": "Director, Technonex NexAcademy",
+        "snippet": "<p className=\"text-[10px] text-slate-500 font-sans\">Director, Technonex NexAcademy</p>"
+      },
+      {
+        "line": 250,
+        "type": "JSX text",
+        "text": "Lead Instructor",
+        "snippet": "<p className=\"text-[10px] text-slate-500 font-sans\">Lead Instructor</p>"
+      },
+      {
+        "line": 277,
+        "type": "JSX text",
+        "text": "TECHNONEX",
+        "snippet": "<textPath href=\"#topArcModal\" startOffset=\"50%\" textAnchor=\"middle\">TECHNONEX</textPath>"
+      },
+      {
+        "line": 281,
+        "type": "JSX text",
+        "text": "CERTIFIED",
+        "snippet": "<textPath href=\"#bottomArcModal\" startOffset=\"50%\" textAnchor=\"middle\">CERTIFIED</textPath>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": []
+  },
+  "client/src/pages/Profile.jsx": {
+    "hardcoded": [
+      {
+        "line": 155,
+        "type": "JSX text",
+        "text": "Profile",
+        "snippet": "<h1 className=\"text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight\">Profile</h1>"
+      },
+      {
+        "line": 156,
+        "type": "JSX text",
+        "text": "Manage your account details.",
+        "snippet": "<p className=\"text-sm text-slate-500 font-normal mt-1\">Manage your account details.</p>"
+      },
+      {
+        "line": 160,
+        "type": "JSX text",
+        "text": "Loading profile details...",
+        "snippet": "<div className=\"p-10 text-center text-slate-400 text-sm italic\">Loading profile details...</div>"
+      },
+      {
+        "line": 290,
+        "type": "JSX text",
+        "text": "Saving...",
+        "snippet": "<span>Saving...</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 170,
+        "expression": "message",
+        "snippet": "<span>{message}</span>"
+      },
+      {
+        "line": 178,
+        "expression": "error",
+        "snippet": "<span>{error}</span>"
+      },
+      {
+        "line": 214,
+        "expression": "formData.email",
+        "snippet": "value={formData.email}"
+      }
+    ]
+  },
+  "client/src/pages/TrackExplorer.jsx": {
+    "hardcoded": [
+      {
+        "line": 26,
+        "type": "JSX text",
+        "text": "Loading tracks...",
+        "snippet": "return <div className=\"p-6 text-gray-600\">Loading tracks...</div>;"
+      },
+      {
+        "line": 36,
+        "type": "JSX text",
+        "text": "Explore Tracks",
+        "snippet": "<h1 className=\"text-3xl font-semibold text-gray-900\">Explore Tracks</h1>"
+      },
+      {
+        "line": 37,
+        "type": "JSX text",
+        "text": "Browse available learning paths and start your next module.",
+        "snippet": "<p className=\"mt-2 text-gray-600\">Browse available learning paths and start your next module.</p>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 30,
+        "expression": "error",
+        "snippet": "return <div className=\"p-6 text-red-600\">{error}</div>;"
+      },
+      {
+        "line": 48,
+        "expression": "track.title",
+        "snippet": "<h2 className=\"text-xl font-semibold text-gray-900\">{track.title}</h2>"
+      }
+    ]
+  },
+  "client/src/pages/TrackDetail.jsx": {
+    "hardcoded": [
+      {
+        "line": 44,
+        "type": "JSX text",
+        "text": "Loading track details...",
+        "snippet": "return <div className=\"p-6 text-gray-600\">Loading track details...</div>;"
+      },
+      {
+        "line": 59,
+        "type": "JSX text",
+        "text": "Overall progress",
+        "snippet": "<span>Overall progress</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 48,
+        "expression": "error",
+        "snippet": "return <div className=\"p-6 text-red-600\">{error}</div>;"
+      },
+      {
+        "line": 78,
+        "expression": "moduleItem.title",
+        "snippet": "<img src={thumb} alt={moduleItem.title} className=\"w-full h-full object-cover\" />"
+      },
+      {
+        "line": 86,
+        "expression": "moduleItem.title",
+        "snippet": "<h2 className=\"text-base font-bold text-gray-900 truncate\">{moduleItem.title}</h2>"
+      }
+    ]
+  },
+  "client/src/pages/LegalNoticePage.jsx": {
+    "hardcoded": [
+      {
+        "line": 9,
+        "type": "JSX text",
+        "text": "Legal Notice",
+        "snippet": "<h1 className=\"text-4xl font-bold tracking-tight text-slate-900 md:text-5xl\">Legal Notice</h1>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 17,
+        "expression": "section.text",
+        "snippet": "{section.text}"
+      },
+      {
+        "line": 37,
+        "expression": "item.label",
+        "snippet": "<div key={`${section.id}-${item.label}`} className=\"flex flex-col gap-1 md:flex-row md:gap-3\">"
+      },
+      {
+        "line": 38,
+        "expression": "item.label",
+        "snippet": "<dt className=\"min-w-[120px] font-medium text-slate-900\">{item.label}:</dt>"
+      },
+      {
+        "line": 54,
+        "expression": "section.text",
+        "snippet": "<p className=\"text-base leading-7 text-slate-700\">{section.text}</p>"
+      }
+    ]
+  },
+  "client/src/pages/PrivacyPolicyPage.jsx": {
+    "hardcoded": [
+      {
+        "line": 9,
+        "type": "JSX text",
+        "text": "Privacy Policy",
+        "snippet": "<h1 className=\"text-4xl font-bold tracking-tight text-slate-900 md:text-5xl\">Privacy Policy</h1>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 17,
+        "expression": "section.text",
+        "snippet": "{section.text}"
+      },
+      {
+        "line": 37,
+        "expression": "item.label",
+        "snippet": "<div key={`${section.id}-${item.label}`} className=\"flex flex-col gap-1 md:flex-row md:gap-3\">"
+      },
+      {
+        "line": 38,
+        "expression": "item.label",
+        "snippet": "<dt className=\"min-w-[120px] font-medium text-slate-900\">{item.label}:</dt>"
+      },
+      {
+        "line": 70,
+        "expression": "section.customLink.text",
+        "snippet": "{section.customLink.text}"
+      }
+    ]
+  },
+  "client/src/pages/CookiesPage.jsx": {
+    "hardcoded": [
+      {
+        "line": 14,
+        "type": "JSX text",
+        "text": "Cookie Policy",
+        "snippet": "<h1 className=\"text-4xl font-bold tracking-tight text-slate-900 md:text-5xl\">Cookie Policy</h1>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 49,
+        "expression": "section.customLink.text",
+        "snippet": "{section.customLink.text}"
+      },
+      {
+        "line": 56,
+        "expression": "section.text",
+        "snippet": "{section.text}"
+      },
+      {
+        "line": 87,
+        "expression": "item.label",
+        "snippet": "<div key={`${section.id}-${item.label}`} className=\"flex flex-col sm:flex-row sm:gap-4\">"
+      },
+      {
+        "line": 88,
+        "expression": "item.label",
+        "snippet": "<dt className=\"min-w-[130px] font-semibold text-slate-900\">{item.label}:</dt>"
+      }
+    ]
+  },
+  "client/src/pages/TermsPage.jsx": {
+    "hardcoded": [],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 19,
+        "expression": "section.text",
+        "snippet": "{section.text}"
+      }
+    ]
+  },
+  "client/src/components/CookieConsentBanner.jsx": {
+    "hardcoded": [],
+    "missingKeys": [],
+    "backendSourced": []
+  },
+  "client/src/components/NetworkBanner.jsx": {
+    "hardcoded": [
+      {
+        "line": 26,
+        "type": "JSX text",
+        "text": "Network connection lost. Reconnect to continue your session.",
+        "snippet": "<span>Network connection lost. Reconnect to continue your session.</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": []
+  },
+  "client/src/components/LanguageSwitcher.jsx": {
+    "hardcoded": [],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 64,
+        "expression": "currentLang.name",
+        "snippet": "<span className=\"font-sans text-xs font-semibold text-slate-800\">{currentLang.name}</span>"
+      },
+      {
+        "line": 91,
+        "expression": "lng.name",
+        "snippet": "<span>{lng.name}</span>"
+      }
+    ]
+  },
+  "client/src/components/NotificationBell.jsx": {
+    "hardcoded": [
+      {
+        "line": 140,
+        "type": "JSX text",
+        "text": "Notifications",
+        "snippet": "<h4 className=\"text-sm font-bold text-[#092857]\">Notifications</h4>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 180,
+        "expression": "badge.label",
+        "snippet": "{badge.label}"
+      },
+      {
+        "line": 186,
+        "expression": "item.title",
+        "snippet": "<p className=\"text-xs font-bold text-slate-900 leading-tight\">{item.title}</p>"
+      },
+      {
+        "line": 187,
+        "expression": "item.message",
+        "snippet": "<p className=\"text-xs text-slate-600 leading-normal\">{item.message}</p>"
+      }
+    ]
+  },
+  "client/src/components/ProfileModal.jsx": {
+    "hardcoded": [],
+    "missingKeys": [],
+    "backendSourced": [
+      {
+        "line": 165,
+        "expression": "error",
+        "snippet": "<span>{error}</span>"
+      },
+      {
+        "line": 203,
+        "expression": "formData.email",
+        "snippet": "value={formData.email}"
+      }
+    ]
+  },
+  "client/src/components/VideoPlayer.jsx": {
+    "hardcoded": [],
+    "missingKeys": [],
+    "backendSourced": []
+  },
+  "client/src/components/Pagination.jsx": {
+    "hardcoded": [
+      {
+        "line": 33,
+        "type": "JSX text",
+        "text": "Previous",
+        "snippet": "<span>Previous</span>"
+      },
+      {
+        "line": 46,
+        "type": "JSX text",
+        "text": "Next",
+        "snippet": "<span>Next</span>"
+      }
+    ],
+    "missingKeys": [],
+    "backendSourced": []
+  }
+}

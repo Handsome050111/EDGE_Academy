@@ -482,18 +482,18 @@ const TeamLeadDashboard = () => {
 
       {/* Slide-Out Navigation Drawer on Mobile / Fixed Sidebar on Desktop */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[78vw] max-w-xs sm:max-w-sm lg:w-72 bg-[#092857] text-white p-6 flex flex-col justify-between border-r border-blue-900/40 shrink-0 h-screen overflow-y-auto shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[78vw] max-w-xs sm:max-w-sm lg:w-72 bg-[#092857] text-white p-5 flex flex-col justify-between border-r border-blue-900/40 shrink-0 h-screen overflow-y-auto shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         <div className="overflow-y-auto">
           {/* Drawer Brand Header + Close Button */}
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex items-start justify-between mb-7">
             <div>
-              <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <Logo size="full" variant="light" className="h-9" />
-              </h1>
-              <p className="text-xs text-blue-300/70 font-medium mt-0.5">Technonex Team Portal</p>
+              </div>
+              <p className="text-xs font-normal text-slate-400 tracking-normal mt-0.5">Technonex Team Portal</p>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -506,18 +506,20 @@ const TeamLeadDashboard = () => {
             </button>
           </div>
 
-          <nav className="space-y-1.5">
+          <nav className="space-y-1">
             <button
               onClick={() => {
                 setActiveTab('overview');
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                activeTab === 'overview' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm tracking-normal transition cursor-pointer ${
+                activeTab === 'overview'
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5 font-normal'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              <svg className={`w-5 h-5 shrink-0 stroke-[1.75] ${activeTab === 'overview' ? 'text-white' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               <span>{t('overviewMetrics')}</span>
             </button>
@@ -526,12 +528,14 @@ const TeamLeadDashboard = () => {
                 setActiveTab('engineers');
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                activeTab === 'engineers' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm tracking-normal transition cursor-pointer ${
+                activeTab === 'engineers'
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5 font-normal'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              <svg className={`w-5 h-5 shrink-0 stroke-[1.75] ${activeTab === 'engineers' ? 'text-white' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
               <span>{t('engineers')} ({totalEngineers})</span>
             </button>
@@ -540,12 +544,14 @@ const TeamLeadDashboard = () => {
                 setActiveTab('concepts');
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                activeTab === 'concepts' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm tracking-normal transition cursor-pointer ${
+                activeTab === 'concepts'
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5 font-normal'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              <svg className={`w-5 h-5 shrink-0 stroke-[1.75] ${activeTab === 'concepts' ? 'text-white' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
               <span>{t('weakConceptsMap')}</span>
             </button>
@@ -554,12 +560,14 @@ const TeamLeadDashboard = () => {
                 setActiveTab('curriculum');
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                activeTab === 'curriculum' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm tracking-normal transition cursor-pointer ${
+                activeTab === 'curriculum'
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5 font-normal'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              <svg className={`w-5 h-5 shrink-0 stroke-[1.75] ${activeTab === 'curriculum' ? 'text-white' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
               <span>Curriculum Browser</span>
             </button>
@@ -568,12 +576,14 @@ const TeamLeadDashboard = () => {
                 setActiveTab('assignments');
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                activeTab === 'assignments' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm tracking-normal transition cursor-pointer ${
+                activeTab === 'assignments'
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5 font-normal'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              <svg className={`w-5 h-5 shrink-0 stroke-[1.75] ${activeTab === 'assignments' ? 'text-white' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
               </svg>
               <span>Squad Assignments ({activeAssignments})</span>
             </button>
@@ -582,52 +592,52 @@ const TeamLeadDashboard = () => {
                 setActiveTab('certificates');
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                activeTab === 'certificates' ? 'bg-white/15 text-white border border-white/20 shadow-sm' : 'text-blue-200/80 hover:bg-white/10 hover:text-white'
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm tracking-normal transition cursor-pointer ${
+                activeTab === 'certificates'
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5 font-normal'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              <svg className={`w-5 h-5 shrink-0 stroke-[1.75] ${activeTab === 'certificates' ? 'text-white' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
               <span>Squad Certificates ({earnedCertificatesTotal})</span>
             </button>
           </nav>
         </div>
 
-        {/* Sidebar Bottom Profile & Logout Footer */}
-        <div className="pt-6 border-t border-blue-900/50 space-y-3 mt-auto">
+        {/* Compact Enterprise Sidebar Footer */}
+        <div className="pt-3.5 border-t border-white/10 mt-auto flex items-center justify-between gap-1.5">
           <button
             onClick={() => {
               setShowProfileModal(true);
               setMobileMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-white/10 transition cursor-pointer text-left group"
+            className="flex-1 flex items-center gap-2.5 p-1.5 -ml-1 rounded-xl hover:bg-white/5 transition cursor-pointer text-left min-w-0 group"
             title="Open Profile Settings"
           >
-            <div className="h-9 w-9 rounded-xl bg-[#08306B] border border-blue-400/30 flex items-center justify-center font-bold text-white text-sm shadow-sm shrink-0 group-hover:border-white/50 transition">
+            <div className="h-8 w-8 rounded-lg bg-[#08306B] border border-blue-400/30 flex items-center justify-center font-medium text-white text-xs shadow-xs shrink-0 group-hover:border-white/50 transition">
               {(user?.fullName || user?.full_name || user?.email || 'T')[0]?.toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white truncate group-hover:text-blue-200 transition">
+              <p className="text-xs font-medium text-white truncate group-hover:text-slate-200 transition">
                 {user?.fullName || user?.full_name || 'Team Lead'}
               </p>
-              <p className="text-xs text-blue-300/60 truncate capitalize">
+              <p className="text-[11px] font-normal text-slate-400 truncate capitalize">
                 {user?.role?.replace('_', ' ') || 'Team Lead'}
               </p>
             </div>
-            <svg className="w-4 h-4 text-blue-300/50 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
           </button>
 
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-2 py-2 text-xs font-medium text-blue-200/80 hover:text-white hover:bg-white/5 rounded-xl transition-colors group cursor-pointer"
+            className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition cursor-pointer shrink-0"
+            title="Logout"
+            aria-label="Logout"
           >
-            <svg className="w-4 h-4 text-blue-300 group-hover:text-white transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <svg className="w-4 h-4 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span>Logout</span>
           </button>
         </div>
       </aside>
@@ -659,7 +669,7 @@ const TeamLeadDashboard = () => {
               <div className="h-8 w-8 rounded-full bg-[#08306B] text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
                 {(user?.fullName || user?.full_name || user?.email || 'T')[0]?.toUpperCase()}
               </div>
-              <span className="text-xs font-semibold text-slate-800 hidden sm:inline truncate max-w-[140px]">
+              <span className="text-sm font-medium text-slate-700 hidden sm:inline truncate max-w-[140px]">
                 {user?.fullName || user?.full_name || user?.email || 'Team Lead'}
               </span>
             </div>
@@ -679,7 +689,7 @@ const TeamLeadDashboard = () => {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center flex-wrap gap-2.5">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center flex-wrap gap-2.5">
                 <span>
                   {activeTab === 'engineers'
                     ? 'Engineer Progress & Concept Tracking'
@@ -694,22 +704,22 @@ const TeamLeadDashboard = () => {
                     : 'Team Performance Dashboard'}
                 </span>
                 {activeTab === 'concepts' && allWeakConcepts.length > 0 && (
-                  <span className="bg-blue-50 text-[#08306B] border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold align-middle">
+                  <span className="bg-blue-50 text-[#08306B] border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-medium align-middle">
                     {allWeakConcepts.length} Concept{allWeakConcepts.length === 1 ? '' : 's'} Tracked
                   </span>
                 )}
                 {activeTab === 'assignments' && squadAssignments.length > 0 && (
-                  <span className="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold align-middle">
+                  <span className="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-medium align-middle">
                     {squadAssignments.length} Assignment{squadAssignments.length === 1 ? '' : 's'} Total
                   </span>
                 )}
                 {activeTab === 'certificates' && squadCertificates.length > 0 && (
-                  <span className="bg-amber-50 text-amber-800 border border-amber-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold align-middle">
+                  <span className="bg-amber-50 text-amber-800 border border-amber-200 text-xs px-2.5 py-0.5 rounded-full font-medium align-middle">
                     {squadCertificates.length} Verified Credential{squadCertificates.length === 1 ? '' : 's'}
                   </span>
                 )}
               </h1>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              <p className="text-sm font-normal text-slate-500 mt-1">
                 {activeTab === 'engineers'
                   ? 'Track completion rates, quiz averages, and active training status for squad engineers'
                   : activeTab === 'concepts'
@@ -727,7 +737,7 @@ const TeamLeadDashboard = () => {
             <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={() => setShowAssignModal(true)}
-                className="bg-[#08306B] hover:bg-[#062452] text-white text-xs sm:text-sm font-extrabold px-4 sm:px-5 py-2.5 rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer shrink-0"
+                className="bg-[#08306B] hover:bg-[#062452] text-white text-sm font-medium px-4 sm:px-5 py-2.5 rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer shrink-0"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -741,28 +751,28 @@ const TeamLeadDashboard = () => {
           {activeTab === 'overview' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
               <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('activeEngineers')}</p>
-                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-[#08306B]">{totalEngineers}</p>
-                <span className="mt-1 inline-block text-[11px] font-semibold text-emerald-600">Active Squad Members</span>
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{t('activeEngineers')}</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-[#08306B]">{totalEngineers}</p>
+                <span className="mt-1 inline-block text-xs font-medium text-emerald-600">Active Squad Members</span>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('avgQuizScore')}</p>
-                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-[#08306B]">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{t('avgQuizScore')}</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-[#08306B]">
                   {avgQuizScore}%
                 </p>
-                <span className="mt-1 inline-block text-[11px] font-semibold text-emerald-600">Team Pass Avg ({completionRate}% completed)</span>
+                <span className="mt-1 inline-block text-xs font-medium text-emerald-600">Team Pass Avg ({completionRate}% completed)</span>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Active Assignments</p>
-                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-blue-600">{activeAssignments}</p>
-                <span className="mt-1 inline-block text-[11px] font-semibold text-blue-600">Pending / In Progress</span>
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Active Assignments</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-blue-600">{activeAssignments}</p>
+                <span className="mt-1 inline-block text-xs font-medium text-blue-600">Pending / In Progress</span>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Earned Certificates</p>
-                <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-amber-600">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Earned Certificates</p>
+                <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-amber-600">
                   {earnedCertificatesTotal}
                 </p>
-                <span className="mt-1 inline-block text-[11px] font-semibold text-amber-600">Verified Credentials</span>
+                <span className="mt-1 inline-block text-xs font-medium text-amber-600">Verified Credentials</span>
               </div>
             </div>
           )}
@@ -1166,16 +1176,16 @@ const TeamLeadDashboard = () => {
                       return (
                         <div key={track._id} className="border border-slate-200 rounded-2xl p-6 bg-slate-50/50">
                           <div className="flex items-center justify-between mb-3">
-                            <h4 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                            <h4 className="text-base font-semibold text-slate-900 flex items-center gap-2">
                               <span>{track.name || track.title}</span>
                               {(track.code || track.slug) && (
                                 <span className="text-xs text-slate-400 font-normal">({track.code || track.slug})</span>
                               )}
-                              <span className="text-xs font-semibold text-slate-500">
+                              <span className="text-xs font-medium text-slate-500">
                                 • {trackModules.length} Module{trackModules.length === 1 ? '' : 's'}
                               </span>
                             </h4>
-                            <span className="bg-[#08306B] text-white text-xs px-2.5 py-1 rounded-full font-extrabold">
+                            <span className="bg-[#08306B] text-white text-xs px-2.5 py-0.5 rounded-full font-medium">
                               {track.tier}
                             </span>
                           </div>
@@ -1590,10 +1600,10 @@ const TeamLeadDashboard = () => {
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-in fade-in zoom-in duration-150 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div>
-                <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                   <span>Assign Curriculum to Team</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">Assign a single module or entire certification track to your squad.</p>
+                <p className="text-sm font-normal text-slate-500 mt-1">Assign a single module or entire certification track to your squad.</p>
               </div>
               <button
                 onClick={() => setShowAssignModal(false)}
@@ -1837,7 +1847,7 @@ const TeamLeadDashboard = () => {
                 <button
                   type="submit"
                   disabled={assignLoading}
-                  className="bg-[#08306B] hover:bg-[#062452] text-white text-xs font-extrabold px-5 py-2.5 rounded-xl shadow-md transition disabled:opacity-50 cursor-pointer"
+                  className="bg-[#08306B] hover:bg-[#062452] text-white text-sm font-medium px-5 py-2.5 rounded-xl shadow-xs transition disabled:opacity-50 cursor-pointer"
                 >
                   {assignLoading ? 'Dispatching...' : 'Dispatch Assignment'}
                 </button>
@@ -1857,7 +1867,7 @@ const TeamLeadDashboard = () => {
                   {(selectedEngineerForCerts.fullName || selectedEngineerForCerts.full_name || selectedEngineerForCerts.name || 'E')[0]?.toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-slate-900">
+                  <h3 className="text-base font-semibold text-slate-900">
                     {selectedEngineerForCerts.fullName || selectedEngineerForCerts.full_name || selectedEngineerForCerts.name}
                   </h3>
                   <p className="text-xs text-slate-500">{selectedEngineerForCerts.email}</p>
@@ -1983,7 +1993,7 @@ const TeamLeadDashboard = () => {
                   {(selectedEngineerForAssignments.fullName || selectedEngineerForAssignments.full_name || selectedEngineerForAssignments.name || 'E')[0]?.toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-slate-900">
+                  <h3 className="text-base font-semibold text-slate-900">
                     {selectedEngineerForAssignments.fullName || selectedEngineerForAssignments.full_name || selectedEngineerForAssignments.name}
                   </h3>
                   <p className="text-xs text-slate-500">{selectedEngineerForAssignments.email}</p>

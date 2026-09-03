@@ -245,7 +245,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-900">Certificate Governance & Signatories</h2>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-sm font-normal text-slate-500 mt-1">
           Configure official certificate signatories, inspect issued credentials, and manage certificate revocations
         </p>
       </div>
@@ -256,25 +256,25 @@ const CertificateGovernanceTab = ({ showNotification }) => {
         <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Certificate Template Signatories</h3>
-              <p className="text-xs text-slate-500">Signatures rendered dynamically onto generated PDF certificates</p>
+              <h3 className="text-base font-semibold text-slate-900">Certificate Template Signatories</h3>
+              <p className="text-xs font-normal text-slate-500 mt-0.5">Signatures rendered dynamically onto generated PDF certificates</p>
             </div>
             <span className="text-xs font-mono px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700">Official Signatures</span>
           </div>
 
           <form onSubmit={handleSaveConfig} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
               {/* Director Card */}
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Director Credentials</span>
-                  <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3 flex flex-col justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Director Credentials</span>
+                  <span className="text-xs font-medium text-[#08306B] bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full shrink-0">
                     Official Signatory
                   </span>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Director Full Name</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Director Full Name</label>
                   <input
                     type="text"
                     required
@@ -286,7 +286,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Director Title / Role</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Director Title / Role</label>
                   <input
                     type="text"
                     required
@@ -299,7 +299,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
 
                 {/* Director Signature Upload / Preview */}
                 <div className="pt-2 border-t border-slate-200">
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Original Handwritten Signature</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Original Handwritten Signature</label>
                   {configForm.director_signature_preview || (configForm.director_signature_url && !configForm.remove_director_signature) ? (
                     <div className="p-3 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
@@ -312,7 +312,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                         </div>
                         <div className="min-w-0">
                           <p className="text-xs font-semibold text-emerald-700 truncate">Custom Signature Uploaded</p>
-                          <p className="text-[10px] text-slate-400">Rendered dynamically on certificate</p>
+                          <p className="text-xs font-normal text-slate-400">Rendered dynamically on certificate</p>
                         </div>
                       </div>
                       <button
@@ -332,7 +332,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                           </svg>
                           <span className="text-xs font-semibold">Upload Signature File (PNG/JPG/SVG)</span>
                         </div>
-                        <span className="text-[10px] text-slate-400 mt-0.5">Transparent PNG recommended</span>
+                        <span className="text-xs text-slate-400 mt-0.5">Transparent PNG recommended</span>
                         <input
                           type="file"
                           accept="image/png,image/jpeg,image/svg+xml,image/webp"
@@ -340,7 +340,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                           className="hidden"
                         />
                       </label>
-                      <p className="text-[10px] text-slate-400 italic">
+                      <p className="text-xs text-slate-400 italic">
                         *If not uploaded, the system will use cursive font signature automatically.
                       </p>
                     </div>
@@ -349,16 +349,16 @@ const CertificateGovernanceTab = ({ showNotification }) => {
               </div>
 
               {/* Instructor Card */}
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Instructor Credentials</span>
-                  <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3 flex flex-col justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Instructor Credentials</span>
+                  <span className="text-xs font-medium text-[#08306B] bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full shrink-0">
                     Lead Instructor
                   </span>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Lead Instructor Full Name</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Lead Instructor Full Name</label>
                   <input
                     type="text"
                     required
@@ -370,7 +370,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Instructor Title / Role</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Instructor Title / Role</label>
                   <input
                     type="text"
                     required
@@ -527,7 +527,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-slate-50 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th className="px-5 py-3.5">Certificate ID</th>
                   <th className="px-4 py-3.5">Recipient Engineer</th>
@@ -547,21 +547,21 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                   return (
                     <tr key={cert._id || cert.id} className="hover:bg-slate-50/70 transition">
                       <td className="px-5 py-3.5">
-                        <span className="font-mono font-bold text-slate-900">
+                        <span className="font-mono text-xs font-medium text-slate-900">
                           {cert.certificate_id || 'CERT-N/A'}
                         </span>
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <p className="font-semibold text-slate-900">{engName}</p>
-                        {engEmail && <p className="text-[11px] text-slate-500">{engEmail}</p>}
+                        <p className="text-sm font-semibold text-slate-900">{engName}</p>
+                        {engEmail && <p className="text-xs font-normal text-slate-500">{engEmail}</p>}
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <p className="font-medium text-slate-800">{trackTitle}</p>
+                        <p className="text-sm font-medium text-slate-800">{trackTitle}</p>
                       </td>
 
-                      <td className="px-4 py-3.5 text-slate-500 text-[11px]">
+                      <td className="px-4 py-3.5 text-slate-500 text-xs font-normal">
                         {cert.issued_at || cert.createdAt
                           ? new Date(cert.issued_at || cert.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                           : '—'}
@@ -569,7 +569,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
 
                       <td className="px-4 py-3.5">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize border ${
                             isRevoked
                               ? 'bg-rose-100 text-rose-800 border-rose-200'
                               : 'bg-emerald-100 text-emerald-800 border-emerald-200'
@@ -578,7 +578,7 @@ const CertificateGovernanceTab = ({ showNotification }) => {
                           {isRevoked ? 'Revoked' : 'Active'}
                         </span>
                         {isRevoked && cert.revocation_reason && (
-                          <p className="text-[10px] text-rose-600 mt-0.5 italic truncate max-w-[140px]" title={cert.revocation_reason}>
+                          <p className="text-xs text-rose-600 mt-0.5 italic truncate max-w-[140px]" title={cert.revocation_reason}>
                             Reason: {cert.revocation_reason}
                           </p>
                         )}

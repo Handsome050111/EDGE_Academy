@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.png', 'favicon-32x32.png', 'favicon-16x16.png', 'apple-touch-icon-180x180.png', 'new-app-logo-192x192.png', 'new-app-logo-512x512.png'],
+      includeAssets: ['NexLogo-2.png', 'NexLogo-3.png', 'NexLogo-4.png', 'favicon-32x32.png', 'favicon-16x16.png', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'NexAcademy',
         short_name: 'NexAcademy',
@@ -18,13 +18,13 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/new-app-logo-192x192.png',
+            src: '/NexLogo-2.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any maskable',
           },
           {
-            src: '/new-app-logo-512x512.png',
+            src: '/NexLogo-2.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',

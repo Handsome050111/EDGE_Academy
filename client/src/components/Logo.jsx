@@ -1,7 +1,7 @@
 const Logo = ({ size = 'full', variant = 'default', className = '', ...props }) => {
   const sizeClasses = {
-    compact: 'h-8 w-auto',
-    full: 'h-10 w-auto',
+    compact: 'h-10 w-auto',
+    full: 'h-12 w-auto',
   };
 
   const variantClasses = {
@@ -12,7 +12,7 @@ const Logo = ({ size = 'full', variant = 'default', className = '', ...props }) 
 
   return (
     <img
-      src="/new-website-logo.png"
+      src="/NexLogo-1.png"
       alt="NexAcademy"
       className={`${sizeClasses[size] || sizeClasses.full} ${variantClasses[variant] || ''} object-contain ${className}`.trim()}
       {...props}

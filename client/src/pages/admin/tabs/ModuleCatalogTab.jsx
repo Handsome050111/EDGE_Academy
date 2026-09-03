@@ -61,7 +61,6 @@ const ModuleCatalogTab = ({ showNotification }) => {
     title: '',
     description: '',
     passingScorePercentage: '80',
-    thumbnail_url: '',
   });
 
   // Media & Attachment Upload States
@@ -72,6 +71,9 @@ const ModuleCatalogTab = ({ showNotification }) => {
   const [thumbnailPreview, setThumbnailPreview] = useState('');
   const [attachmentFile, setAttachmentFile] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [videoUploadLoading, setVideoUploadLoading] = useState(false);
+  const [thumbnailUploadLoading, setThumbnailUploadLoading] = useState(false);
+  const [attachmentUploadLoading, setAttachmentUploadLoading] = useState(false);
 
   // Delete Confirm Modal State
   const [deleteModal, setDeleteModal] = useState({
@@ -162,7 +164,6 @@ const ModuleCatalogTab = ({ showNotification }) => {
         title: mod.title || '',
         description: mod.description || '',
         passingScorePercentage: String(mod.pass_threshold || mod.passingScorePercentage || '80'),
-        thumbnail_url: mod.thumbnail_url || mod.thumbnailUrl || '',
       });
 
       resetModuleMediaState();
@@ -197,7 +198,6 @@ const ModuleCatalogTab = ({ showNotification }) => {
       title: '',
       description: '',
       passingScorePercentage: '80',
-      thumbnail_url: '',
     });
     setModuleQuestions([]);
     setModuleAttachments([]);
@@ -220,7 +220,6 @@ const ModuleCatalogTab = ({ showNotification }) => {
       title: '',
       description: '',
       passingScorePercentage: '80',
-      thumbnail_url: '',
     });
     setModuleQuestions([]);
     setModuleAttachments([]);
@@ -291,6 +290,80 @@ const ModuleCatalogTab = ({ showNotification }) => {
     }
   };
 
+  const uploadPendingMedia = async (moduleId) => {
+    if (!moduleId) return null;
+
+    const mediaActions = [];
+
+    if (videoFile || cloudflareVideoId.trim()) {
+      mediaActions.push(async () => {
+        let res;
+        if (videoFile) {
+          const form = new FormData();
+          form.append('video', videoFile);
+          if (detectedDurationSec) {
+            form.append('video_duration_sec', detectedDurationSec);
+          }
+          res = await api.post(`/admin/modules/${moduleId}/video`, form, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+        } else {
+          res = await api.post(`/admin/modules/${moduleId}/video`, {
+            video_provider_id: cloudflareVideoId.trim(),
+          });
+        }
+
+        const updatedMod = res.data.module || res.data;
+        setSelectedModule(updatedMod);
+        setModules((prev) => prev.map((m) => (m._id === moduleId ? updatedMod : m)));
+        setVideoFile(null);
+        setDetectedDurationSec(null);
+        setCloudflareVideoId('');
+        showNotification('success', `Video attached successfully! Duration: ${formatExactDuration(updatedMod.video_duration_sec || updatedMod.duration_sec)}`);
+        return updatedMod;
+      });
+    }
+
+    if (thumbnailFile) {
+      mediaActions.push(async () => {
+        const form = new FormData();
+        form.append('thumbnail', thumbnailFile);
+        const res = await api.post(`/admin/modules/${moduleId}/thumbnail`, form, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        const updatedMod = res.data.module || res.data;
+        setSelectedModule(updatedMod);
+        setModules((prev) => prev.map((m) => (m._id === moduleId ? updatedMod : m)));
+        setThumbnailFile(null);
+        setThumbnailPreview('');
+        showNotification('success', 'Custom thumbnail image uploaded successfully!');
+        return updatedMod;
+      });
+    }
+
+    if (attachmentFile) {
+      mediaActions.push(async () => {
+        const form = new FormData();
+        form.append('attachment', attachmentFile);
+        const res = await api.post(`/admin/modules/${moduleId}/attachments`, form, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setModuleAttachments((prev) => [res.data.attachment, ...prev]);
+        setAttachmentFile(null);
+        showNotification('success', `Attachment '${res.data.attachment?.filename || 'Document'}' uploaded!`);
+        return res.data.attachment;
+      });
+    }
+
+    let latestModule = selectedModule;
+    for (const action of mediaActions) {
+      latestModule = await action();
+    }
+
+    await loadTracksAndModules();
+    return latestModule;
+  };
+
   // Module CRUD Handlers
   const handleSaveModule = async (e) => {
     e.preventDefault();
@@ -306,26 +379,27 @@ const ModuleCatalogTab = ({ showNotification }) => {
         title: moduleFormData.title.trim(),
         description: moduleFormData.description.trim(),
         passingScorePercentage: Number(moduleFormData.passingScorePercentage),
-        thumbnail_url: moduleFormData.thumbnail_url.trim() || null,
       };
 
+      let savedModule;
       if (selectedModule?._id) {
         const res = await api.put(`/modules/${selectedModule._id}`, payload);
-        const updated = res.data;
-        setModules((prev) => prev.map((m) => (m._id === updated._id ? updated : m)));
-        showNotification('success', `Module '${updated.title}' updated successfully!`);
-        await loadTracksAndModules();
-        handleCloseModal();
+        savedModule = res.data;
+        setModules((prev) => prev.map((m) => (m._id === savedModule._id ? savedModule : m)));
+        showNotification('success', `Module '${savedModule.title}' updated successfully!`);
       } else {
         payload.isPublished = false;
         payload.status = 'draft';
         const res = await api.post('/modules', payload);
-        const created = res.data;
-        setModules((prev) => [...prev, created]);
-        showNotification('success', `Module '${created.title}' created successfully!`);
-        await loadTracksAndModules();
-        handleCloseModal();
+        savedModule = res.data;
+        setModules((prev) => [...prev, savedModule]);
+        showNotification('success', `Module '${savedModule.title}' created successfully!`);
       }
+
+      const finalModule = await uploadPendingMedia(savedModule?._id || selectedModule?._id);
+      setSelectedModule(finalModule || savedModule || selectedModule);
+      await loadTracksAndModules();
+      handleCloseModal();
     } catch (err) {
       showNotification('error', err.response?.data?.message || err.message || 'Failed to save module');
     } finally {
@@ -368,7 +442,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
       return;
     }
 
-    setUploadLoading(true);
+    setVideoUploadLoading(true);
     try {
       let res;
       if (videoFile) {
@@ -387,6 +461,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
       }
 
       const updatedMod = res.data.module || res.data;
+      setSelectedModule(updatedMod);
       setModules((prev) => prev.map((m) => (m._id === selectedModule._id ? updatedMod : m)));
       showNotification('success', `Video attached successfully! Duration: ${formatExactDuration(updatedMod.video_duration_sec || updatedMod.duration_sec)}`);
       await loadTracksAndModules();
@@ -396,7 +471,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
     } catch (err) {
       showNotification('error', err.response?.data?.message || err.message || 'Video upload failed');
     } finally {
-      setUploadLoading(false);
+      setVideoUploadLoading(false);
     }
   };
 
@@ -419,7 +494,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
       return;
     }
 
-    setUploadLoading(true);
+    setThumbnailUploadLoading(true);
     try {
       const form = new FormData();
       form.append('thumbnail', thumbnailFile);
@@ -428,6 +503,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
       });
 
       const updatedMod = res.data.module || res.data;
+      setSelectedModule(updatedMod);
       setModules((prev) => prev.map((m) => (m._id === selectedModule._id ? updatedMod : m)));
       showNotification('success', 'Custom thumbnail image uploaded successfully!');
       await loadTracksAndModules();
@@ -436,7 +512,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
     } catch (err) {
       showNotification('error', err.response?.data?.message || err.message || 'Thumbnail upload failed');
     } finally {
-      setUploadLoading(false);
+      setThumbnailUploadLoading(false);
     }
   };
 
@@ -451,7 +527,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
       return;
     }
 
-    setUploadLoading(true);
+    setAttachmentUploadLoading(true);
     try {
       const form = new FormData();
       form.append('attachment', attachmentFile);
@@ -465,7 +541,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
     } catch (err) {
       showNotification('error', err.response?.data?.message || err.message || 'Attachment upload failed');
     } finally {
-      setUploadLoading(false);
+      setAttachmentUploadLoading(false);
     }
   };
 
@@ -488,14 +564,15 @@ const ModuleCatalogTab = ({ showNotification }) => {
   };
 
   // Publish Module Guard Trigger
-  const handlePublishModule = async () => {
-    if (!selectedModule?._id) return;
+  const handlePublishModule = async (moduleItem = selectedModule) => {
+    if (!moduleItem?._id) return;
     setUploadLoading(true);
     try {
-      const res = await api.post(`/admin/modules/${selectedModule._id}/publish`);
+      const res = await api.post(`/admin/modules/${moduleItem._id}/publish`);
       const publishedMod = res.data.module || res.data;
-      setSelectedModule(publishedMod);
-      setModules((prev) => prev.map((m) => (m._id === selectedModule._id ? publishedMod : m)));
+
+      setSelectedModule((prev) => (prev && prev._id === moduleItem._id ? publishedMod : prev));
+      setModules((prev) => prev.map((m) => (m._id === moduleItem._id ? { ...m, ...publishedMod, status: publishedMod.status || 'published', is_published: publishedMod.is_published ?? true } : m)));
       showNotification('success', 'Module published successfully and is now active for learners.');
       await loadTracksAndModules();
     } catch (err) {
@@ -549,30 +626,30 @@ const ModuleCatalogTab = ({ showNotification }) => {
     <div className="space-y-6">
       {/* Header with Track Filter & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-xl font-bold text-slate-900">Module & Curriculum CMS</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Manage learning tracks, instructional modules, custom video thumbnails, and study documents</p>
+          <p className="text-sm font-normal text-slate-500 mt-1">Manage learning tracks, instructional modules, custom video thumbnails, and study documents</p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={handleOpenCreateTrack}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 shadow-2xs transition cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 shadow-xs transition cursor-pointer shrink-0 whitespace-nowrap"
           >
-            <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
             </svg>
-            Add Track
+            <span>Add Track</span>
           </button>
 
           <button
             onClick={handleOpenCreateModule}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#08306B] text-white hover:bg-[#0a3d87] shadow-xs transition cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-[#08306B] text-white hover:bg-[#062452] shadow-xs transition cursor-pointer shrink-0 whitespace-nowrap"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-white shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
             </svg>
-            New Module
+            <span>New Module</span>
           </button>
         </div>
       </div>
@@ -580,10 +657,10 @@ const ModuleCatalogTab = ({ showNotification }) => {
       {/* Tracks & Modules Browser Bar */}
       <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
-          <span className="text-xs font-bold text-slate-500 shrink-0">Filter by Track:</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 shrink-0">Filter by Track:</span>
           <button
             onClick={() => setSelectedTrackFilter('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer shrink-0 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer shrink-0 ${
               selectedTrackFilter === 'all'
                 ? 'bg-[#08306B] text-white'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -601,7 +678,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
             return (
               <div
                 key={tr._id}
-                className={`inline-flex items-center rounded-xl border transition text-xs font-bold shrink-0 ${
+                className={`inline-flex items-center rounded-xl border transition text-xs font-medium shrink-0 ${
                   isSelected
                     ? 'bg-[#08306B] text-white border-[#08306B] shadow-xs'
                     : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
@@ -754,6 +831,21 @@ const ModuleCatalogTab = ({ showNotification }) => {
 
                       <td className="px-5 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => handlePublishModule(m)}
+                            disabled={uploadLoading || m.status === 'published' || m.is_published === true}
+                            className={`p-1.5 rounded-lg transition ${
+                              m.status === 'published' || m.is_published === true
+                                ? 'bg-emerald-100 text-emerald-700 cursor-default'
+                                : 'text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50'
+                            } ${uploadLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                            title={m.status === 'published' || m.is_published === true ? 'Published' : 'Publish Module'}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 3" />
+                            </svg>
+                          </button>
+
                           <button
                             onClick={() => handleOpenEditModule(m._id)}
                             className="p-1.5 text-slate-500 hover:text-[#08306B] hover:bg-slate-100 rounded-lg transition"
@@ -919,228 +1011,260 @@ const ModuleCatalogTab = ({ showNotification }) => {
               </form>
 
               {/* Media & Attachments 3-Column Grid */}
-              {selectedModule ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#08306B]"></span>
-                      Module Assets & Media
-                    </h4>
-                    <span className="text-[11px] text-slate-400">Manage video, thumbnail poster, and supplementary files</span>
-                  </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#08306B]"></span>
+                    Module Assets & Media
+                  </h4>
+                  <span className="text-[11px] text-slate-400">
+                    {selectedModule ? 'Manage video, thumbnail poster, and supplementary files' : 'Select video, thumbnail, and files to upload with your new module'}
+                  </span>
+                </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* 1. Instructional Video Manager */}
-                    <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 space-y-3 flex flex-col justify-between">
-                      <div className="space-y-3">
-                        <h5 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                          <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                          </svg>
-                          1. Instructional Video Content
-                        </h5>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* 1. Instructional Video Manager */}
+                  <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <h5 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        1. Instructional Video Content
+                      </h5>
 
-                        {selectedModule.videoUrl || selectedModule.video_provider_id ? (
-                          <div className="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-1">
-                            <p className="font-semibold text-emerald-800 flex items-center gap-1">
-                              ✓ Video attached: <span className="font-normal text-slate-600 truncate">{selectedModule.video_provider_id || selectedModule.videoUrl}</span>
-                            </p>
-                            <p className="text-[11px] text-slate-700 font-medium">
-                              Exact Duration: <strong className="text-slate-900">{formatExactDuration(selectedModule.video_duration_sec || selectedModule.duration_sec)}</strong>
-                            </p>
-                          </div>
-                        ) : (
-                          <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
-                            No video attached yet. Upload a local MP4/WebM or enter a Cloudflare Stream ID below.
+                      {selectedModule?.videoUrl || selectedModule?.video_provider_id ? (
+                        <div className="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-1">
+                          <p className="font-semibold text-emerald-800 flex items-center gap-1">
+                            ✓ Video attached: <span className="font-normal text-slate-600 truncate">{selectedModule.video_provider_id || selectedModule.videoUrl}</span>
                           </p>
-                        )}
-
-                        <div className="space-y-2 pt-1">
-                          <div>
-                            <label className="block text-[11px] font-semibold text-slate-600 mb-1">Option A: Upload MP4 / WebM File</label>
-                            <input
-                              type="file"
-                              accept="video/mp4,video/webm"
-                              onChange={handleVideoFileChange}
-                              className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#08306B] file:text-white hover:file:bg-[#0a3d87] cursor-pointer"
-                            />
-                            {detectedDurationSec && (
-                              <p className="text-[11px] text-emerald-700 font-bold mt-1">
-                                Detected Duration: {formatExactDuration(detectedDurationSec)}
-                              </p>
-                            )}
-                          </div>
-
-                          <div>
-                            <label className="block text-[11px] font-semibold text-slate-600 mb-1">Option B: Cloudflare Stream Video UID</label>
-                            <input
-                              type="text"
-                              value={cloudflareVideoId}
-                              onChange={(e) => setCloudflareVideoId(e.target.value)}
-                              placeholder="e.g. 5d537f14a468d955f654da5de0f8bc41"
-                              className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl bg-white focus:border-[#08306B] outline-none"
-                            />
-                          </div>
+                          <p className="text-[11px] text-slate-700 font-medium">
+                            Exact Duration: <strong className="text-slate-900">{formatExactDuration(selectedModule.video_duration_sec || selectedModule.duration_sec)}</strong>
+                          </p>
                         </div>
-                      </div>
+                      ) : videoFile ? (
+                        <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-1">
+                          <p className="font-semibold text-emerald-800 flex items-center gap-1">
+                            ✓ File selected: <span className="font-medium text-emerald-950 truncate">{videoFile.name}</span>
+                          </p>
+                          <p className="text-[11px] text-emerald-700">
+                            Duration: <strong>{detectedDurationSec ? formatExactDuration(detectedDurationSec) : 'Detecting duration...'}</strong> • Will upload on save
+                          </p>
+                        </div>
+                      ) : cloudflareVideoId.trim() ? (
+                        <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-200 text-xs space-y-1">
+                          <p className="font-semibold text-indigo-800 flex items-center gap-1">
+                            ✓ Stream ID: <span className="font-medium text-indigo-950 truncate">{cloudflareVideoId.trim()}</span>
+                          </p>
+                          <p className="text-[11px] text-indigo-600">Will attach when module is saved</p>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
+                          No video attached yet. Upload a local MP4/WebM or enter a Cloudflare Stream ID below.
+                        </p>
+                      )}
 
-                      <button
-                        type="button"
-                        onClick={handleUploadVideo}
-                        disabled={uploadLoading || (!videoFile && !cloudflareVideoId.trim())}
-                        className="w-full py-2 mt-2 rounded-xl text-xs font-semibold bg-slate-800 text-white hover:bg-slate-900 transition cursor-pointer disabled:opacity-50"
-                      >
-                        {uploadLoading ? 'Attaching Video...' : 'Attach Video to Module'}
-                      </button>
-                    </div>
-
-                    {/* 2. Custom Thumbnail Manager */}
-                    <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 space-y-3 flex flex-col justify-between">
-                      <div className="space-y-3">
-                        <h5 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                          <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          2. Custom Thumbnail Poster
-                        </h5>
-
-                        {/* Thumbnail Preview Area */}
-                        <div className="aspect-video w-full rounded-xl bg-slate-200 border border-slate-300 overflow-hidden flex items-center justify-center relative">
-                          {currentThumbnail ? (
-                            <img
-                              src={currentThumbnail}
-                              alt="Thumbnail Preview"
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="text-center text-slate-400 p-4">
-                              <svg className="w-8 h-8 mx-auto mb-1 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                              <p className="text-[11px]">No custom thumbnail uploaded</p>
-                            </div>
+                      <div className="space-y-2 pt-1">
+                        <div>
+                          <label className="block text-[11px] font-semibold text-slate-600 mb-1">Option A: Upload MP4 / WebM File</label>
+                          <input
+                            type="file"
+                            accept="video/mp4,video/webm"
+                            onChange={handleVideoFileChange}
+                            className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#08306B] file:text-white hover:file:bg-[#0a3d87] cursor-pointer"
+                          />
+                          {detectedDurationSec && (
+                            <p className="text-[11px] text-emerald-700 font-bold mt-1">
+                              Detected Duration: {formatExactDuration(detectedDurationSec)}
+                            </p>
                           )}
                         </div>
 
-                        <div className="space-y-2">
-                          <label className="block text-[11px] font-semibold text-slate-600 mb-1">Select Image (PNG, JPG, WEBP)</label>
+                        <div>
+                          <label className="block text-[11px] font-semibold text-slate-600 mb-1">Option B: Cloudflare Stream Video UID</label>
                           <input
-                            type="file"
-                            accept="image/png,image/jpeg,image/jpg,image/webp"
-                            onChange={handleThumbnailFileChange}
-                            className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#08306B] file:text-white hover:file:bg-[#0a3d87] cursor-pointer"
+                            type="text"
+                            value={cloudflareVideoId}
+                            onChange={(e) => setCloudflareVideoId(e.target.value)}
+                            placeholder="e.g. 5d537f14a468d955f654da5de0f8bc41"
+                            className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl bg-white focus:border-[#08306B] outline-none"
                           />
                         </div>
                       </div>
+                    </div>
 
+                    {selectedModule?._id ? (
+                      <button
+                        type="button"
+                        onClick={handleUploadVideo}
+                        disabled={videoUploadLoading || (!videoFile && !cloudflareVideoId.trim())}
+                        className="w-full py-2 mt-2 rounded-xl text-xs font-semibold bg-slate-800 text-white hover:bg-slate-900 transition cursor-pointer disabled:opacity-50"
+                      >
+                        {videoUploadLoading ? 'Attaching Video...' : 'Attach Video to Module'}
+                      </button>
+                    ) : (
+                      <div className="w-full py-2 mt-2 rounded-xl text-[11px] font-semibold text-center bg-slate-100 text-slate-600 border border-slate-200">
+                        {videoFile || cloudflareVideoId.trim() ? '✓ Video ready (will attach on save)' : 'Select video above to attach on save'}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 2. Custom Thumbnail Manager */}
+                  <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <h5 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        2. Custom Thumbnail Poster
+                      </h5>
+
+                      {/* Thumbnail Preview Area */}
+                      <div className="aspect-video w-full rounded-xl bg-slate-200 border border-slate-300 overflow-hidden flex items-center justify-center relative">
+                        {currentThumbnail ? (
+                          <img
+                            src={currentThumbnail}
+                            alt="Thumbnail Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-center text-slate-400 p-4">
+                            <svg className="w-8 h-8 mx-auto mb-1 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p className="text-[11px]">No custom thumbnail selected</p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="block text-[11px] font-semibold text-slate-600 mb-1">Select Image (PNG, JPG, WEBP)</label>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/jpg,image/webp"
+                          onChange={handleThumbnailFileChange}
+                          className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#08306B] file:text-white hover:file:bg-[#0a3d87] cursor-pointer"
+                        />
+                      </div>
+                    </div>
+
+                    {selectedModule?._id ? (
                       <button
                         type="button"
                         onClick={handleUploadThumbnail}
-                        disabled={!thumbnailFile || uploadLoading}
+                        disabled={!thumbnailFile || thumbnailUploadLoading}
                         className="w-full py-2 mt-2 rounded-xl text-xs font-semibold bg-[#08306B] text-white hover:bg-[#0a3d87] transition cursor-pointer disabled:opacity-50"
                       >
-                        {uploadLoading ? 'Uploading Thumbnail...' : 'Upload Thumbnail Image'}
+                        {thumbnailUploadLoading ? 'Uploading Thumbnail...' : 'Upload Thumbnail Image'}
                       </button>
-                    </div>
+                    ) : (
+                      <div className="w-full py-2 mt-2 rounded-xl text-[11px] font-semibold text-center bg-slate-100 text-slate-600 border border-slate-200">
+                        {thumbnailFile ? '✓ Thumbnail ready (will upload on save)' : 'Select image above to upload on save'}
+                      </div>
+                    )}
+                  </div>
 
-                    {/* 3. Document Attachments Manager */}
-                    <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 space-y-3 flex flex-col justify-between">
-                      <div className="space-y-3">
-                        <h5 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                          <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          3. Supplementary Study Documents
-                        </h5>
+                  {/* 3. Document Attachments Manager */}
+                  <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <h5 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        3. Supplementary Study Documents
+                      </h5>
 
-                        <div>
-                          <label className="block text-[11px] font-semibold text-slate-600 mb-1">Upload PDF / DOCX / Diagram</label>
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="file"
-                              accept=".pdf,.docx,.doc,image/*"
-                              onChange={(e) => setAttachmentFile(e.target.files[0])}
-                              className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-white hover:file:bg-slate-800 cursor-pointer"
-                            />
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-600 mb-1">Upload PDF / DOCX / Diagram</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="file"
+                            accept=".pdf,.docx,.doc,image/*"
+                            onChange={(e) => setAttachmentFile(e.target.files[0])}
+                            className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-white hover:file:bg-slate-800 cursor-pointer"
+                          />
+                          {selectedModule?._id ? (
                             <button
                               type="button"
                               onClick={handleUploadAttachment}
-                              disabled={!attachmentFile || uploadLoading}
+                              disabled={!attachmentFile || attachmentUploadLoading}
                               className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#08306B] text-white hover:bg-[#0a3d87] transition cursor-pointer disabled:opacity-40 shrink-0"
                             >
-                              Upload
+                              {attachmentUploadLoading ? 'Uploading...' : 'Upload'}
                             </button>
-                          </div>
-                        </div>
-
-                        <div className="pt-1">
-                          <p className="text-[11px] font-bold text-slate-700 mb-2">
-                            Attached Files ({moduleAttachments.length}):
-                          </p>
-                          {moduleAttachments.length === 0 ? (
-                            <p className="text-xs text-slate-400 italic p-3 bg-white rounded-xl border border-slate-200 text-center">
-                              No supporting documents attached yet.
-                            </p>
                           ) : (
-                            <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
-                              {moduleAttachments.map((att) => {
-                                const fileUrl = resolveAssetUrl(att.storage_path || att.file_url);
-                                return (
-                                  <div
-                                    key={att._id || att.id}
-                                    className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-slate-300 transition text-xs gap-2"
-                                  >
-                                    <div className="flex items-center gap-2 min-w-0">
-                                      <div className="h-7 w-7 rounded-lg bg-blue-50 text-[#08306B] flex items-center justify-center font-bold text-[10px] shrink-0">
-                                        DOC
-                                      </div>
-                                      <div className="min-w-0">
-                                        <p className="font-semibold text-slate-900 truncate">{att.filename || 'Document'}</p>
-                                        <p className="text-[10px] text-slate-400">{formatFileSize(att.file_size_bytes)}</p>
-                                      </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 shrink-0">
-                                      {fileUrl && (
-                                        <a
-                                          href={fileUrl}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                          download
-                                          className="text-[#08306B] hover:underline font-bold text-[11px] px-2 py-1 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
-                                        >
-                                          Download
-                                        </a>
-                                      )}
-                                      <button
-                                        type="button"
-                                        onClick={() => handleDeleteAttachment(att._id || att.id)}
-                                        className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                                        title="Delete Attachment"
-                                      >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                      </button>
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                            <div className="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+                              {attachmentFile ? 'Ready' : 'Select'}
                             </div>
                           )}
                         </div>
+                        {!selectedModule && attachmentFile && (
+                          <p className="text-[11px] text-emerald-700 font-medium mt-1">
+                            ✓ {attachmentFile.name} ({formatFileSize(attachmentFile.size)}) will upload on save
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="pt-1">
+                        <p className="text-[11px] font-bold text-slate-700 mb-2">
+                          Attached Files ({moduleAttachments.length}):
+                        </p>
+                        {moduleAttachments.length === 0 ? (
+                          <p className="text-xs text-slate-400 italic p-3 bg-white rounded-xl border border-slate-200 text-center">
+                            No supporting documents attached yet.
+                          </p>
+                        ) : (
+                          <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
+                            {moduleAttachments.map((att) => {
+                              const fileUrl = resolveAssetUrl(att.storage_path || att.file_url);
+                              return (
+                                <div
+                                  key={att._id || att.id}
+                                  className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs hover:border-slate-300 transition text-xs gap-2"
+                                >
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <div className="h-7 w-7 rounded-lg bg-blue-50 text-[#08306B] flex items-center justify-center font-bold text-[10px] shrink-0">
+                                      DOC
+                                    </div>
+                                    <div className="min-w-0">
+                                      <p className="font-semibold text-slate-900 truncate">{att.filename || 'Document'}</p>
+                                      <p className="text-[10px] text-slate-400">{formatFileSize(att.file_size_bytes)}</p>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    {fileUrl && (
+                                      <a
+                                        href={fileUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        download
+                                        className="text-[#08306B] hover:underline font-bold text-[11px] px-2 py-1 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
+                                      >
+                                        Download
+                                      </a>
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteAttachment(att._id || att.id)}
+                                      className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                                      title="Delete Attachment"
+                                    >
+                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
-              ) : (
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl text-xs text-[#08306B] flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#08306B] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Save basic module details first to enable video attachment, custom thumbnails, and document uploads.</span>
-                </div>
-              )}
+              </div>
             </div>
 
             {/* Sticky Modal Footer */}
@@ -1158,7 +1282,7 @@ const ModuleCatalogTab = ({ showNotification }) => {
                 disabled={uploadLoading}
                 className="px-5 py-2.5 text-xs font-bold bg-[#08306B] text-white hover:bg-[#0a3d87] rounded-xl shadow-xs transition cursor-pointer disabled:opacity-50"
               >
-                {uploadLoading ? 'Saving...' : selectedModule ? 'Update Module Details' : 'Create Module'}
+                {uploadLoading ? 'Saving...' : selectedModule ? 'Update Module Details' : 'Create Module & Save Assets'}
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const Team = require('../models/Team');
+const Track = require('../models/Track');
 const Module = require('../models/Module');
 const Question = require('../models/Question');
 const Assignment = require('../models/Assignment');
@@ -56,7 +57,12 @@ const getTeamReport = async (req, res) => {
     const teamEngineers = await User.find(engineerFilter).select('_id full_name fullName email role status is_active');
     const engineerIds = teamEngineers.map((e) => e._id);
 
-    const assignments = await Assignment.find({ engineer_id: { $in: engineerIds } });
+    const assignments = await Assignment.find({
+      $or: [
+        { engineer_id: { $in: engineerIds } },
+        { userId: { $in: engineerIds } },
+      ],
+    });
     const totalAssignments = assignments.length;
     const completedAssignments = assignments.filter((a) => a.status === 'completed').length;
     const activeAssignments = assignments.filter((a) => a.status === 'pending' || a.status === 'in_progress').length;
@@ -296,8 +302,250 @@ const getWeakConceptsReport = async (req, res) => {
   }
 };
 
+// @desc    Get system-wide aggregated admin overview report
+// @route   GET /api/v1/admin/reports/overview
+// @access  Private/Admin
+const getAdminOverview = async (req, res) => {
+  try {
+    const [
+      allUsers,
+      allTracks,
+      allModules,
+      totalQuestions,
+      allAssignments,
+      allAttempts,
+      allCertificates,
+      weakConcepts,
+    ] = await Promise.all([
+      // 1. Users (no teams queried)
+      User.find({ deleted_at: null }).select('role is_active status deleted_at').lean(),
+
+      // 2. Tracks with modules
+      Track.find({ deleted_at: null }).select('_id title name tier description is_published').lean(),
+
+      // 3. Modules
+      Module.find({ deleted_at: null }).select('_id track_id trackId status pass_threshold').lean(),
+
+      // 4. Questions count
+      Question.countDocuments({ deleted_at: null }),
+
+      // 5. Assignments
+      Assignment.find({}).select('status engineer_id userId module_id moduleId').lean(),
+
+      // 6. Quiz Attempts
+      QuizAttempt.find({ status: 'completed' }).select('passed score_percent scorePercentage engineer_id userId module_id moduleId').lean(),
+
+      // 7. Certificates
+      Certificate.find({}).select('tier status engineer_id userId track_id trackId').lean(),
+
+      // 8. Organization Weak Concepts
+      ConceptScore.aggregate([
+        {
+          $group: {
+            _id: '$concept_tag',
+            totalCorrect: { $sum: '$correct_count' },
+            totalAttempts: { $sum: '$total_count' },
+            engineerCount: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            concept_tag: '$_id',
+            totalCorrect: 1,
+            totalAttempts: 1,
+            engineerCount: 1,
+            accuracyPercentage: {
+              $cond: [
+                { $gt: ['$totalAttempts', 0] },
+                { $round: [{ $multiply: [{ $divide: ['$totalCorrect', '$totalAttempts'] }, 100] }, 1] },
+                0,
+              ],
+            },
+          },
+        },
+        { $match: { totalAttempts: { $gt: 0 } } },
+        { $sort: { accuracyPercentage: 1 } },
+        { $limit: 6 },
+      ]),
+    ]);
+
+    // Compute Workforce Metrics (engineers, team leads, admins, active/deactivated)
+    let engineersCount = 0;
+    let teamLeadsCount = 0;
+    let adminsCount = 0;
+    let activeUsersCount = 0;
+    let deactivatedUsersCount = 0;
+
+    for (const u of allUsers) {
+      const roleStr = String(u.role || '').toLowerCase();
+      if (roleStr === 'engineer') engineersCount++;
+      else if (roleStr === 'team_lead' || roleStr === 'teamlead') teamLeadsCount++;
+      else if (roleStr === 'admin') adminsCount++;
+
+      const isActive = u.is_active !== false && u.status !== 'deactivated';
+      if (isActive) activeUsersCount++;
+      else deactivatedUsersCount++;
+    }
+
+    // Compute Curriculum Metrics
+    let publishedModulesCount = 0;
+    let draftModulesCount = 0;
+    let archivedModulesCount = 0;
+
+    for (const m of allModules) {
+      const s = m.status || 'draft';
+      if (s === 'published') publishedModulesCount++;
+      else if (s === 'draft') draftModulesCount++;
+      else if (s === 'archived') archivedModulesCount++;
+    }
+
+    // Compute Assignment Velocity (no overdue)
+    const totalAssignments = allAssignments.length;
+    let completedAssignments = 0;
+    let inProgressAssignments = 0;
+    let pendingAssignments = 0;
+
+    for (const a of allAssignments) {
+      if (a.status === 'completed') completedAssignments++;
+      else if (a.status === 'in_progress') inProgressAssignments++;
+      else pendingAssignments++;
+    }
+    const assignmentCompletionRate = totalAssignments > 0
+      ? Number(((completedAssignments / totalAssignments) * 100).toFixed(1))
+      : 0;
+
+    // Compute Quiz Mastery Metrics
+    const totalQuizAttempts = allAttempts.length;
+    let passedAttemptsCount = 0;
+    let totalScoreSum = 0;
+
+    for (const qa of allAttempts) {
+      if (qa.passed) passedAttemptsCount++;
+      const s = qa.score_percent !== undefined ? qa.score_percent : (qa.scorePercentage || 0);
+      totalScoreSum += s;
+    }
+    const failedAttemptsCount = totalQuizAttempts - passedAttemptsCount;
+    const globalPassRate = totalQuizAttempts > 0
+      ? Number(((passedAttemptsCount / totalQuizAttempts) * 100).toFixed(1))
+      : 0;
+    const averageQuizScore = totalQuizAttempts > 0
+      ? Number((totalScoreSum / totalQuizAttempts).toFixed(1))
+      : 0;
+
+    // Compute Certificate Governance Metrics
+    let activeCertsCount = 0;
+    let edgeCertsCount = 0;
+    let coreCertsCount = 0;
+    let revokedCertsCount = 0;
+
+    for (const c of allCertificates) {
+      if (c.status === 'active') {
+        activeCertsCount++;
+        const tierStr = String(c.tier || '').toUpperCase();
+        if (tierStr === 'CORE' || tierStr === 'L2_ADVANCED') coreCertsCount++;
+        else edgeCertsCount++;
+      } else if (c.status === 'revoked') {
+        revokedCertsCount++;
+      }
+    }
+
+    // Compute Track-Level Health Breakdown
+    const tracksHealth = allTracks.map((tr) => {
+      const trIdStr = tr._id.toString();
+      const trackMods = allModules.filter(
+        (m) => (m.track_id || m.trackId)?.toString() === trIdStr && m.status === 'published'
+      );
+      const trackModIds = new Set(trackMods.map((m) => m._id.toString()));
+
+      // Count distinct engineers enrolled via assignments
+      const enrolledEngineers = new Set();
+      const completedEngineers = new Set();
+
+      for (const a of allAssignments) {
+        const mId = (a.module_id || a.moduleId)?.toString();
+        if (trackModIds.has(mId)) {
+          const engId = (a.engineer_id || a.userId)?.toString();
+          if (engId) enrolledEngineers.add(engId);
+        }
+      }
+
+      // Count certified engineers for this track
+      for (const c of allCertificates) {
+        const tId = (c.track_id || c.trackId)?.toString();
+        if (tId === trIdStr && c.status === 'active') {
+          const engId = (c.engineer_id || c.userId)?.toString();
+          if (engId) completedEngineers.add(engId);
+        }
+      }
+
+      const enrolledCount = enrolledEngineers.size;
+      const completedCount = completedEngineers.size;
+      const trackCompletionRate = enrolledCount > 0
+        ? Math.min(100, Math.round((completedCount / enrolledCount) * 100))
+        : (completedCount > 0 ? 100 : 0);
+
+      return {
+        _id: tr._id,
+        title: tr.title || tr.name,
+        tier: tr.tier || 'EDGE',
+        description: tr.description || '',
+        publishedModulesCount: trackMods.length,
+        enrolledEngineersCount: enrolledCount,
+        completedEngineersCount: completedCount,
+        completionRate: trackCompletionRate,
+      };
+    });
+
+    return res.json({
+      workforce: {
+        totalUsers: allUsers.length,
+        engineers: engineersCount,
+        teamLeads: teamLeadsCount,
+        admins: adminsCount,
+        activeUsers: activeUsersCount,
+        deactivatedUsers: deactivatedUsersCount,
+      },
+      curriculum: {
+        totalTracks: allTracks.length,
+        totalModules: allModules.length,
+        publishedModules: publishedModulesCount,
+        draftModules: draftModulesCount,
+        archivedModules: archivedModulesCount,
+        totalQuestions,
+      },
+      assignments: {
+        total: totalAssignments,
+        completed: completedAssignments,
+        inProgress: inProgressAssignments,
+        pending: pendingAssignments,
+        completionRate: assignmentCompletionRate,
+      },
+      quizzes: {
+        totalAttempts: totalQuizAttempts,
+        passedAttempts: passedAttemptsCount,
+        failedAttempts: failedAttemptsCount,
+        passRate: globalPassRate,
+        averageScore: averageQuizScore,
+      },
+      certificates: {
+        totalActive: activeCertsCount,
+        edgeCertificates: edgeCertsCount,
+        coreCertificates: coreCertsCount,
+        revokedCertificates: revokedCertsCount,
+      },
+      tracksHealth,
+      weakConcepts,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getTeamReport,
   getModuleReport,
   getWeakConceptsReport,
+  getAdminOverview,
 };
+

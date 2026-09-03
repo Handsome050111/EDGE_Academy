@@ -83,7 +83,7 @@ const VerificationPage = () => {
       <header className="bg-white border-b border-slate-200 text-slate-900 px-6 py-3.5 shadow-xs flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center">
-            <img src="/certificate.png" alt="NexAcademy logo" className="h-8 w-auto max-w-[220px] object-contain" />
+            <img src="/NexLogo-3.png" alt="NexAcademy logo" className="h-8 w-auto max-w-[220px] object-contain" />
           </Link>
           <span className="text-xs text-slate-500 border-l border-slate-200 pl-3 font-medium">NexAcademy Official Verification Portal</span>
         </div>
@@ -189,27 +189,26 @@ const VerificationPage = () => {
                 {/* Certificate Content Grid */}
                 <div className="relative z-10 h-full flex flex-col justify-between px-6 py-2">
                   {/* Header Official Logo */}
-                  <div className="flex items-center justify-between gap-4">
-                    <img src="/certificate.png" alt="NexAcademy logo" className="h-8 sm:h-9 w-auto max-w-[180px] object-contain" />
-                    <img src="/cert-logo-2.png" alt="Technonex logo" className="h-8 sm:h-9 w-auto max-w-[220px] object-contain" />
+                  <div className="flex items-center justify-start gap-4">
+                    <img src="/NexLogo-3.png" alt="NexAcademy logo" className="h-10 sm:h-12 w-auto max-w-[220px] object-contain" />
                   </div>
 
                   {/* Title & Subtitle */}
                   <div className="text-center my-1">
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0A2540] tracking-tight" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                    <h1 className="text-xl sm:text-2xl font-extrabold text-[#0A2540] tracking-tight uppercase font-sans">
                       {trackTitle}
                     </h1>
-                    <p className="text-xs sm:text-sm font-bold text-[#B58D3D] uppercase tracking-widest mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                    <p className="text-[10px] sm:text-xs font-semibold text-[#0A2540] uppercase tracking-wider mt-1 font-sans">
                       Engineering Development & Growth Ecosystem
                     </p>
                   </div>
 
-                  {/* Recipient Name & Gold Line */}
+                  {/* Recipient Name & Line */}
                   <div className="text-center my-2">
-                    <h2 className="text-3xl sm:text-4xl font-bold text-[#0A1C30] tracking-wide" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-[#0A1C30] tracking-tight font-sans">
                       {recipientName}
                     </h2>
-                    <div className="w-96 sm:w-120 h-0.5 bg-[#C59B27] mx-auto mt-2.5"></div>
+                    <div className="w-80 sm:w-112 h-0.5 bg-[#064f99] mx-auto mt-2.5"></div>
                   </div>
 
                   {/* Citation Body */}
@@ -217,43 +216,43 @@ const VerificationPage = () => {
                     <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-sans">
                       This certificate is proudly awarded to <strong>{recipientName}</strong> in recognition of successful completion and proficiency demonstrated within the <strong>{(tier === 'EDGE' || tier === 'L2_ADVANCED') ? 'EDGE' : 'CORE'}</strong> program. This achievement verifies the acquisition of skills and knowledge required for excellence in engineering and development.
                     </p>
-                    <p className="text-xs font-semibold text-slate-900">Issued by Technonex NexAcademy</p>
+                    <p className="text-xs font-semibold text-slate-900 font-sans">Issued by Technonex NexAcademy</p>
                   </div>
 
                   {/* Signatures & Embossed Medallion */}
-                  <div className="flex items-end justify-between pt-2">
+                  <div className="flex items-end justify-between pt-1">
                     <div className="flex items-center gap-8 sm:gap-12 text-left">
                       <div>
                         {directorSignatureUrl ? (
-                          <div className="h-8 flex items-end border-b border-slate-300 pb-0.5 min-w-[120px]">
-                            <img src={resolveUrl(directorSignatureUrl)} alt={directorName} className="max-h-7 max-w-[140px] object-contain" />
+                          <div className="h-9 flex items-end border-b border-slate-300 pb-0.5 min-w-[130px]">
+                            <img src={resolveUrl(directorSignatureUrl)} alt={directorName} className="max-h-8 max-w-[140px] object-contain" />
                           </div>
                         ) : (
-                          <p className="font-serif italic font-bold text-[#0A2540] text-xl border-b border-slate-300 pb-0.5 min-w-[120px]" style={{ fontFamily: 'Dancing Script, cursive' }}>
+                          <p className="font-serif italic font-bold text-[#0A2540] text-xl border-b border-slate-300 pb-0.5 min-w-[130px]" style={{ fontFamily: 'Dancing Script, cursive' }}>
                             {directorName}
                           </p>
                         )}
-                        <p className="text-xs font-bold text-slate-900 mt-1">{directorName}</p>
-                        <p className="text-[10px] text-slate-500">Director, Technonex NexAcademy</p>
+                        <p className="text-xs font-bold text-slate-900 mt-1 font-sans">{directorName}</p>
+                        <p className="text-[10px] text-slate-500 font-sans">Director, Technonex NexAcademy</p>
                       </div>
 
                       <div>
                         {instructorSignatureUrl ? (
-                          <div className="h-8 flex items-end border-b border-slate-300 pb-0.5 min-w-[120px]">
-                            <img src={resolveUrl(instructorSignatureUrl)} alt={instructorName} className="max-h-7 max-w-[140px] object-contain" />
+                          <div className="h-9 flex items-end border-b border-slate-300 pb-0.5 min-w-[130px]">
+                            <img src={resolveUrl(instructorSignatureUrl)} alt={instructorName} className="max-h-8 max-w-[140px] object-contain" />
                           </div>
                         ) : (
-                          <p className="font-serif italic font-bold text-[#0A2540] text-xl border-b border-slate-300 pb-0.5 min-w-[120px]" style={{ fontFamily: 'Dancing Script, cursive' }}>
+                          <p className="font-serif italic font-bold text-[#0A2540] text-xl border-b border-slate-300 pb-0.5 min-w-[130px]" style={{ fontFamily: 'Dancing Script, cursive' }}>
                             {instructorName}
                           </p>
                         )}
-                        <p className="text-xs font-bold text-slate-900 mt-1">{instructorName}</p>
-                        <p className="text-[10px] text-slate-500">Lead Instructor</p>
+                        <p className="text-xs font-bold text-slate-900 mt-1 font-sans">{instructorName}</p>
+                        <p className="text-[10px] text-slate-500 font-sans">Lead Instructor</p>
                       </div>
                     </div>
 
-                    {/* Gold Medallion SVG */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0">
+                    {/* Gold Medallion SVG in bottom right */}
+                    <div className="w-20 h-20 sm:w-22 sm:h-22 shrink-0">
                       <svg viewBox="0 0 160 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                           <radialGradient id="goldGradModal" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
@@ -274,20 +273,25 @@ const VerificationPage = () => {
                         <circle cx="80" cy="80" r="72" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.6" strokeDasharray="2 2" />
                         <circle cx="80" cy="80" r="62" fill="url(#goldGradModal)" stroke="#784F07" strokeWidth="1.2" />
                         <circle cx="80" cy="80" r="58" fill="none" stroke="#FFF0B0" strokeWidth="1" opacity="0.7" />
-                        <text fontSize="8.5" fontWeight="800" fill="#543605" letterSpacing="2">
+                        <text fontFamily="'Inter', sans-serif" fontSize="8.5" fontWeight="800" fill="#543605" letterSpacing="2">
                           <textPath href="#topArcModal" startOffset="50%" textAnchor="middle">TECHNONEX</textPath>
                         </text>
-                        <text x="80" y="86" fontSize="20" fontWeight="900" fill="#422903" textAnchor="middle" letterSpacing="1.5">EDGE</text>
-                        <text fontSize="8.5" fontWeight="800" fill="#543605" letterSpacing="2">
+                        <text x="80" y="86" fontFamily="'Inter', sans-serif" fontSize="20" fontWeight="900" fill="#422903" textAnchor="middle" letterSpacing="1.5">EDGE</text>
+                        <text fontFamily="'Inter', sans-serif" fontSize="8.5" fontWeight="800" fill="#543605" letterSpacing="2">
                           <textPath href="#bottomArcModal" startOffset="50%" textAnchor="middle">CERTIFIED</textPath>
                         </text>
                       </svg>
                     </div>
                   </div>
 
-                  {/* Metadata Footer */}
-                  <div className="text-center text-[10px] text-slate-500 pt-1">
-                    Date issued: {issueDateFormatted} &nbsp;|&nbsp; Certificate ID: {certId}
+                  {/* Metadata Footer: Date & ID centered in middle, Technonex Logo below golden seal on the right */}
+                  <div className="relative pt-2.5 border-t border-slate-100 flex items-center justify-center min-h-[44px]">
+                    <div className="text-center text-[10px] sm:text-[11px] text-slate-500 font-medium font-sans">
+                      Date issued: {issueDateFormatted} &nbsp;|&nbsp; Certificate ID: {certId}
+                    </div>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                      <img src="/cert-logo-2.png" alt="Technonex logo" className="h-10 sm:h-12 w-auto max-w-[220px] object-contain" />
+                    </div>
                   </div>
                 </div>
               </div>

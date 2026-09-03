@@ -596,6 +596,25 @@ const notifyPasswordReset = async ({ user, token }) => {
   }
 };
 
+/**
+ * Notify an engineer that a new track has been created/published and assigned to them
+ */
+const notifyNewTrackAssigned = async (recipientId, track) => {
+  try {
+    const trackTitle = track.name || track.title || 'New Curriculum Track';
+    const tier = track.tier || 'EDGE';
+    await createNotification({
+      recipient_id: recipientId,
+      title: `New Track Assigned: ${trackTitle}`,
+      message: `A new track "${trackTitle}" (${tier}) has been published and assigned to your learning path.`,
+      type: 'assignment',
+      link: '/engineer',
+    });
+  } catch (error) {
+    console.error('Error creating new track assignment notification:', error.message);
+  }
+};
+
 module.exports = {
   sendEmail,
   notifyUserInvitation,
@@ -604,5 +623,7 @@ module.exports = {
   notifyTeamLeadAssignment,
   notifyAssignment,
   notifyCertificateIssued,
+  notifyNewTrackAssigned,
 };
+
 

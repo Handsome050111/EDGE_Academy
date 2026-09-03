@@ -250,19 +250,19 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
     <div className="space-y-6">
       {/* Header Section with Actions & Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-xl font-bold text-slate-900">{t('adminPortal.users.title')}</h2>
-          <p className="text-xs text-slate-500 mt-0.5">{t('adminPortal.users.subtitle')}</p>
+          <p className="text-sm font-normal text-slate-500 mt-1">{t('adminPortal.users.subtitle')}</p>
         </div>
 
         <button
           onClick={() => setShowInviteModal(true)}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#08306B] text-white hover:bg-[#0a3d87] shadow-sm transition cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-[#08306B] text-white hover:bg-[#062452] shadow-xs transition cursor-pointer shrink-0 whitespace-nowrap"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
           </svg>
-          {t('adminPortal.users.inviteUser')}
+          <span>{t('adminPortal.users.inviteUser')}</span>
         </button>
       </div>
 
@@ -277,7 +277,7 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t('adminPortal.users.searchPlaceholder')}
-            className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition"
+            className="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none transition font-normal"
           />
         </div>
 
@@ -285,7 +285,7 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer"
+            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer font-normal"
           >
             <option value="all" className="truncate">{t('adminPortal.users.allRoles')}</option>
             <option value="admin" className="truncate">{t('admin')}</option>
@@ -296,7 +296,7 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer"
+            className="w-full sm:w-auto min-w-[140px] max-w-full sm:max-w-[220px] md:max-w-[280px] truncate text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] cursor-pointer font-normal"
           >
             <option value="all" className="truncate">{t('adminPortal.users.allStatuses')}</option>
             <option value="active" className="truncate">{t('common.active')}</option>
@@ -311,7 +311,7 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
                 setStatusFilter('all');
                 setRoleFilter('all');
               }}
-              className="text-xs text-slate-500 hover:text-slate-800 px-2 py-1 underline cursor-pointer"
+              className="text-xs font-medium text-slate-500 hover:text-slate-800 px-2 py-1 underline cursor-pointer"
             >
               {t('common.cancel')}
             </button>
@@ -338,7 +338,7 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-slate-50 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th className="px-5 py-3.5">{t('adminPortal.users.colUser')}</th>
                   <th className="px-4 py-3.5">{t('adminPortal.users.colRole')}</th>
@@ -365,30 +365,30 @@ const UserManagementTab = ({ currentUser, showNotification }) => {
                             {initial}
                           </div>
                           <div className="min-w-0">
-                            <p className="font-semibold text-slate-900 truncate">{name}</p>
-                            <p className="text-[11px] text-slate-500 truncate">{u.email}</p>
+                            <p className="text-sm font-semibold text-slate-900 truncate">{name}</p>
+                            <p className="text-xs font-normal text-slate-500 truncate">{u.email}</p>
                           </div>
                         </div>
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${getRoleBadgeClass(u.role)}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getRoleBadgeClass(u.role)}`}>
                           {(u.role || 'engineer').replace('_', ' ')}
                         </span>
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <p className="font-medium text-slate-800 truncate">{teamName}</p>
-                        <p className="text-[11px] text-slate-500 truncate">Lead: {leadName}</p>
+                        <p className="text-sm font-medium text-slate-800 truncate">{teamName}</p>
+                        <p className="text-xs font-normal text-slate-500 truncate">Lead: {leadName}</p>
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold capitalize ${getStatusBadgeClass(u.status, u.is_active)}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusBadgeClass(u.status, u.is_active)}`}>
                           {u.status || (u.is_active ? 'active' : 'deactivated')}
                         </span>
                       </td>
 
-                      <td className="px-4 py-3.5 text-slate-500 text-[11px]">
+                      <td className="px-4 py-3.5 text-slate-500 text-xs font-normal">
                         {u.last_login_at ? new Date(u.last_login_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Never'}
                       </td>
 

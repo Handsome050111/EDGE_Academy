@@ -123,17 +123,13 @@ const AcceptInvitePage = () => {
     <div className="h-screen w-screen overflow-hidden bg-white flex flex-col lg:flex-row font-sans">
       {/* Left Side: Brand Panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-[#062452] p-8 lg:p-14 xl:p-16 flex-col justify-between text-white relative overflow-hidden shrink-0">
-        {/* Large Watermark Graphic */}
-        <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full border-[32px] border-white/[0.04] flex items-center justify-center pointer-events-none">
-          <div className="w-[360px] h-[360px] rounded-full border-[24px] border-white/[0.03] flex items-center justify-center">
-            <div className="w-[200px] h-[200px] rounded-full bg-white/[0.02]"></div>
-          </div>
-        </div>
-
-        {/* Decorative Horizontal Circuit Line */}
-        <div className="absolute bottom-1/3 left-0 right-0 h-[1px] bg-blue-400/20 pointer-events-none flex items-center justify-between px-20">
-          <div className="w-2.5 h-2.5 rounded-full border-2 border-blue-300 bg-[#062452]"></div>
-          <div className="w-2.5 h-2.5 rounded-full border-2 border-blue-300 bg-[#062452]"></div>
+        {/* Rotating NexLogo-4 Watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-0 overflow-hidden">
+          <img
+            src="/NexLogo-4.png"
+            alt=""
+            className="w-[460px] h-[460px] object-contain opacity-10 animate-spin-slow select-none pointer-events-none"
+          />
         </div>
 
         {/* Top Brand Logo */}
@@ -146,23 +142,28 @@ const AcceptInvitePage = () => {
         </div>
 
         {/* Middle Copy with Typewriter Effect */}
-        <div className="relative z-10 max-w-md my-auto py-12">
-          <div className="inline-flex items-center gap-2 bg-blue-400/10 border border-blue-300/20 text-blue-200 text-xs px-3.5 py-1.5 rounded-full font-semibold mb-6">
+        <div className="relative z-10 max-w-md my-auto">
+          <div className="inline-flex items-center gap-2 bg-blue-400/10 border border-blue-300/20 text-blue-200 text-xs px-3.5 py-1.5 rounded-full font-semibold mb-4">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             Account Activation Portal
           </div>
-          <h1 className="text-3xl lg:text-4xl xl:text-[42px] font-bold leading-tight text-white mb-4 tracking-tight min-h-[96px] sm:min-h-[110px]">
+          <h1 className="text-2xl sm:text-3xl font-bold leading-tight text-white tracking-tight">
             <span>{typedText}</span>
             <span className="inline-block w-[3.5px] h-[0.82em] bg-blue-300 ml-1.5 align-baseline animate-pulse rounded-full"></span>
           </h1>
-          <p className="text-sm lg:text-base text-blue-200/80 leading-relaxed font-normal">
+          <p className="text-sm lg:text-base text-blue-200/80 leading-relaxed font-normal mt-3 mb-6">
             Activate your corporate account to access personalized curriculum tracks, dynamic assessments, and verified certifications.
           </p>
+          {/* Step Indicator: Circuit Line + Dots */}
+          <div className="mt-6 w-full h-[1px] bg-blue-400/20 flex items-center justify-between relative">
+            <div className="w-2.5 h-2.5 rounded-full border-2 border-blue-300 bg-[#062452] shrink-0"></div>
+            <div className="w-2.5 h-2.5 rounded-full border-2 border-blue-300 bg-[#062452] shrink-0"></div>
+          </div>
         </div>
 
         {/* Bottom Product Footer */}
-        <div className="relative z-10 text-center lg:text-left text-xs text-blue-200/60 font-medium">
-          © {new Date().getFullYear()} Technonex GmbH. All rights reserved.
+        <div className="relative z-10 text-center text-xs text-blue-200/60 font-medium w-full">
+          A Technonex Product
         </div>
       </div>
 
@@ -171,9 +172,11 @@ const AcceptInvitePage = () => {
         <div className="max-w-[420px] w-full mx-auto my-auto py-6 lg:py-0">
           {/* Mobile-Only Header Brand */}
           <div className="flex lg:hidden items-center mb-8 cursor-pointer group" onClick={() => navigate('/')}>
-            <span className="text-2xl font-extrabold tracking-tight text-[#062452] leading-none">
-              <Logo size="compact" variant="dark" />
-            </span>
+            <img
+              src="/NexLogo-3.png"
+              alt="NexAcademy"
+              className="h-10 w-auto object-contain"
+            />
           </div>
 
           {loading ? (

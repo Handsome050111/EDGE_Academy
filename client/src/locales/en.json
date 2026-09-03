@@ -178,6 +178,7 @@
     "title": "Admin Portal",
     "subtitle": "Curriculum management, access governance, and certification configuration",
     "tabs": {
+      "overview": "Overview",
       "userManagement": "User Management",
       "curriculum": "Curriculum",
       "questionBank": "Question Bank",

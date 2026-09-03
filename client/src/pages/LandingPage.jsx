@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import Logo from '../components/Logo';
+import SiteNavbar from '../components/SiteNavbar';
 
 const officialModules = [
   {
@@ -12,10 +13,10 @@ const officialModules = [
     category: 'INFRASTRUCTURE',
     badge: 'EDGE L1 • INFRASTRUCTURE',
     title: 'M3: Rack & Cabinet Fundamentals',
-    description: 'RU counting, cable dressing to Siemens visual standard, bend radius, and rack elevations.',
+    description: 'RU counting, cable dressing to enterprise visual standard, bend radius, and rack elevations.',
     image: '/modules-c1.jpeg',
     duration: '45 min',
-    fieldScope: 'Hands-on physical infrastructure standard for installing, organizing, and securing enterprise server racks (12U to 42U) in live customer data centers. Focuses on Siemens benchmark visual cable management, copper/fiber minimum bend radius adherence, hot/cold aisle thermal containment, and PDU distribution.',
+    fieldScope: 'Hands-on physical infrastructure standard for installing, organizing, and securing enterprise server racks (12U to 42U) in live customer data centers. Focuses on enterprise benchmark visual cable management, copper/fiber minimum bend radius adherence, hot/cold aisle thermal containment, and PDU distribution.',
     learningOutcomes: [
       'Accurately calculate Rack Unit (RU) spacing and align equipment per elevation diagrams',
       'Dress copper and fiber cabling adhering to Siemens visual benchmark standards with zero-tension velcro',
@@ -57,9 +58,9 @@ const officialModules = [
     description: '14-section survey standard, Must-field validation, and the Technonex dual-validation model.',
     image: '/modules-c3.jpeg',
     duration: '60 min',
-    fieldScope: 'Comprehensive methodology for conducting pre-transformation and physical wireless/LAN site surveys on client campuses. Covers all 14 mandatory sections of the official Infosys field audit document, distinguishing non-negotiable Must validation criteria from Good to Have metrics, and executing the Technonex dual-validation signoff process.',
+    fieldScope: 'Comprehensive methodology for conducting pre-transformation and physical wireless/LAN site surveys on client campuses. Covers all 14 mandatory sections of the official client field audit document, distinguishing non-negotiable Must validation criteria from Good to Have metrics, and executing the Technonex dual-validation signoff process.',
     learningOutcomes: [
-      'Complete all 14 structured sections of the official Infosys Site Survey Form on site',
+      'Complete all 14 structured sections of the official client 14-section site survey form on site',
       'Validate critical Must-Have fields (MDF/IDF room dimensions, power redundancy, ceiling heights, AP mounts)',
       'Perform dual-validation check against BOM (Bill of Materials) and CMO/FMO architecture plans',
       'Capture high-resolution 5-stage site photos adhering to strict naming and timestamping conventions',
@@ -90,6 +91,11 @@ const officialModules = [
   },
 ];
 
+const getDisplayBadgeLabel = (badge) => {
+  if (!badge || !badge.includes('•')) return badge || '';
+  return badge.split('•').slice(1).join('•').trim();
+};
+
 const defaultCertificationTiers = [
   {
     id: 'edge',
@@ -114,7 +120,7 @@ const defaultCertificationTiers = [
     tierTitle: 'CORE Certified Engineer',
     badgeColor: 'bg-indigo-600',
     subtitle: 'Certified Operations & Readiness Excellence',
-    description: 'On-site technical leader capable of leading deployment teams, validating 14-section Infosys surveys, mentoring junior technicians, and managing quality handovers.',
+    description: 'On-site technical leader capable of leading deployment teams, validating 14-section client surveys, mentoring junior technicians, and managing quality handovers.',
     requirements: [
       'Prerequisite: EDGE L1 certified + minimum 3 successful site deployments',
       'Complete all 15 advanced CORE technical and leadership modules',
@@ -125,6 +131,12 @@ const defaultCertificationTiers = [
   },
 ];
 
+const primaryActionButtonClass =
+  'bg-[#E62E52] hover:bg-[#d42b4b] text-white rounded-2xl shadow-sm shadow-[#E62E52]/20 transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E62E52]/60';
+
+const secondaryActionButtonClass =
+  'border border-white/40 hover:bg-white/10 text-white rounded-2xl transition';
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [verifyInput, setVerifyInput] = useState('');
@@ -132,7 +144,6 @@ const LandingPage = () => {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedModule, setSelectedModule] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [pwaMessage, setPwaMessage] = useState('');
@@ -220,132 +231,74 @@ const LandingPage = () => {
     navigate(`/verify/${verifyInput.trim()}`);
   };
 
-  // Dynamically formatted certification tracks matching official Technonex standards (limited to Top 2 Tier Tracks)
+  // Dynamically formatted certification tracks matching official Technonex standards (always keep 2 cards visible)
   const certificationTiers = useMemo(() => {
+    const buildTierCard = (track, idx, fallbackTier) => {
+      const isCore = track.tier === 'CORE' || (track.slug || track.code || track.name || '').toUpperCase().includes('CORE') || idx === 1;
+      const defaultTier = fallbackTier || defaultCertificationTiers[isCore ? 1 : 0];
+
+      return {
+        id: track._id || defaultTier.id,
+        tierPill: isCore ? 'TIER 2 • CORE' : 'TIER 1 • EDGE',
+        tierBadge: isCore ? 'CORE' : 'EDGE',
+        tierTitle: isCore ? 'CORE Certified Engineer' : 'EDGE Certified Technician',
+        badgeColor: defaultTier.badgeColor,
+        subtitle: defaultTier.subtitle,
+        description: defaultTier.description,
+        requirements: defaultTier.requirements,
+        sealTitle: defaultTier.sealTitle,
+        idFormat: defaultTier.idFormat,
+      };
+    };
+
     if (tracks.length > 0) {
-      // Find top 2 tier tracks (EDGE as Tier 1 and CORE as Tier 2, or top 2 tracks from database)
       const edgeTrack = tracks.find((t) => (t.tier === 'EDGE' || (t.slug || t.code || t.name || '').toUpperCase().includes('EDGE')));
       const coreTrack = tracks.find((t) => (t.tier === 'CORE' || (t.slug || t.code || t.name || '').toUpperCase().includes('CORE')));
 
-      let topTracks = [];
-      if (edgeTrack && coreTrack && edgeTrack._id !== coreTrack._id) {
-        topTracks = [edgeTrack, coreTrack];
-      } else {
-        topTracks = tracks.slice(0, 2);
+      const preferredTracks = [];
+      if (edgeTrack) preferredTracks.push(edgeTrack);
+      if (coreTrack && coreTrack._id !== edgeTrack?._id) preferredTracks.push(coreTrack);
+
+      const remainingTracks = tracks.filter((t) => {
+        const tId = t._id || t.id;
+        return !preferredTracks.some((pt) => (pt._id || pt.id) === tId);
+      });
+
+      for (const track of remainingTracks) {
+        if (preferredTracks.length >= 2) break;
+        preferredTracks.push(track);
       }
 
-      return topTracks.slice(0, 2).map((track, idx) => {
-        const isCore = track.tier === 'CORE' || (track.slug || track.code || track.name || '').toUpperCase().includes('CORE') || idx === 1;
-        const defaultTier = defaultCertificationTiers[isCore ? 1 : 0];
+      const topTracks = preferredTracks.slice(0, 2);
+      const paddedTracks = [...topTracks];
 
-        return {
-          id: track._id || defaultTier.id,
-          tierPill: isCore ? 'TIER 2 • CORE' : 'TIER 1 • EDGE',
-          tierBadge: isCore ? 'CORE' : 'EDGE',
-          tierTitle: isCore ? 'CORE Certified Engineer' : 'EDGE Certified Technician',
-          badgeColor: defaultTier.badgeColor,
-          subtitle: defaultTier.subtitle,
-          description: defaultTier.description,
-          requirements: defaultTier.requirements,
-          sealTitle: defaultTier.sealTitle,
-          idFormat: defaultTier.idFormat,
-        };
-      });
+      for (const fallbackTier of defaultCertificationTiers) {
+        const alreadyUsed = paddedTracks.some((track) => (track._id || track.id) === fallbackTier.id);
+        if (!alreadyUsed && paddedTracks.length < 2) {
+          paddedTracks.push({
+            _id: fallbackTier.id,
+            tier: fallbackTier.id === 'core' ? 'CORE' : 'EDGE',
+            slug: fallbackTier.id === 'core' ? 'CORE' : 'EDGE',
+            code: fallbackTier.id === 'core' ? 'CORE' : 'EDGE',
+            name: fallbackTier.tierTitle,
+          });
+        }
+      }
+
+      if (paddedTracks.length > 0) {
+        return paddedTracks.slice(0, 2).map((track, idx) => {
+          const fallbackTier = defaultCertificationTiers[idx] || defaultCertificationTiers[0];
+          return buildTierCard(track, idx, fallbackTier);
+        });
+      }
     }
+
     return defaultCertificationTiers.slice(0, 2);
   }, [tracks]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
-      {/* Top Navbar */}
-      <header className="bg-[#062452] text-white sticky top-0 z-40 border-b border-blue-900/40 shadow-md">
-        <div className="px-6 sm:px-12 lg:px-16 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center cursor-pointer group" onClick={() => navigate('/')}>
-              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-none group-hover:text-blue-100 transition">
-                <Logo size="full" variant="light" className="h-8" />
-              </span>
-            </div>
-          </div>
-
-          {/* Center Nav Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-blue-100/90">
-            <a href="#modules" className="hover:text-white transition">Modules</a>
-            <a href="#certifications" className="hover:text-white transition">Certifications</a>
-            <a href="#about" className="hover:text-white transition">About Us</a>
-            <a href="#verification" className="hover:text-white transition">Verify Credential</a>
-          </nav>
-
-          {/* Right CTA & Mobile Hamburger */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-[#EAB308] hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-bold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full transition shadow-sm cursor-pointer active:scale-95"
-            >
-              Login
-            </button>
-
-            {/* Mobile Menu Button */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-blue-100 hover:text-white hover:bg-blue-900/50 rounded-xl transition cursor-pointer"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <>
-            <div
-              className="md:hidden fixed inset-0 z-40 bg-slate-950/40"
-              aria-hidden="true"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            <div className="md:hidden fixed left-0 right-0 top-[68px] z-50 border-t border-blue-900/60 bg-[#062452]/95 backdrop-blur-md px-6 py-4 space-y-1 animate-in slide-in-from-top-2 duration-200">
-            <a
-              href="#modules"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
-            >
-              Modules
-            </a>
-            <a
-              href="#certifications"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
-            >
-              Certifications
-            </a>
-            <a
-              href="#about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
-            >
-              About Us
-            </a>
-            <a
-              href="#verification"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-semibold text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2.5 rounded-xl transition"
-            >
-              Verify Credential
-            </a>
-            </div>
-          </>
-        )}
-      </header>
+      <SiteNavbar basePath="" />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[#062452] via-[#08306B] to-[#041E42] text-white px-6 sm:px-12 lg:px-16 py-16 relative overflow-hidden">
@@ -365,16 +318,16 @@ const LandingPage = () => {
             </p>
 
             {/* Dual CTAs */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch gap-4 pt-2">
               <button
                 onClick={() => navigate('/login')}
-                className="bg-[#EAB308] hover:bg-amber-400 text-slate-950 font-extrabold text-base px-8 py-3.5 rounded-full shadow-lg shadow-amber-500/20 transition active:scale-95 cursor-pointer"
+                className={`${primaryActionButtonClass} w-full sm:w-auto inline-flex items-center justify-center font-extrabold text-base px-8 py-3.5 shadow-lg active:scale-95`}
               >
                 Access Portal
               </button>
               <a
                 href="#certifications"
-                className="border border-white/40 hover:bg-white/10 text-white font-bold text-base px-7 py-3.5 rounded-full transition"
+                className={`${secondaryActionButtonClass} w-full sm:w-auto inline-flex items-center justify-center font-bold text-base px-7 py-3.5`}
               >
                 Explore Certifications
               </a>
@@ -397,7 +350,7 @@ const LandingPage = () => {
       {/* 1. Featured Training Modules Section */}
       <section id="modules" className="pt-16 pb-8 px-6 sm:px-12 lg:px-16 max-w-7xl mx-auto w-full">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="text-xs font-extrabold text-[#08306B] uppercase tracking-widest block mb-2">Curriculum Tracks</span>
+          <span className="text-xs font-extrabold text-[#E62E52] uppercase tracking-widest block mb-2">Curriculum Tracks</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Featured Training Modules</h2>
         </div>
 
@@ -415,9 +368,9 @@ const LandingPage = () => {
                     alt={mod.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-slate-900 text-slate-200 text-xs px-2.5 py-1 rounded-full font-bold shadow-md inline-block">
-                      {mod.badge}
+                  <div className="absolute top-4 left-4 right-4 flex justify-start">
+                    <span className="inline-flex w-[13.5rem] h-7 items-center justify-center px-3 rounded-full bg-slate-900 text-slate-200 text-[11px] font-bold shadow-md whitespace-nowrap overflow-hidden text-ellipsis text-center">
+                      {getDisplayBadgeLabel(mod.badge)}
                     </span>
                   </div>
                 </div>
@@ -449,7 +402,7 @@ const LandingPage = () => {
       <section id="certifications" className="pt-16 pb-8 px-6 sm:px-12 lg:px-16 bg-slate-100 border-y border-slate-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-extrabold text-[#08306B] uppercase tracking-widest block mb-2">Industry Credentials</span>
+            <span className="text-xs font-extrabold text-[#E62E52] uppercase tracking-widest block mb-2">Industry Credentials</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               Official Technonex Certifications
             </h2>
@@ -483,7 +436,7 @@ const LandingPage = () => {
                     <p className="text-xs font-bold text-slate-800 uppercase tracking-wider">Certification Requirements:</p>
                     {cert.requirements.map((req, idx) => (
                       <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600">
-                        <svg className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-[#062452] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                         </svg>
                         <span>{req}</span>
@@ -534,11 +487,8 @@ const LandingPage = () => {
 
                   <button
                     onClick={() => navigate('/login')}
-                    className="px-5 py-2.5 bg-slate-900 hover:bg-[#062452] text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+                    className={`${primaryActionButtonClass} px-5 py-2.5 text-xs font-bold shadow-xs flex items-center justify-center shrink-0`}
                   >
-                    <svg className="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
                     Assigned via Invitation
                   </button>
                 </div>
@@ -552,7 +502,7 @@ const LandingPage = () => {
       <section id="about" className="pt-16 pb-8 px-6 sm:px-12 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-extrabold text-[#08306B] uppercase tracking-widest block mb-2">
+          <span className="text-xs font-extrabold text-[#E62E52] uppercase tracking-widest block mb-2">
             INTERNAL QUALIFICATION FRAMEWORK
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -567,35 +517,29 @@ const LandingPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: Real Field Experience */}
           <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between group">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200/80 flex items-center justify-center p-2.5 mb-6 group-hover:scale-105 transition-transform duration-300 shadow-xs">
-                <img src="/portfolio.png" alt="Real Field Experience" className="w-full h-full object-contain" />
-              </div>
-              <span className="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-2">
+            <div className="space-y-4">
+              <span className="text-xs font-bold text-[#E62E52] uppercase tracking-wider block">
                 Field-Grounded Curriculum
               </span>
-              <h3 className="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-[#08306B] transition">
+              <h3 className="text-xl font-extrabold text-slate-900 group-hover:text-[#08306B] transition">
                 Real Field Experience
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Every module is derived directly from Siemens site standards, Infosys survey requirements, and physical infrastructure lessons learned on the ground.
+                Every module is derived directly from enterprise site standards, client survey requirements, and physical infrastructure lessons learned on the ground.
               </p>
             </div>
             <div className="pt-5 mt-6 border-t border-slate-100 flex items-center text-xs font-semibold text-slate-500 group-hover:text-[#08306B] transition">
-              Siemens & Infosys Ground Standard
+              Enterprise & Client Ground Standard
             </div>
           </div>
 
           {/* Card 2: Live Assessor Viva */}
           <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between group">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200/80 flex items-center justify-center p-2.5 mb-6 group-hover:scale-105 transition-transform duration-300 shadow-xs">
-                <img src="/quality-control.png" alt="Live Assessor Viva" className="w-full h-full object-contain" />
-              </div>
-              <span className="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-2">
+            <div className="space-y-4">
+              <span className="text-xs font-bold text-[#E62E52] uppercase tracking-wider block">
                 Live Viva Verification
               </span>
-              <h3 className="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-[#08306B] transition">
+              <h3 className="text-xl font-extrabold text-slate-900 group-hover:text-[#08306B] transition">
                 Live Assessor Viva
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
@@ -609,14 +553,11 @@ const LandingPage = () => {
 
           {/* Card 3: SLA & Quality Compliance */}
           <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between group">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200/80 flex items-center justify-center p-2.5 mb-6 group-hover:scale-105 transition-transform duration-300 shadow-xs">
-                <img src="/shield.png" alt="SLA & Quality Compliance" className="w-full h-full object-contain" />
-              </div>
-              <span className="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-2">
+            <div className="space-y-4">
+              <span className="text-xs font-bold text-[#E62E52] uppercase tracking-wider block">
                 Enterprise Deployment Ready
               </span>
-              <h3 className="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-[#08306B] transition">
+              <h3 className="text-xl font-extrabold text-slate-900 group-hover:text-[#08306B] transition">
                 SLA & Quality Compliance
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
@@ -650,7 +591,7 @@ const LandingPage = () => {
             />
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#EAB308] hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-2xl shadow-lg transition cursor-pointer shrink-0 active:scale-95"
+              className={`${primaryActionButtonClass} w-full sm:w-auto px-8 py-3.5 font-bold text-sm shadow-lg shrink-0 active:scale-95`}
             >
               Verify ID
             </button>
@@ -667,7 +608,7 @@ const LandingPage = () => {
             <div className="lg:col-span-2 space-y-4">
               <div className="flex flex-col items-start cursor-pointer group select-none" onClick={() => navigate('/')}>
                 <span className="text-2xl font-extrabold tracking-tight text-white leading-none">
-                  <Logo size="full" variant="light" className="h-8" />
+                  <Logo size="full" variant="light" className="h-10" />
                 </span>
                 <span className="text-xs font-medium text-blue-200/80 tracking-wide mt-1">
                   A product of Technonex
@@ -683,9 +624,9 @@ const LandingPage = () => {
                 <button
                   type="button"
                   onClick={handleInstallPwa}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-950/90 hover:bg-blue-900/80 border border-blue-800/60 hover:border-amber-400/50 text-blue-100 hover:text-white text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-950/90 hover:bg-blue-900/80 border border-blue-800/60 hover:border-gray-400/50 text-blue-100 hover:text-gray-400 text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
                 >
-                  <svg className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
                   <span>{isInstalled ? 'App Installed' : 'Install NexAcademy App'}</span>
@@ -700,19 +641,19 @@ const LandingPage = () => {
               </h4>
               <ul className="space-y-2.5 text-xs sm:text-sm">
                 <li>
-                  <a href="#modules" className="hover:text-amber-400 transition">Curriculum Modules</a>
+                  <a href="#modules" className="hover:text-gray-400 transition">Curriculum Modules</a>
                 </li>
                 <li>
-                  <a href="#certifications" className="hover:text-amber-400 transition">Certification Tiers</a>
+                  <a href="#certifications" className="hover:text-gray-400 transition">Certification Tiers</a>
                 </li>
                 <li>
-                  <a href="#about" className="hover:text-amber-400 transition">About Framework</a>
+                  <a href="#about" className="hover:text-gray-400 transition">About Framework</a>
                 </li>
                 <li>
-                  <a href="#verification" className="hover:text-amber-400 transition">Verify Credential</a>
+                  <a href="#verification" className="hover:text-gray-400 transition">Verify Credential</a>
                 </li>
                 <li>
-                  <button onClick={() => navigate('/login')} className="hover:text-amber-400 transition cursor-pointer text-left">
+                  <button onClick={() => navigate('/login')} className="hover:text-gray-400 transition cursor-pointer text-left">
                     Engineer Portal Login
                   </button>
                 </li>
@@ -726,19 +667,19 @@ const LandingPage = () => {
               </h4>
               <ul className="space-y-2.5 text-xs sm:text-sm">
                 <li>
-                  <a href="#certifications" className="hover:text-amber-400 transition">EDGE Technician (L1)</a>
+                  <a href="#certifications" className="hover:text-gray-400 transition">EDGE Technician (L1)</a>
                 </li>
                 <li>
-                  <a href="#certifications" className="hover:text-amber-400 transition">CORE Lead Engineer (L2)</a>
+                  <a href="#certifications" className="hover:text-gray-400 transition">CORE Lead Engineer (L2)</a>
                 </li>
                 <li>
-                  <a href="#modules" className="hover:text-amber-400 transition">Siemens Rack Standards</a>
+                  <a href="#modules" className="hover:text-gray-400 transition">Enterprise Rack Standards</a>
                 </li>
                 <li>
-                  <a href="#modules" className="hover:text-amber-400 transition">Infosys 14-Section Survey</a>
+                  <a href="#modules" className="hover:text-gray-400 transition">Client 14-Section Site Survey</a>
                 </li>
                 <li>
-                  <a href="#modules" className="hover:text-amber-400 transition">Fiber Optics & Ekahau WLAN</a>
+                  <a href="#modules" className="hover:text-gray-400 transition">Fiber Optics & Ekahau WLAN</a>
                 </li>
               </ul>
             </div>
@@ -750,16 +691,16 @@ const LandingPage = () => {
               </h4>
               <ul className="space-y-2.5 text-xs sm:text-sm">
                 <li>
-                  <a href="#verification" className="hover:text-amber-400 transition">Instant ID Lookup</a>
+                  <a href="#verification" className="hover:text-gray-400 transition">Instant ID Lookup</a>
                 </li>
                 <li>
-                  <a href="#about" className="hover:text-amber-400 transition">Live Viva Assessment</a>
+                  <a href="#about" className="hover:text-gray-400 transition">Live Viva Assessment</a>
                 </li>
                 <li>
-                  <a href="#about" className="hover:text-amber-400 transition">DGUV V3 Electrical Safety</a>
+                  <a href="#about" className="hover:text-gray-400 transition">DGUV V3 Electrical Safety</a>
                 </li>
                 <li>
-                  <a href="#about" className="hover:text-amber-400 transition">OTDR Tier-2 Fiber Testing</a>
+                  <a href="#about" className="hover:text-gray-400 transition">OTDR Tier-2 Fiber Testing</a>
                 </li>
                 <li>
                   <span className="text-slate-500">Regional Lead Sign-Off</span>
@@ -772,19 +713,10 @@ const LandingPage = () => {
           <div className="mt-12 pt-8 border-t border-blue-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
             <p>© {new Date().getFullYear()} Technonex NexAcademy. All rights reserved.</p>
             <div className="flex flex-wrap items-center gap-6">
-              <button
-                type="button"
-                onClick={handleInstallPwa}
-                className="hover:text-amber-400 transition flex items-center gap-1.5 cursor-pointer"
-              >
-                <svg className="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                <span>{isInstalled ? 'App Installed' : 'Install App'}</span>
-              </button>
-              <a href="#" className="hover:text-slate-300 transition">Privacy Policy</a>
-              <a href="#" className="hover:text-slate-300 transition">Terms of Service</a>
-              <a href="#verification" className="hover:text-amber-400 transition font-mono">TNX Credential Registry</a>
+              <a href="/privacy-policy" className="hover:text-slate-300 transition">Privacy Policy</a>
+              <a href="/terms" className="hover:text-slate-300 transition">Terms and Conditions</a>
+              <a href="/cookies" className="hover:text-slate-300 transition">Cookies</a>
+              <a href="/legal-notice" className="hover:text-slate-300 transition">Legal Notice</a>
             </div>
           </div>
         </div>
@@ -828,13 +760,7 @@ const LandingPage = () => {
                 </svg>
               </button>
 
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="bg-slate-900 text-amber-400 text-xs px-3 py-1 rounded-full font-extrabold shadow-xs tracking-wider border border-white/10">
-                  {selectedModule.badge}
-                </span>
-              </div>
-
-              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white pr-8">
+              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white pr-8 mt-0">
                 {selectedModule.title}
               </h2>
             </div>
@@ -857,7 +783,7 @@ const LandingPage = () => {
               {/* Learning Outcomes */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: '#1B4F9B' }}></span>
                   <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
                     Target On-Site Competencies (Learning Outcomes)
                   </h3>
@@ -865,7 +791,7 @@ const LandingPage = () => {
                 <div className="space-y-2.5">
                   {selectedModule.learningOutcomes.map((outcome, idx) => (
                     <div key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
-                      <div className="h-5 w-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 font-bold">
+                      <div className="h-5 w-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 font-bold" style={{ backgroundColor: '#1B4F9B', color: '#FFFFFF' }}>
                         ✓
                       </div>
                       <span className="leading-snug">{outcome}</span>
@@ -888,7 +814,7 @@ const LandingPage = () => {
                   setSelectedModule(null);
                   navigate('/login');
                 }}
-                className="px-6 py-2.5 text-xs font-bold text-slate-950 bg-[#EAB308] hover:bg-amber-400 rounded-xl shadow-xs transition cursor-pointer"
+                className={`${primaryActionButtonClass} px-6 py-2.5 text-xs font-bold shadow-sm`}
               >
                 Access Portal
               </button>

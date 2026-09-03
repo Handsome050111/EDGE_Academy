@@ -26,6 +26,9 @@ const languages = [
   { code: 'en', name: 'English', FlagComponent: UKFlag },
 ];
 
+// English to German toggle is temporarily disabled/hidden across all dashboards
+const ENABLE_LANGUAGE_SWITCHER = false;
+
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +53,11 @@ const LanguageSwitcher = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Return null while toggle is disabled for the time being
+  if (!ENABLE_LANGUAGE_SWITCHER) {
+    return null;
+  }
 
   const SelectedFlag = currentLang.FlagComponent;
 

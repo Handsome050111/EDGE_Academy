@@ -2,6 +2,7 @@ const Track = require('../models/Track');
 const Module = require('../models/Module');
 const AuditLog = require('../models/AuditLog');
 const { getClientIp } = require('../utils/audit');
+const { autoEnrollAllEngineersInTrack } = require('../utils/autoEnroll');
 
 // @desc    Get all active tracks with populated modules
 // @route   GET /api/tracks
@@ -121,6 +122,13 @@ const createTrack = async (req, res) => {
 
     const createdTrack = await track.save();
 
+    // Auto-enroll all active engineers into the new published track and notify them
+    if (createdTrack.is_published) {
+      autoEnrollAllEngineersInTrack(createdTrack).catch((err) => {
+        console.error('[TrackController] Auto-enroll on createTrack error:', err.message);
+      });
+    }
+
     // Log Audit Event
     if (req.user) {
       await AuditLog.create({
@@ -170,7 +178,15 @@ const updateTrack = async (req, res) => {
       track.tier = tier.toUpperCase();
     }
 
+    const wasPublished = track.is_published;
     const updatedTrack = await track.save();
+
+    // If transitioned from unpublished to published, auto-enroll engineers & notify
+    if (updatedTrack.is_published && !wasPublished) {
+      autoEnrollAllEngineersInTrack(updatedTrack).catch((err) => {
+        console.error('[TrackController] Auto-enroll on updateTrack error:', err.message);
+      });
+    }
 
     // Log Audit Event
     if (req.user) {

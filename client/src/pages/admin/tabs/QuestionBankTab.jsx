@@ -255,15 +255,15 @@ const QuestionBankTab = ({ showNotification }) => {
       <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Question Bank & MCQ Engine</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Author single questions with immutable versioning or bulk import questions via CSV</p>
+          <p className="text-sm font-normal text-slate-500 mt-1">Author single questions with immutable versioning or bulk import questions via CSV</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <label className="text-xs font-semibold text-slate-700 shrink-0">Working Module:</label>
+          <label className="text-xs font-medium text-slate-700 shrink-0">Working Module:</label>
           <select
             value={selectedModuleId}
             onChange={(e) => setSelectedModuleId(e.target.value)}
-            className="w-full sm:w-auto min-w-[200px] max-w-full sm:max-w-md md:max-w-lg truncate px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-medium cursor-pointer"
+            className="w-full sm:w-auto min-w-[200px] max-w-full sm:max-w-md md:max-w-lg truncate px-3.5 py-2 text-sm border border-slate-300 rounded-xl focus:border-[#08306B] focus:ring-1 focus:ring-[#08306B] outline-none bg-white font-normal cursor-pointer"
           >
             {modules.map((m) => (
               <option key={m._id} value={m._id} className="truncate">
@@ -278,11 +278,11 @@ const QuestionBankTab = ({ showNotification }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Single MCQ Builder Form */}
         <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-5">
-          <h3 className="text-base font-bold text-slate-900">Single MCQ Builder</h3>
+          <h3 className="text-base font-semibold text-slate-900">Single MCQ Builder</h3>
 
           <form onSubmit={handleCreateQuestion} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Question Prompt *</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1.5">Question Prompt *</label>
               <textarea
                 rows={2}
                 required
@@ -472,7 +472,7 @@ const QuestionBankTab = ({ showNotification }) => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-slate-50 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th className="px-5 py-3.5">Version</th>
                   <th className="px-4 py-3.5">Question Prompt</th>
@@ -490,31 +490,31 @@ const QuestionBankTab = ({ showNotification }) => {
                   return (
                     <tr key={q._id} className="hover:bg-slate-50/70 transition">
                       <td className="px-5 py-3.5">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 border border-purple-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
                           v{q.version || 1}
                         </span>
                       </td>
 
                       <td className="px-4 py-3.5 max-w-sm">
-                        <p className="font-semibold text-slate-900 line-clamp-2">{q.question_text || q.questionText}</p>
+                        <p className="text-sm font-semibold text-slate-900 line-clamp-2">{q.question_text || q.questionText}</p>
                         {q.explanation && (
-                          <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1 italic">{q.explanation}</p>
+                          <p className="text-xs font-normal text-slate-500 mt-0.5 line-clamp-1 italic">{q.explanation}</p>
                         )}
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <p className="font-bold text-emerald-700">Option {q.correct_option}:</p>
-                        <p className="text-[11px] text-slate-600 truncate max-w-[160px]">{correctText}</p>
+                        <p className="text-sm font-medium text-emerald-700">Option {q.correct_option}:</p>
+                        <p className="text-xs font-normal text-slate-600 truncate max-w-[160px]">{correctText}</p>
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <span className="font-mono text-[11px] px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md">
+                        <span className="font-mono text-xs px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md">
                           {q.concept_tag}
                         </span>
                       </td>
 
                       <td className="px-4 py-3.5">
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase border ${getDifficultyBadge(q.difficulty)}`}>
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium capitalize border ${getDifficultyBadge(q.difficulty)}`}>
                           {q.difficulty || 'medium'}
                         </span>
                       </td>

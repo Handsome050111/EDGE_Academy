@@ -19,6 +19,9 @@ export default {
           textMuted: '#64748B',
         },
       },
+      animation: {
+        'spin-slow': 'spin 35s linear infinite',
+      },
     },
   },
   plugins: [],

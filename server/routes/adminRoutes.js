@@ -29,6 +29,7 @@ const {
   getTeamReport,
   getModuleReport,
   getWeakConceptsReport,
+  getAdminOverview,
 } = require('../controllers/adminReportController');
 
 const {
@@ -234,6 +235,7 @@ router.post('/users/:id/resend-invite', authorize('Admin'), resendInvite);
 router.post('/backfill-enrollments', authorize('Admin'), backfillEnrollments);
 
 // Reporting & Analytics Endpoints (Admin, TeamLead)
+router.get('/reports/overview', authorize('Admin'), getAdminOverview);
 router.get('/reports/team/:id', getTeamReport);
 router.get('/reports/module/:id', getModuleReport);
 router.get('/reports/weak-concepts', getWeakConceptsReport);

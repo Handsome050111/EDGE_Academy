@@ -125,16 +125,16 @@ const weightedSampleWithoutReplacement = (
 };
 
 /**
- * Strips correct_option & explanation and shuffles options (A/B/C/D) & question order
+ * Strips correct_option & explanation, preserves authored option order (A, B, C, D), and shuffles question sequence
  */
 const formatObfuscatedQuestions = (questions = []) => {
   const formatted = questions.map((q) => {
-    const options = shuffle([
+    const options = [
       { key: 'A', text: q.option_a },
       { key: 'B', text: q.option_b },
       { key: 'C', text: q.option_c },
       { key: 'D', text: q.option_d },
-    ]);
+    ];
 
     return {
       id: q._id,

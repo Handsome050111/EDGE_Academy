@@ -136,8 +136,8 @@ const ProfileModal = ({ isOpen, onClose }) => {
         {/* Header with Title & Close Button */}
         <div className="flex items-start justify-between pb-4">
           <div>
-            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">{t('profileModal.title')}</h2>
-            <p className="text-sm text-slate-500 font-normal mt-0.5">{t('profileModal.subtitle')}</p>
+            <h2 className="text-xl font-bold text-slate-900 tracking-tight">{t('profileModal.title')}</h2>
+            <p className="text-sm text-slate-500 font-normal mt-1">{t('profileModal.subtitle')}</p>
           </div>
           <button
             onClick={onClose}
@@ -150,7 +150,7 @@ const ProfileModal = ({ isOpen, onClose }) => {
 
         {/* Feedback Alerts */}
         {success && (
-          <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-200 p-3.5 text-xs font-semibold text-emerald-800 flex items-center gap-2">
+          <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-200 p-3.5 text-xs font-medium text-emerald-800 flex items-center gap-2">
             <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
@@ -158,7 +158,7 @@ const ProfileModal = ({ isOpen, onClose }) => {
           </div>
         )}
         {error && (
-          <div className="mt-4 rounded-2xl bg-red-50 border border-red-200 p-3.5 text-xs font-semibold text-red-800 flex items-center gap-2">
+          <div className="mt-4 rounded-2xl bg-red-50 border border-red-200 p-3.5 text-xs font-medium text-red-800 flex items-center gap-2">
             <svg className="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -172,7 +172,7 @@ const ProfileModal = ({ isOpen, onClose }) => {
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
             {/* Role Pill */}
             <div>
-              <span className="inline-block px-3.5 py-1 bg-[#EBF3FC] text-[#1E40AF] text-xs font-semibold rounded-full capitalize">
+              <span className="inline-block px-3 py-1 bg-blue-50 text-[#08306B] border border-blue-200 text-xs font-medium rounded-full capitalize">
                 {displayRole}
               </span>
             </div>
@@ -180,7 +180,7 @@ const ProfileModal = ({ isOpen, onClose }) => {
             {/* Full Name & Email (2-Column Responsive Grid) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
                   {t('profileModal.fullName')}
                 </label>
                 <input
@@ -189,12 +189,12 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={formData.fullName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#08306B] focus:border-[#08306B] transition"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
                   {t('profileModal.emailAddress')}
                 </label>
                 <input
@@ -203,21 +203,21 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#08306B] focus:border-[#08306B] transition"
                 />
               </div>
             </div>
 
             {/* Language Selector */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 mb-1.5">
                 {t('profileModal.platformLanguage')}
               </label>
               <select
                 name="locale"
                 value={formData.locale}
                 onChange={handleChange}
-                className="w-full truncate px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
+                className="w-full truncate px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#08306B] focus:border-[#08306B] transition"
               >
                 <option value="en" className="truncate">{t('profileModal.english')}</option>
                 <option value="de" className="truncate">{t('profileModal.german')}</option>
@@ -226,13 +226,13 @@ const ProfileModal = ({ isOpen, onClose }) => {
 
             {/* Password Section */}
             <div className="pt-2">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
                 {t('profileModal.changePassword')}
               </label>
 
               {/* Current Password */}
               <div className="mb-4">
-                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
                   {t('profileModal.currentPassword')}
                 </label>
                 <input
@@ -241,14 +241,14 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={formData.currentPassword}
                   onChange={handleChange}
                   placeholder="••••••••••••"
-                  className="w-full px-4 py-3 bg-[#EBF3FC] border border-blue-100 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#08306B] focus:border-[#08306B] transition"
                 />
               </div>
 
               {/* New Password & Confirm Password (2-Column Grid) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">
                     {t('profileModal.newPassword')}
                   </label>
                   <input
@@ -257,12 +257,12 @@ const ProfileModal = ({ isOpen, onClose }) => {
                     value={formData.newPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#08306B] focus:border-[#08306B] transition"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">
                     {t('profileModal.confirmNewPassword')}
                   </label>
                   <input
@@ -271,7 +271,7 @@ const ProfileModal = ({ isOpen, onClose }) => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#08306B]/20 focus:border-[#08306B] transition"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#08306B] focus:border-[#08306B] transition"
                   />
                 </div>
               </div>
@@ -282,14 +282,14 @@ const ProfileModal = ({ isOpen, onClose }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold rounded-xl transition cursor-pointer"
+                className="px-5 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium rounded-xl transition cursor-pointer"
               >
                 {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2.5 bg-[#092857] hover:bg-[#071F44] text-white text-sm font-semibold rounded-xl shadow-xs transition duration-150 disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+                className="px-6 py-2.5 bg-[#08306B] hover:bg-[#062452] text-white text-sm font-medium rounded-xl shadow-xs transition duration-150 disabled:opacity-50 flex items-center gap-2 cursor-pointer"
               >
                 {saving ? (
                   <>

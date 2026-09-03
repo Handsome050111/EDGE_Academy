@@ -50,3 +50,10 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Vite temp files
+*.timestamp-*.mjs
+
+# Temporary manual test artifacts
+temp_manual_test/
+landing-button-comparison.html

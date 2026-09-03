@@ -6,6 +6,7 @@ const VideoProgress = require('../models/VideoProgress');
 const QuizAttempt = require('../models/QuizAttempt');
 const ConceptScore = require('../models/ConceptScore');
 const ModuleAttachment = require('../models/ModuleAttachment');
+const { getCompletedModuleIds } = require('../utils/progressUtils');
 
 // @desc    Get aggregated learner dashboard data (Strict Assigned Only)
 // @route   GET /api/v1/me/dashboard
@@ -23,19 +24,40 @@ const getLearnerDashboard = async (req, res) => {
       $or: [{ userId: engineer_id }, { user_id: engineer_id }],
     });
 
+    const passedQuizAttempts = await QuizAttempt.find({
+      $or: [{ engineer_id }, { userId: engineer_id }],
+      passed: true,
+      status: 'completed',
+    }).select('module_id moduleId score_percent scorePercentage');
+
     const assignedModuleIds = assignments
       .map((a) => (a.module_id || a.moduleId)?.toString())
       .filter(Boolean);
 
-    const progressCompletedModuleIds = progressRecords
-      .flatMap((p) => (p.completedModules || []).map((m) => m.moduleId?.toString()))
+    const completedModuleIds = getCompletedModuleIds({
+      assignments,
+      progressRecords,
+      quizAttempts: passedQuizAttempts,
+    });
+
+    const passedQuizModuleIds = passedQuizAttempts
+      .map((qa) => (qa.module_id || qa.moduleId)?.toString())
       .filter(Boolean);
 
-    const allRelevantModuleIds = [...new Set([...assignedModuleIds, ...progressCompletedModuleIds])];
+    // Map moduleId → best (first passing) quiz score for display in My Tracks
+    const moduleQuizScoreMap = {};
+    for (const qa of passedQuizAttempts) {
+      const mId = (qa.module_id || qa.moduleId)?.toString();
+      if (!mId) continue;
+      const score = qa.score_percent ?? qa.scorePercentage ?? null;
+      // Keep the first passing score encountered (authoritative first pass)
+      if (score !== null && !(mId in moduleQuizScoreMap)) {
+        moduleQuizScoreMap[mId] = score;
+      }
+    }
 
-    // Find the modules assigned to the user
     const assignedModules = await Module.find({
-      _id: { $in: allRelevantModuleIds },
+      _id: { $in: assignedModuleIds },
       deleted_at: null,
     }).select('_id title track_id trackId');
 
@@ -49,35 +71,26 @@ const getLearnerDashboard = async (req, res) => {
 
     const assignedTrackIds = [...new Set([...explicitTrackIds, ...moduleTrackIds])];
 
-    // If no tracks or modules assigned to this engineer, return empty assigned tracks
-    let enrolledTracks = [];
-
-    if (assignedTrackIds.length > 0) {
-      const tracks = await Track.find({
-        _id: { $in: assignedTrackIds },
-        deleted_at: null,
+    // Fetch all published tracks as well as explicitly assigned tracks
+    const tracks = await Track.find({
+      $or: [
+        { is_published: true },
+        { _id: { $in: assignedTrackIds } },
+      ],
+      deleted_at: null,
+    })
+      .populate({
+        path: 'modules',
+        match: { deleted_at: null },
       })
-        .populate({
-          path: 'modules',
-          match: { deleted_at: null },
-        })
-        .sort({ display_order: 1, created_at: 1 });
+      .sort({ display_order: 1, created_at: 1 });
 
-      const completedAssignments = assignments.filter((a) => a.status === 'completed');
-      const completedModuleIds = [
-        ...new Set([
-          ...completedAssignments.map((a) => (a.module_id || a.moduleId)?.toString()),
-          ...progressCompletedModuleIds,
-        ]),
-      ];
+    let enrolledTracks = [];
+    if (tracks.length > 0) {
 
       enrolledTracks = tracks
         .map((track) => {
-          const isExplicitTrackEnrollment = explicitTrackIds.includes(track._id.toString());
-          const trackModules = (track.modules || []).filter((m) => {
-            if (isExplicitTrackEnrollment) return true;
-            return allRelevantModuleIds.includes(m._id.toString());
-          });
+          const trackModules = track.modules || [];
 
           if (trackModules.length === 0) return null;
 
@@ -97,12 +110,15 @@ const getLearnerDashboard = async (req, res) => {
             modules: trackModules.map((m) => ({
               _id: m._id,
               title: m.title,
+              description: m.description || '',
               thumbnail_url: m.thumbnail_url || m.thumbnailUrl || (m.video_provider_id && !m.video_provider_id.startsWith('/uploads/') && !m.video_provider_id.endsWith('.mp4') && !m.video_provider_id.endsWith('.webm') && !m.video_provider_id.startsWith('video_') ? `https://videodelivery.net/${m.video_provider_id}/thumbnails/thumbnail.jpg` : null),
               video_duration_sec: m.video_duration_sec || 0,
               estimated_minutes: m.estimated_minutes || m.estimated_duration_min || 0,
+              quiz_passed: passedQuizModuleIds.includes(m._id.toString()),
+              best_quiz_score: moduleQuizScoreMap[m._id.toString()] ?? null,
               status: completedModuleIds.includes(m._id.toString())
                 ? 'completed'
-                : assignments.some((a) => (a.module_id || a.moduleId)?.toString() === m._id.toString())
+                : assignments.some((a) => (a.module_id || a.moduleId)?.toString() === m._id.toString() && (a.status === 'in_progress' || a.status === 'pending'))
                 ? 'in_progress'
                 : 'available',
               // hasAssignment: true when an active Assignment exists for this engineer+module.

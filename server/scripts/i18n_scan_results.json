@@ -1,0 +1,4062 @@
+{
+  "client/src/components/AssignTeamLeadModal.jsx": [
+    {
+      "file": "client/src/components/AssignTeamLeadModal.jsx",
+      "line": 92,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign Team Lead",
+      "raw": "<h3 className=\"text-lg font-bold text-slate-900\">Assign Team Lead</h3>"
+    },
+    {
+      "file": "client/src/components/AssignTeamLeadModal.jsx",
+      "line": 93,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign a Team Lead to supervise and guide this engineer",
+      "raw": "<p className=\"text-xs text-slate-500 mt-0.5\">Assign a Team Lead to supervise and guide this engineer</p>"
+    },
+    {
+      "file": "client/src/components/AssignTeamLeadModal.jsx",
+      "line": 122,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Engineer:",
+      "raw": "<span className=\"text-slate-500 font-medium\">Engineer:</span>"
+    },
+    {
+      "file": "client/src/components/AssignTeamLeadModal.jsx",
+      "line": 126,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Email:",
+      "raw": "<span className=\"text-slate-500 font-medium\">Email:</span>"
+    },
+    {
+      "file": "client/src/components/AssignTeamLeadModal.jsx",
+      "line": 130,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Current Team Lead:",
+      "raw": "<span className=\"text-slate-500 font-medium\">Current Team Lead:</span>"
+    }
+  ],
+  "client/src/components/CertificateConfigModal.jsx": [
+    {
+      "file": "client/src/components/CertificateConfigModal.jsx",
+      "line": 66,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certificate Template Configuration",
+      "raw": "<h3 className=\"text-xl font-bold text-[#092857]\">Certificate Template Configuration</h3>"
+    },
+    {
+      "file": "client/src/components/CertificateConfigModal.jsx",
+      "line": 100,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Director Name",
+      "raw": "<label className=\"block text-[11px] font-semibold text-gray-600 mb-1\">Director Name</label>"
+    },
+    {
+      "file": "client/src/components/CertificateConfigModal.jsx",
+      "line": 110,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Director Title",
+      "raw": "<label className=\"block text-[11px] font-semibold text-gray-600 mb-1\">Director Title</label>"
+    },
+    {
+      "file": "client/src/components/CertificateConfigModal.jsx",
+      "line": 128,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Instructor Name",
+      "raw": "<label className=\"block text-[11px] font-semibold text-gray-600 mb-1\">Instructor Name</label>"
+    },
+    {
+      "file": "client/src/components/CertificateConfigModal.jsx",
+      "line": 138,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Instructor Title",
+      "raw": "<label className=\"block text-[11px] font-semibold text-gray-600 mb-1\">Instructor Title</label>"
+    }
+  ],
+  "client/src/components/LanguageSwitcher.jsx": [
+    {
+      "file": "client/src/components/LanguageSwitcher.jsx",
+      "line": 64,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "currentLang.name",
+      "raw": "<span className=\"font-sans text-xs font-semibold text-slate-800\">{currentLang.name}</span>"
+    },
+    {
+      "file": "client/src/components/LanguageSwitcher.jsx",
+      "line": 91,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "lng.name",
+      "raw": "<span>{lng.name}</span>"
+    }
+  ],
+  "client/src/components/NetworkBanner.jsx": [
+    {
+      "file": "client/src/components/NetworkBanner.jsx",
+      "line": 26,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Network connection lost. Reconnect to continue your session.",
+      "raw": "<span>Network connection lost. Reconnect to continue your session.</span>"
+    }
+  ],
+  "client/src/components/NotificationBell.jsx": [
+    {
+      "file": "client/src/components/NotificationBell.jsx",
+      "line": 140,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Notifications",
+      "raw": "<h4 className=\"text-sm font-bold text-[#092857]\">Notifications</h4>"
+    },
+    {
+      "file": "client/src/components/NotificationBell.jsx",
+      "line": 180,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "badge.label",
+      "raw": "{badge.label}"
+    },
+    {
+      "file": "client/src/components/NotificationBell.jsx",
+      "line": 186,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.title",
+      "raw": "<p className=\"text-xs font-bold text-slate-900 leading-tight\">{item.title}</p>"
+    },
+    {
+      "file": "client/src/components/NotificationBell.jsx",
+      "line": 187,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.message",
+      "raw": "<p className=\"text-xs text-slate-600 leading-normal\">{item.message}</p>"
+    }
+  ],
+  "client/src/components/Pagination.jsx": [
+    {
+      "file": "client/src/components/Pagination.jsx",
+      "line": 33,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Previous",
+      "raw": "<span>Previous</span>"
+    },
+    {
+      "file": "client/src/components/Pagination.jsx",
+      "line": 46,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Next",
+      "raw": "<span>Next</span>"
+    }
+  ],
+  "client/src/components/QuizModal.jsx": [
+    {
+      "file": "client/src/components/QuizModal.jsx",
+      "line": 152,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "q.question_text",
+      "raw": "{qIndex + 1}. {q.question_text}"
+    },
+    {
+      "file": "client/src/components/QuizModal.jsx",
+      "line": 171,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "opt.text",
+      "raw": "<strong className=\"mr-1\">{opt.key}.</strong> {opt.text}"
+    }
+  ],
+  "client/src/components/SitePageLayout.jsx": [
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 106,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Curriculum Modules",
+      "raw": "<a href=\"/#modules\" className=\"hover:text-gray-400 transition\">Curriculum Modules</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 109,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certification Tiers",
+      "raw": "<a href=\"/#certifications\" className=\"hover:text-gray-400 transition\">Certification Tiers</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 112,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "About Framework",
+      "raw": "<a href=\"/#about\" className=\"hover:text-gray-400 transition\">About Framework</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 115,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Verify Credential",
+      "raw": "<a href=\"/#verification\" className=\"hover:text-gray-400 transition\">Verify Credential</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 131,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "EDGE Technician (L1)",
+      "raw": "<a href=\"/#certifications\" className=\"hover:text-gray-400 transition\">EDGE Technician (L1)</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 134,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "CORE Lead Engineer (L2)",
+      "raw": "<a href=\"/#certifications\" className=\"hover:text-gray-400 transition\">CORE Lead Engineer (L2)</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 137,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Enterprise Rack Standards",
+      "raw": "<a href=\"/#modules\" className=\"hover:text-gray-400 transition\">Enterprise Rack Standards</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 140,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Client 14-Section Site Survey",
+      "raw": "<a href=\"/#modules\" className=\"hover:text-gray-400 transition\">Client 14-Section Site Survey</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 143,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Fiber Optics & Ekahau WLAN",
+      "raw": "<a href=\"/#modules\" className=\"hover:text-gray-400 transition\">Fiber Optics & Ekahau WLAN</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 154,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Instant ID Lookup",
+      "raw": "<a href=\"/#verification\" className=\"hover:text-gray-400 transition\">Instant ID Lookup</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 157,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Live Viva Assessment",
+      "raw": "<a href=\"/#about\" className=\"hover:text-gray-400 transition\">Live Viva Assessment</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 160,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "DGUV V3 Electrical Safety",
+      "raw": "<a href=\"/#about\" className=\"hover:text-gray-400 transition\">DGUV V3 Electrical Safety</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 163,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "OTDR Tier-2 Fiber Testing",
+      "raw": "<a href=\"/#about\" className=\"hover:text-gray-400 transition\">OTDR Tier-2 Fiber Testing</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 166,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Regional Lead Sign-Off",
+      "raw": "<span className=\"text-slate-500\">Regional Lead Sign-Off</span>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 175,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Privacy Policy",
+      "raw": "<a href=\"/privacy-policy\" className=\"hover:text-slate-300 transition\">Privacy Policy</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 176,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Terms and Conditions",
+      "raw": "<a href=\"/terms\" className=\"hover:text-slate-300 transition\">Terms and Conditions</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 177,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Cookies",
+      "raw": "<a href=\"/cookies\" className=\"hover:text-slate-300 transition\">Cookies</a>"
+    },
+    {
+      "file": "client/src/components/SitePageLayout.jsx",
+      "line": 178,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Legal Notice",
+      "raw": "<a href=\"/legal-notice\" className=\"hover:text-slate-300 transition\">Legal Notice</a>"
+    }
+  ],
+  "client/src/components/UserInviteModal.jsx": [
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 75,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "res.data.user.role",
+      "raw": "setSuccess(`User '${res.data.user.email}' created successfully with role '${res.data.user.role}'!`);"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 121,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "User Management & Invitations",
+      "raw": "<h3 className=\"text-xl font-bold text-[#092857]\">User Management & Invitations</h3>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 165,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Invitation Setup Link:",
+      "raw": "<p className=\"font-bold\">Invitation Setup Link:</p>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 180,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. Ali Sultan",
+      "raw": "placeholder=\"e.g. Ali Sultan\""
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 194,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. ali.sultan@technonex.de",
+      "raw": "placeholder=\"e.g. ali.sultan@technonex.de\""
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 208,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Password123!",
+      "raw": "placeholder=\"Password123!\""
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 230,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Engineer",
+      "raw": "<option value=\"engineer\" className=\"truncate\">Engineer</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 231,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Team Lead",
+      "raw": "<option value=\"team_lead\" className=\"truncate\">Team Lead</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 232,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Admin",
+      "raw": "<option value=\"admin\" className=\"truncate\">Admin</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 245,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "English (EN)",
+      "raw": "<option value=\"en\" className=\"truncate\">English (EN)</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 246,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "German (DE)",
+      "raw": "<option value=\"de\" className=\"truncate\">German (DE)</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 296,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. Klaus Weber",
+      "raw": "placeholder=\"e.g. Klaus Weber\""
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 309,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "klaus.weber@technonex.de",
+      "raw": "placeholder=\"klaus.weber@technonex.de\""
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 331,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Engineer",
+      "raw": "<option value=\"engineer\" className=\"truncate\">Engineer</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 332,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Team Lead",
+      "raw": "<option value=\"team_lead\" className=\"truncate\">Team Lead</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 333,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Admin",
+      "raw": "<option value=\"admin\" className=\"truncate\">Admin</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 346,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "English (EN)",
+      "raw": "<option value=\"en\" className=\"truncate\">English (EN)</option>"
+    },
+    {
+      "file": "client/src/components/UserInviteModal.jsx",
+      "line": 347,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "German (DE)",
+      "raw": "<option value=\"de\" className=\"truncate\">German (DE)</option>"
+    }
+  ],
+  "client/src/pages/AcceptInvitePage.jsx": [
+    {
+      "file": "client/src/pages/AcceptInvitePage.jsx",
+      "line": 185,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Verifying invitation token...",
+      "raw": "<p className=\"text-sm font-semibold text-slate-600\">Verifying invitation token...</p>"
+    },
+    {
+      "file": "client/src/pages/AcceptInvitePage.jsx",
+      "line": 217,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Invalid or Expired Link",
+      "raw": "<h2 className=\"text-2xl font-bold text-slate-900 tracking-tight\">Invalid or Expired Link</h2>"
+    },
+    {
+      "file": "client/src/pages/AcceptInvitePage.jsx",
+      "line": 337,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Security Requirements:",
+      "raw": "<p className=\"font-semibold text-slate-700 mb-1 text-[11px] uppercase tracking-wider\">Security Requirements:</p>"
+    },
+    {
+      "file": "client/src/pages/AcceptInvitePage.jsx",
+      "line": 371,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Activating Account...",
+      "raw": "<span>Activating Account...</span>"
+    }
+  ],
+  "client/src/pages/admin/AdminPortal.jsx": [
+    {
+      "file": "client/src/pages/admin/AdminPortal.jsx",
+      "line": 119,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Admin Portal",
+      "raw": "<p className=\"text-xs font-normal text-slate-400 tracking-normal mt-0.5\">Admin Portal</p>"
+    },
+    {
+      "file": "client/src/pages/admin/AdminPortal.jsx",
+      "line": 150,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "tab.label",
+      "raw": "<span>{tab.label}</span>"
+    },
+    {
+      "file": "client/src/pages/admin/AdminPortal.jsx",
+      "line": 174,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Administrator",
+      "raw": "<p className=\"text-[11px] font-normal text-slate-400 truncate capitalize\">Administrator</p>"
+    },
+    {
+      "file": "client/src/pages/admin/AdminPortal.jsx",
+      "line": 235,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "toast.message",
+      "raw": "<span>{toast.message}</span>"
+    }
+  ],
+  "client/src/pages/admin/tabs/AssignmentTab.jsx": [
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 101,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Failed to load assignment dependencies",
+      "raw": "showNotification('error', 'Failed to load assignment dependencies');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 155,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select at least one engineer.",
+      "raw": "showNotification('error', 'Please select at least one engineer.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 161,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select a Team Lead.",
+      "raw": "showNotification('error', 'Please select a Team Lead.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 171,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select a module.",
+      "raw": "showNotification('error', 'Please select a module.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 176,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select a track.",
+      "raw": "showNotification('error', 'Please select a track.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 193,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Selected track contains no modules.",
+      "raw": "showNotification('error', 'Selected track contains no modules.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 290,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assignment Engine",
+      "raw": "<h2 className=\"text-xl font-bold text-slate-900\">Assignment Engine</h2>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 310,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Dispatch Assignments",
+      "raw": "<span className=\"hidden sm:inline\">Dispatch Assignments</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 311,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Dispatch",
+      "raw": "<span className=\"sm:hidden\">Dispatch</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 349,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Search by engineer name, email, module, or track...",
+      "raw": "placeholder=\"Search by engineer name, email, module, or track...\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 363,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Statuses",
+      "raw": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 364,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Pending",
+      "raw": "<option value=\"pending\" className=\"truncate\">Pending</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 365,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "In Progress",
+      "raw": "<option value=\"in_progress\" className=\"truncate\">In Progress</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 366,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Completed",
+      "raw": "<option value=\"completed\" className=\"truncate\">Completed</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 367,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Overdue",
+      "raw": "<option value=\"overdue\" className=\"truncate\">Overdue</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 377,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading assignments...",
+      "raw": "<p className=\"text-xs font-semibold\">Loading assignments...</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 386,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No assignments found",
+      "raw": "<p className=\"text-sm font-semibold text-slate-800\">No assignments found</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 398,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Engineer",
+      "raw": "<th className=\"px-5 py-3.5\">Engineer</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 399,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assigned Module & Track",
+      "raw": "<th className=\"px-4 py-3.5\">Assigned Module & Track</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 400,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assigned By",
+      "raw": "<th className=\"px-4 py-3.5\">Assigned By</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 401,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assigned Date",
+      "raw": "<th className=\"px-4 py-3.5\">Assigned Date</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 402,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Deadline",
+      "raw": "<th className=\"px-4 py-3.5\">Deadline</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 403,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Status",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Status</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 435,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.tier",
+      "raw": "{track.title || track.name || 'Curriculum Track'} {track.tier ? `· ${track.tier}` : ''}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 455,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No deadline",
+      "raw": "<span className=\"text-slate-400 text-xs font-normal\">No deadline</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 506,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading teams and curriculum...",
+      "raw": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading teams and curriculum...</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 536,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Single Module",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Single Module</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 537,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign a specific individual module",
+      "raw": "<p className=\"text-[11px] text-slate-500\">Assign a specific individual module</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 557,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Entire Track (Sequential)",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Entire Track (Sequential)</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 558,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign all modules within a track",
+      "raw": "<p className=\"text-[11px] text-slate-500\">Assign all modules within a track</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 574,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "m.title",
+      "raw": "{m.title}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 595,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "t.name",
+      "raw": "{t.name} ({count} Modules)"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 628,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Specific Engineers",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Specific Engineers</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 629,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Choose one or more individuals",
+      "raw": "<p className=\"text-[11px] text-slate-500\">Choose one or more individuals</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 649,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Entire Team (by Team Lead)",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Entire Team (by Team Lead)</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 650,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign to overall team of selected lead",
+      "raw": "<p className=\"text-[11px] text-slate-500\">Assign to overall team of selected lead</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 663,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Search engineers by name, email, or team...",
+      "raw": "placeholder=\"Search engineers by name, email, or team...\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 677,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No engineers found matching query.",
+      "raw": "<p className=\"p-4 text-center text-xs text-slate-500\">No engineers found matching query.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 720,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No Team Leads Found",
+      "raw": "<p className=\"font-semibold\">No Team Leads Found</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 722,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Team Lead",
+      "raw": "Create or promote a user to the <strong>Team Lead</strong> role in User Management to assign by team."
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 764,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Team Members:",
+      "raw": "<p className=\"text-[11px] font-medium text-slate-500 mb-1\">Team Members:</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 797,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Completion Deadline (Optional)",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Completion Deadline (Optional)</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 804,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "If set, automated reminder notifications will trigger before deadline.",
+      "raw": "<p className=\"text-[11px] text-slate-500 mt-1\">If set, automated reminder notifications will trigger before deadline.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 808,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Automated Dispatch Actions:",
+      "raw": "<p className=\"font-bold text-slate-800\">Automated Dispatch Actions:</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 814,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "In-app notification bell dispatched",
+      "raw": "<span>In-app notification bell dispatched</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 820,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Email notification queued with direct link",
+      "raw": "<span>Email notification queued with direct link</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AssignmentTab.jsx",
+      "line": 826,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Audit log entry recorded",
+      "raw": "<span>Audit log entry recorded</span>"
+    }
+  ],
+  "client/src/pages/admin/tabs/AuditLogTab.jsx": [
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 72,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Security Audit Logs",
+      "raw": "<h2 className=\"text-xl font-bold text-slate-900\">Security Audit Logs</h2>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 87,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Actions",
+      "raw": "<option value=\"\" className=\"truncate\">All Actions</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 88,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "CREATE_USER",
+      "raw": "<option value=\"CREATE_USER\" className=\"truncate\">CREATE_USER</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 89,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "INVITE_USER",
+      "raw": "<option value=\"INVITE_USER\" className=\"truncate\">INVITE_USER</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 90,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "UPDATE_USER",
+      "raw": "<option value=\"UPDATE_USER\" className=\"truncate\">UPDATE_USER</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 91,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "UPDATE_USER_ROLE",
+      "raw": "<option value=\"UPDATE_USER_ROLE\" className=\"truncate\">UPDATE_USER_ROLE</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 92,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "DELETE_USER",
+      "raw": "<option value=\"DELETE_USER\" className=\"truncate\">DELETE_USER</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 93,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "PUBLISH_MODULE",
+      "raw": "<option value=\"PUBLISH_MODULE\" className=\"truncate\">PUBLISH_MODULE</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 94,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "UPLOAD_MODULE_VIDEO",
+      "raw": "<option value=\"UPLOAD_MODULE_VIDEO\" className=\"truncate\">UPLOAD_MODULE_VIDEO</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 95,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "REVOKE_CERTIFICATE",
+      "raw": "<option value=\"REVOKE_CERTIFICATE\" className=\"truncate\">REVOKE_CERTIFICATE</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 96,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "CREATE_ASSIGNMENT",
+      "raw": "<option value=\"CREATE_ASSIGNMENT\" className=\"truncate\">CREATE_ASSIGNMENT</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 107,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Outcomes",
+      "raw": "<option value=\"\" className=\"truncate\">All Outcomes</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 108,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Success",
+      "raw": "<option value=\"success\" className=\"truncate\">Success</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 109,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Failure",
+      "raw": "<option value=\"failure\" className=\"truncate\">Failure</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 119,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Fetching immutable audit records...",
+      "raw": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Fetching immutable audit records...</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 123,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No audit log entries found.",
+      "raw": "<p className=\"text-sm font-semibold text-slate-700\">No audit log entries found.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 124,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Actions performed on the platform will be automatically recorded here.",
+      "raw": "<p className=\"text-xs text-slate-500 mt-1\">Actions performed on the platform will be automatically recorded here.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 131,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Action",
+      "raw": "<th className=\"px-5 py-3.5\">Action</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 132,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Actor",
+      "raw": "<th className=\"px-4 py-3.5\">Actor</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 133,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Resource",
+      "raw": "<th className=\"px-4 py-3.5\">Resource</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 134,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Outcome",
+      "raw": "<th className=\"px-4 py-3.5\">Outcome</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 135,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Timestamp",
+      "raw": "<th className=\"px-4 py-3.5\">Timestamp</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 136,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Details",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Details</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 151,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "log.action",
+      "raw": "{log.action}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 219,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "selectedLog.action",
+      "raw": "{selectedLog.action}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 228,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Description:",
+      "raw": "<p className=\"text-[11px] font-semibold text-slate-500\">Description:</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 234,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Actor Role:",
+      "raw": "<p className=\"text-[11px] font-semibold text-slate-500\">Actor Role:</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 238,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Resource:",
+      "raw": "<p className=\"text-[11px] font-semibold text-slate-500\">Resource:</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/AuditLogTab.jsx",
+      "line": 245,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Metadata Payload:",
+      "raw": "<p className=\"text-[11px] font-semibold text-slate-500 mb-1\">Metadata Payload:</p>"
+    }
+  ],
+  "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx": [
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 84,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Failed to load issued certificates list",
+      "raw": "showNotification('error', 'Failed to load issued certificates list');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 220,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Mandatory revocation reason is required.",
+      "raw": "showNotification('error', 'Mandatory revocation reason is required.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 230,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Certificate ",
+      "raw": "showNotification('success', `Certificate '${selectedCert.certificate_id}' revoked successfully.`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 247,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certificate Governance & Signatories",
+      "raw": "<h2 className=\"text-xl font-bold text-slate-900\">Certificate Governance & Signatories</h2>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 259,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certificate Template Signatories",
+      "raw": "<h3 className=\"text-base font-semibold text-slate-900\">Certificate Template Signatories</h3>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 260,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Signatures rendered dynamically onto generated PDF certificates",
+      "raw": "<p className=\"text-xs font-normal text-slate-500 mt-0.5\">Signatures rendered dynamically onto generated PDF certificates</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 262,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Official Signatures",
+      "raw": "<span className=\"text-xs font-mono px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700\">Official Signatures</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 270,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Director Credentials",
+      "raw": "<span className=\"text-xs font-semibold text-slate-800 uppercase tracking-wider\">Director Credentials</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 277,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Director Full Name",
+      "raw": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Director Full Name</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 281,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "configForm.director_name",
+      "raw": "value={configForm.director_name}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 284,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. Anya Sharma",
+      "raw": "placeholder=\"e.g. Anya Sharma\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 289,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Director Title / Role",
+      "raw": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Director Title / Role</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 293,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "configForm.director_title",
+      "raw": "value={configForm.director_title}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 296,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. Director, Technonex NexAcademy",
+      "raw": "placeholder=\"e.g. Director, Technonex NexAcademy\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 302,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Original Handwritten Signature",
+      "raw": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Original Handwritten Signature</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 314,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Custom Signature Uploaded",
+      "raw": "<p className=\"text-xs font-semibold text-emerald-700 truncate\">Custom Signature Uploaded</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 315,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Rendered dynamically on certificate",
+      "raw": "<p className=\"text-xs font-normal text-slate-400\">Rendered dynamically on certificate</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 333,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Upload Signature File (PNG/JPG/SVG)",
+      "raw": "<span className=\"text-xs font-semibold\">Upload Signature File (PNG/JPG/SVG)</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 335,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Transparent PNG recommended",
+      "raw": "<span className=\"text-xs text-slate-400 mt-0.5\">Transparent PNG recommended</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 354,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Instructor Credentials",
+      "raw": "<span className=\"text-xs font-semibold text-slate-800 uppercase tracking-wider\">Instructor Credentials</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 361,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Lead Instructor Full Name",
+      "raw": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Lead Instructor Full Name</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 365,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "configForm.instructor_name",
+      "raw": "value={configForm.instructor_name}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 368,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. James Chen",
+      "raw": "placeholder=\"e.g. James Chen\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 373,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Instructor Title / Role",
+      "raw": "<label className=\"block text-xs font-medium text-slate-700 mb-1.5\">Instructor Title / Role</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 377,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "configForm.instructor_title",
+      "raw": "value={configForm.instructor_title}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 380,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. Lead Instructor",
+      "raw": "placeholder=\"e.g. Lead Instructor\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 386,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Original Handwritten Signature",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Original Handwritten Signature</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 398,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Custom Signature Uploaded",
+      "raw": "<p className=\"text-xs font-semibold text-emerald-700 truncate\">Custom Signature Uploaded</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 399,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Rendered dynamically on certificate",
+      "raw": "<p className=\"text-[10px] text-slate-400\">Rendered dynamically on certificate</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 417,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Upload Signature File (PNG/JPG/SVG)",
+      "raw": "<span className=\"text-xs font-semibold\">Upload Signature File (PNG/JPG/SVG)</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 419,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Transparent PNG recommended",
+      "raw": "<span className=\"text-[10px] text-slate-400 mt-0.5\">Transparent PNG recommended</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 445,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Saving Changes...",
+      "raw": "<span>Saving Changes...</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 448,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Save Signatory Configuration & Signatures",
+      "raw": "<span>Save Signatory Configuration & Signatures</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 458,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Credential Metrics",
+      "raw": "<h3 className=\"text-base font-bold text-slate-900 mb-1\">Credential Metrics</h3>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 459,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Live platform certification counts",
+      "raw": "<p className=\"text-xs text-slate-500\">Live platform certification counts</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 464,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Active Certificates",
+      "raw": "<p className=\"text-xs font-semibold text-emerald-800\">Active Certificates</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 478,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Revoked Credentials",
+      "raw": "<p className=\"text-xs font-semibold text-rose-800\">Revoked Credentials</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 505,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Search credentials and manage administrative revocations",
+      "raw": "<p className=\"text-xs text-slate-500 mt-0.5\">Search credentials and manage administrative revocations</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 512,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Search by ID, engineer name, or track...",
+      "raw": "placeholder=\"Search by ID, engineer name, or track...\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 520,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading credentials registry...",
+      "raw": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading credentials registry...</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 524,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No certificates found.",
+      "raw": "<p className=\"text-sm font-semibold text-slate-700\">No certificates found.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 525,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certificates are automatically awarded when engineers achieve 100% track completion.",
+      "raw": "<p className=\"text-xs text-slate-500 mt-1\">Certificates are automatically awarded when engineers achieve 100% track completion.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 532,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certificate ID",
+      "raw": "<th className=\"px-5 py-3.5\">Certificate ID</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 533,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Recipient Engineer",
+      "raw": "<th className=\"px-4 py-3.5\">Recipient Engineer</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 534,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certified Track",
+      "raw": "<th className=\"px-4 py-3.5\">Certified Track</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 535,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Issued Date",
+      "raw": "<th className=\"px-4 py-3.5\">Issued Date</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 536,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Status",
+      "raw": "<th className=\"px-4 py-3.5\">Status</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 537,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Actions",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 581,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "cert.revocation_reason",
+      "raw": "<p className=\"text-xs text-rose-600 mt-0.5 italic truncate max-w-[140px]\" title={cert.revocation_reason}>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 582,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "cert.revocation_reason",
+      "raw": "Reason: {cert.revocation_reason}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 636,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Revoke Certificate",
+      "raw": "<h3 className=\"text-base font-bold text-slate-900\">Revoke Certificate</h3>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/CertificateGovernanceTab.jsx",
+      "line": 651,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "State the justification for revoking this certificate (e.g. academic integrity breach, employment termination)...",
+      "raw": "placeholder=\"State the justification for revoking this certificate (e.g. academic integrity breach, employment termination)...\""
+    }
+  ],
+  "client/src/pages/admin/tabs/ModuleCatalogTab.jsx": [
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 187,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Failed to load module details",
+      "raw": "showNotification('error', 'Failed to load module details');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 260,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Track name is required",
+      "raw": "showNotification('error', 'Track name is required');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 278,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Track ",
+      "raw": "showNotification('success', `Track '${res.data.name}' updated successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 278,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "res.data.name",
+      "raw": "showNotification('success', `Track '${res.data.name}' updated successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 284,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Track ",
+      "raw": "showNotification('success', `Track '${res.data.name}' created successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 284,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "res.data.name",
+      "raw": "showNotification('success', `Track '${res.data.name}' created successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 298,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Parent track and module title are required.",
+      "raw": "showNotification('error', 'Parent track and module title are required.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 316,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Module ",
+      "raw": "showNotification('success', `Module '${updated.title}' updated successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 316,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "updated.title",
+      "raw": "showNotification('success', `Module '${updated.title}' updated successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 325,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Module ",
+      "raw": "showNotification('success', `Module '${created.title}' created successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 325,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "created.title",
+      "raw": "showNotification('success', `Module '${created.title}' created successfully!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 362,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select or create a module first.",
+      "raw": "showNotification('error', 'Please select or create a module first.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 367,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select a video file or enter a Cloudflare Stream ID.",
+      "raw": "showNotification('error', 'Please select a video file or enter a Cloudflare Stream ID.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 414,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select or create a module first.",
+      "raw": "showNotification('error', 'Please select or create a module first.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 418,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select an image file (PNG, JPG, WEBP).",
+      "raw": "showNotification('error', 'Please select an image file (PNG, JPG, WEBP).');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 432,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Custom thumbnail image uploaded successfully!",
+      "raw": "showNotification('success', 'Custom thumbnail image uploaded successfully!');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 446,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select or create a module first.",
+      "raw": "showNotification('error', 'Please select or create a module first.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 450,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select a document file (PDF/DOCX/Images).",
+      "raw": "showNotification('error', 'Please select a document file (PDF/DOCX/Images).');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 461,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Attachment ",
+      "raw": "showNotification('success', `Attachment '${res.data.attachment?.filename || 'Document'}' uploaded!`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 475,
+      "type": "hardcoded",
+      "context": "Alert/Confirm dialog",
+      "text": "Are you sure you want to delete this supporting document?",
+      "raw": "if (!window.confirm('Are you sure you want to delete this supporting document?')) return;"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 481,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Attachment deleted successfully.",
+      "raw": "showNotification('success', 'Attachment deleted successfully.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 499,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Module published successfully and is now active for learners.",
+      "raw": "showNotification('success', 'Module published successfully and is now active for learners.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 525,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Track ",
+      "raw": "showNotification('success', `Track '${item.name}' deleted successfully.`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 525,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.name",
+      "raw": "showNotification('success', `Track '${item.name}' deleted successfully.`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 532,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Module ",
+      "raw": "showNotification('success', `Module '${item.title}' deleted successfully.`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 532,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.title",
+      "raw": "showNotification('success', `Module '${item.title}' deleted successfully.`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 553,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Module & Curriculum CMS",
+      "raw": "<h2 className=\"text-xl font-bold text-slate-900\">Module & Curriculum CMS</h2>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 554,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Manage learning tracks, instructional modules, custom video thumbnails, and study documents",
+      "raw": "<p className=\"text-sm font-normal text-slate-500 mt-1\">Manage learning tracks, instructional modules, custom video thumbnails, and study documents</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 565,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Add Track",
+      "raw": "<span>Add Track</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 575,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "New Module",
+      "raw": "<span>New Module</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 583,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Filter by Track:",
+      "raw": "<span className=\"text-xs font-semibold uppercase tracking-wider text-slate-500 shrink-0\">Filter by Track:</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 615,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "tr.name",
+      "raw": "{tr.name} ({count})"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 667,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading curriculum catalog...",
+      "raw": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading curriculum catalog...</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 671,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No modules found",
+      "raw": "<p className=\"text-sm font-semibold text-slate-800\">No modules found</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 672,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Create your first module or select a different track filter.",
+      "raw": "<p className=\"text-xs text-slate-500\">Create your first module or select a different track filter.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 679,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Module Title",
+      "raw": "<th className=\"px-5 py-3.5\">Module Title</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 680,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Parent Track",
+      "raw": "<th className=\"px-4 py-3.5\">Parent Track</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 681,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Tier",
+      "raw": "<th className=\"px-4 py-3.5\">Tier</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 682,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Duration",
+      "raw": "<th className=\"px-4 py-3.5\">Duration</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 683,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Status",
+      "raw": "<th className=\"px-4 py-3.5\">Status</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 684,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Actions",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 715,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "m.title",
+      "raw": "<p className=\"font-semibold text-slate-900\">{m.title}</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 813,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "selectedModule.title",
+      "raw": "{selectedModule ? `Editing: ${selectedModule.title}` : 'Create New Module'}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 825,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Quality Guard",
+      "raw": "<p className=\"text-[10px] font-bold uppercase tracking-wider text-slate-500\">Quality Guard</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 878,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "t.name",
+      "raw": "<option key={t._id} value={t._id} className=\"truncate\">{t.name}</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 888,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "moduleFormData.title",
+      "raw": "value={moduleFormData.title}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 890,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. M1: Cable Types & Connectors",
+      "raw": "placeholder=\"e.g. M1: Cable Types & Connectors\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 896,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Passing Threshold (%)",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Passing Threshold (%)</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 910,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Description / Learning Objectives",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Description / Learning Objectives</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 913,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "moduleFormData.description",
+      "raw": "value={moduleFormData.description}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 915,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Outline what engineers will master in this module...",
+      "raw": "placeholder=\"Outline what engineers will master in this module...\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 929,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Manage video, thumbnail poster, and supplementary files",
+      "raw": "<span className=\"text-[11px] text-slate-400\">Manage video, thumbnail poster, and supplementary files</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 960,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Option A: Upload MP4 / WebM File",
+      "raw": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Option A: Upload MP4 / WebM File</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 975,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Option B: Cloudflare Stream Video UID",
+      "raw": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Option B: Cloudflare Stream Video UID</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 980,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. 5d537f14a468d955f654da5de0f8bc41",
+      "raw": "placeholder=\"e.g. 5d537f14a468d955f654da5de0f8bc41\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1020,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No custom thumbnail uploaded",
+      "raw": "<p className=\"text-[11px]\">No custom thumbnail uploaded</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1026,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Select Image (PNG, JPG, WEBP)",
+      "raw": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Select Image (PNG, JPG, WEBP)</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1057,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Upload PDF / DOCX / Diagram",
+      "raw": "<label className=\"block text-[11px] font-semibold text-slate-600 mb-1\">Upload PDF / DOCX / Diagram</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1141,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Save basic module details first to enable video attachment, custom thumbnails, and document uploads.",
+      "raw": "<span>Save basic module details first to enable video attachment, custom thumbnails, and document uploads.</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1196,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "trackFormData.name",
+      "raw": "value={trackFormData.name}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1198,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. EDGE Certified Technician",
+      "raw": "placeholder=\"e.g. EDGE Certified Technician\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1209,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. EDGE-L1",
+      "raw": "placeholder=\"e.g. EDGE-L1\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1215,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Track Description",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Track Description</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1218,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "trackFormData.description",
+      "raw": "value={trackFormData.description}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1220,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Overview of this certification pathway...",
+      "raw": "placeholder=\"Overview of this certification pathway...\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/ModuleCatalogTab.jsx",
+      "line": 1228,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "trackFormData.tier",
+      "raw": "value={trackFormData.tier}"
+    }
+  ],
+  "client/src/pages/admin/tabs/QuestionBankTab.jsx": [
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 66,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Failed to load modules",
+      "raw": "showNotification('error', 'Failed to load modules');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 85,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Failed to load questions for module",
+      "raw": "showNotification('error', 'Failed to load questions for module');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 101,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select a module first.",
+      "raw": "showNotification('error', 'Please select a module first.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 106,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Question text and options are required.",
+      "raw": "showNotification('error', 'Question text and options are required.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 125,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "MCQ Question created and added to question bank!",
+      "raw": "showNotification('success', 'MCQ Question created and added to question bank!');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 171,
+      "type": "hardcoded",
+      "context": "Alert/Confirm dialog",
+      "text": "Are you sure you want to delete this question?",
+      "raw": "if (!window.confirm(`Are you sure you want to delete this question?`)) return;"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 177,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Question deleted successfully.",
+      "raw": "showNotification('success', 'Question deleted successfully.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 189,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Please select a CSV file to import.",
+      "raw": "showNotification('error', 'Please select a CSV file to import.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 257,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Question Bank & MCQ Engine",
+      "raw": "<h2 className=\"text-xl font-bold text-slate-900\">Question Bank & MCQ Engine</h2>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 258,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Author single questions with immutable versioning or bulk import questions via CSV",
+      "raw": "<p className=\"text-sm font-normal text-slate-500 mt-1\">Author single questions with immutable versioning or bulk import questions via CSV</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 262,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Working Module:",
+      "raw": "<label className=\"text-xs font-medium text-slate-700 shrink-0\">Working Module:</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 270,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "m.title",
+      "raw": "{m.title}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 281,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Single MCQ Builder",
+      "raw": "<h3 className=\"text-base font-semibold text-slate-900\">Single MCQ Builder</h3>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 289,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "questionForm.question_text",
+      "raw": "value={questionForm.question_text}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 291,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Type question prompt (supports technical terms & codes)...",
+      "raw": "placeholder=\"Type question prompt (supports technical terms & codes)...\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 320,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Correct Answer",
+      "raw": "<span>Correct Answer</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 339,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Difficulty",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Difficulty</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 345,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Easy",
+      "raw": "<option value=\"easy\" className=\"truncate\">Easy</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 346,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Medium",
+      "raw": "<option value=\"medium\" className=\"truncate\">Medium</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 347,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Hard",
+      "raw": "<option value=\"hard\" className=\"truncate\">Hard</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 358,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. cable_types or safety_dguv",
+      "raw": "placeholder=\"e.g. cable_types or safety_dguv\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 365,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Post-Attempt Explanation",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Post-Attempt Explanation</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 370,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Explain why the correct answer is right for post-quiz review...",
+      "raw": "placeholder=\"Explain why the correct answer is right for post-quiz review...\""
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 391,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "CSV Bulk Importer",
+      "raw": "<h3 className=\"text-base font-bold text-slate-900\">CSV Bulk Importer</h3>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 405,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "question_text, option_a, option_b, option_c, option_d, correct_option, difficulty, concept_tag, explanation",
+      "raw": "Upload multiple questions in bulk. Columns: <code className=\"text-[10px] bg-slate-100 p-0.5 rounded\">question_text, option_a, option_b, option_c, option_d, correct_option, difficulty, concept_tag, explanation</code>."
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 437,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Errors encountered:",
+      "raw": "<p className=\"font-semibold text-rose-800\">Errors encountered:</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 458,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Learner quizzes pull random active questions from this bank",
+      "raw": "<p className=\"text-xs text-slate-500 mt-0.5\">Learner quizzes pull random active questions from this bank</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 465,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading questions...",
+      "raw": "<p className=\"text-xs text-slate-500 mt-2 font-medium\">Loading questions...</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 469,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No questions in this module yet.",
+      "raw": "<p className=\"text-sm font-semibold text-slate-700\">No questions in this module yet.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 470,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Add at least 5 questions to satisfy the Publish Quality Guard.",
+      "raw": "<p className=\"text-xs text-slate-500 mt-1\">Add at least 5 questions to satisfy the Publish Quality Guard.</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 477,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Version",
+      "raw": "<th className=\"px-5 py-3.5\">Version</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 478,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Question Prompt",
+      "raw": "<th className=\"px-4 py-3.5\">Question Prompt</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 479,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Correct Answer",
+      "raw": "<th className=\"px-4 py-3.5\">Correct Answer</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 480,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Concept Tag",
+      "raw": "<th className=\"px-4 py-3.5\">Concept Tag</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 481,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Difficulty",
+      "raw": "<th className=\"px-4 py-3.5\">Difficulty</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 482,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Actions",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 574,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Question Prompt",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Question Prompt</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 578,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "editForm.question_text",
+      "raw": "value={editForm.question_text}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 607,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Correct",
+      "raw": "<span>Correct</span>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 615,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Difficulty",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Difficulty</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 621,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Easy",
+      "raw": "<option value=\"easy\" className=\"truncate\">Easy</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 622,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Medium",
+      "raw": "<option value=\"medium\" className=\"truncate\">Medium</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 623,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Hard",
+      "raw": "<option value=\"hard\" className=\"truncate\">Hard</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 628,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Concept Tag",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Concept Tag</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/QuestionBankTab.jsx",
+      "line": 640,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Explanation",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Explanation</label>"
+    }
+  ],
+  "client/src/pages/admin/tabs/UserManagementTab.jsx": [
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 180,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "User ",
+      "raw": "showNotification('success', `User '${u.fullName || u.email}' ${currentlyActive ? 'deactivated' : 'reactivated'} successfully.`);"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 207,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "You cannot delete your own active Admin account.",
+      "raw": "showNotification('error', 'You cannot delete your own active Admin account.');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 500,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "User invitation / account creation completed",
+      "raw": "showNotification('success', 'User invitation / account creation completed');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 518,
+      "type": "hardcoded",
+      "context": "Notification Toast",
+      "text": "Team Lead assignment updated successfully",
+      "raw": "showNotification('success', 'Team Lead assignment updated successfully');"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 527,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Edit User Details",
+      "raw": "<h3 className=\"text-base font-bold text-slate-900\">Edit User Details</h3>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 532,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Full Name",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Full Name</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 543,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Language Preference",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1\">Language Preference</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 549,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "English (EN)",
+      "raw": "<option value=\"en\" className=\"truncate\">English (EN)</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 550,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "German (DE)",
+      "raw": "<option value=\"de\" className=\"truncate\">German (DE)</option>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 579,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Change User Role",
+      "raw": "<h3 className=\"text-base font-bold text-slate-900\">Change User Role</h3>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 584,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Select Role",
+      "raw": "<label className=\"block text-xs font-semibold text-slate-700 mb-1.5\">Select Role</label>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 592,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "r.role",
+      "raw": "key={r.role}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 600,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "r.role",
+      "raw": "value={r.role}"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 606,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "r.label",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">{r.label}</p>"
+    },
+    {
+      "file": "client/src/pages/admin/tabs/UserManagementTab.jsx",
+      "line": 644,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Delete User Account",
+      "raw": "<h3 className=\"text-base font-bold text-slate-900\">Delete User Account</h3>"
+    }
+  ],
+  "client/src/pages/AuthPage.jsx": [
+    {
+      "file": "client/src/pages/AuthPage.jsx",
+      "line": 227,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "name@company.com",
+      "raw": "placeholder=\"name@company.com\""
+    },
+    {
+      "file": "client/src/pages/AuthPage.jsx",
+      "line": 276,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Remember me",
+      "raw": "<span>Remember me</span>"
+    },
+    {
+      "file": "client/src/pages/AuthPage.jsx",
+      "line": 321,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Protected enterprise access",
+      "raw": "<span>Protected enterprise access</span>"
+    },
+    {
+      "file": "client/src/pages/AuthPage.jsx",
+      "line": 331,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Forgot Password?",
+      "raw": "<h3 className=\"text-xl font-extrabold text-slate-900 tracking-tight\">Forgot Password?</h3>"
+    },
+    {
+      "file": "client/src/pages/AuthPage.jsx",
+      "line": 381,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "name@company.com",
+      "raw": "placeholder=\"name@company.com\""
+    },
+    {
+      "file": "client/src/pages/AuthPage.jsx",
+      "line": 402,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Sending Link...",
+      "raw": "<span>Sending Link...</span>"
+    }
+  ],
+  "client/src/pages/CookiesPage.jsx": [
+    {
+      "file": "client/src/pages/CookiesPage.jsx",
+      "line": 14,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Cookie Policy",
+      "raw": "<h1 className=\"text-4xl font-bold tracking-tight text-slate-900 md:text-5xl\">Cookie Policy</h1>"
+    },
+    {
+      "file": "client/src/pages/CookiesPage.jsx",
+      "line": 49,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "section.customLink.text",
+      "raw": "{section.customLink.text}"
+    },
+    {
+      "file": "client/src/pages/CookiesPage.jsx",
+      "line": 56,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "section.text",
+      "raw": "{section.text}"
+    },
+    {
+      "file": "client/src/pages/CookiesPage.jsx",
+      "line": 87,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.label",
+      "raw": "<div key={`${section.id}-${item.label}`} className=\"flex flex-col sm:flex-row sm:gap-4\">"
+    },
+    {
+      "file": "client/src/pages/CookiesPage.jsx",
+      "line": 88,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.label",
+      "raw": "<dt className=\"min-w-[130px] font-semibold text-slate-900\">{item.label}:</dt>"
+    }
+  ],
+  "client/src/pages/EngineerDashboard.jsx": [
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 548,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.title",
+      "raw": "{track.title}"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 640,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "m.title",
+      "raw": "<p className=\"text-xs font-medium text-white leading-snug break-words line-clamp-2\" title={m.title}>"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 641,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "m.title",
+      "raw": "{m.title}"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 752,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "activeLessonData.title",
+      "raw": "<h1 className=\"text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mt-2\">{activeLessonData.title}</h1>"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 766,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "activeLessonData.title",
+      "raw": "title={activeLessonData.title}"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 850,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "chap.title",
+      "raw": "{chap.title}"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 854,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "chap.description",
+      "raw": "{chap.description}"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 915,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "att.filename",
+      "raw": "{att.filename}"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 950,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.title",
+      "raw": "<h2 className=\"text-xl font-bold text-slate-900\">{track.title}</h2>"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 952,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.tier",
+      "raw": "{track.tier}"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 961,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.description",
+      "raw": "<p className=\"text-slate-600 text-sm font-normal\">{track.description}</p>"
+    },
+    {
+      "file": "client/src/pages/EngineerDashboard.jsx",
+      "line": 1015,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "m.title",
+      "raw": "<h4 className=\"font-semibold text-slate-900 text-sm\">{m.title}</h4>"
+    }
+  ],
+  "client/src/pages/LandingPage.jsx": [
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 323,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Curriculum Tracks",
+      "raw": "<span className=\"text-xs font-extrabold text-[#E62E52] uppercase tracking-widest block mb-2\">Curriculum Tracks</span>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 324,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Featured Training Modules",
+      "raw": "<h2 className=\"text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight\">Featured Training Modules</h2>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 338,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "mod.title",
+      "raw": "alt={mod.title}"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 350,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "mod.title",
+      "raw": "{mod.title}"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 353,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "mod.description",
+      "raw": "{mod.description}"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 375,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Industry Credentials",
+      "raw": "<span className=\"text-xs font-extrabold text-[#E62E52] uppercase tracking-widest block mb-2\">Industry Credentials</span>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 394,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "cert.tierBadge",
+      "raw": "{cert.tierPill || `Tier ${cert.tierBadge}`}"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 398,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "cert.tierTitle",
+      "raw": "<h3 className=\"text-2xl font-extrabold text-slate-900 mb-1\">{cert.tierTitle}</h3>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 399,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "cert.subtitle",
+      "raw": "<p className=\"text-xs font-bold text-[#08306B] mb-4\">{cert.subtitle}</p>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 402,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "cert.description",
+      "raw": "{cert.description}"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 406,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certification Requirements:",
+      "raw": "<p className=\"text-xs font-bold text-slate-800 uppercase tracking-wider\">Certification Requirements:</p>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 442,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "TECHNONEX",
+      "raw": "<textPath href={`#topArcLanding-${cert.id}`} startOffset=\"50%\" textAnchor=\"middle\">TECHNONEX</textPath>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 448,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "CERTIFIED",
+      "raw": "<textPath href={`#bottomArcLanding-${cert.id}`} startOffset=\"50%\" textAnchor=\"middle\">CERTIFIED</textPath>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 559,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "e.g. TNX-2026-EDGE-0142 or TNX-2026-CORE-0089",
+      "raw": "placeholder=\"e.g. TNX-2026-EDGE-0142 or TNX-2026-CORE-0089\""
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 614,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Curriculum Modules",
+      "raw": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Curriculum Modules</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 617,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certification Tiers",
+      "raw": "<a href=\"#certifications\" className=\"hover:text-gray-400 transition\">Certification Tiers</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 620,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "About Framework",
+      "raw": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">About Framework</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 623,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Verify Credential",
+      "raw": "<a href=\"#verification\" className=\"hover:text-gray-400 transition\">Verify Credential</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 640,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "EDGE Technician (L1)",
+      "raw": "<a href=\"#certifications\" className=\"hover:text-gray-400 transition\">EDGE Technician (L1)</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 643,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "CORE Lead Engineer (L2)",
+      "raw": "<a href=\"#certifications\" className=\"hover:text-gray-400 transition\">CORE Lead Engineer (L2)</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 646,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Enterprise Rack Standards",
+      "raw": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Enterprise Rack Standards</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 649,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Client 14-Section Site Survey",
+      "raw": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Client 14-Section Site Survey</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 652,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Fiber Optics & Ekahau WLAN",
+      "raw": "<a href=\"#modules\" className=\"hover:text-gray-400 transition\">Fiber Optics & Ekahau WLAN</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 664,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Instant ID Lookup",
+      "raw": "<a href=\"#verification\" className=\"hover:text-gray-400 transition\">Instant ID Lookup</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 667,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Live Viva Assessment",
+      "raw": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">Live Viva Assessment</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 670,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "DGUV V3 Electrical Safety",
+      "raw": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">DGUV V3 Electrical Safety</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 673,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "OTDR Tier-2 Fiber Testing",
+      "raw": "<a href=\"#about\" className=\"hover:text-gray-400 transition\">OTDR Tier-2 Fiber Testing</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 676,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Regional Lead Sign-Off",
+      "raw": "<span className=\"text-slate-500\">Regional Lead Sign-Off</span>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 686,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Privacy Policy",
+      "raw": "<a href=\"/privacy-policy\" className=\"hover:text-slate-300 transition\">Privacy Policy</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 687,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Terms and Conditions",
+      "raw": "<a href=\"/terms\" className=\"hover:text-slate-300 transition\">Terms and Conditions</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 688,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Cookies",
+      "raw": "<a href=\"/cookies\" className=\"hover:text-slate-300 transition\">Cookies</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 689,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Legal Notice",
+      "raw": "<a href=\"/legal-notice\" className=\"hover:text-slate-300 transition\">Legal Notice</a>"
+    },
+    {
+      "file": "client/src/pages/LandingPage.jsx",
+      "line": 734,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "selectedModule.title",
+      "raw": "{selectedModule.title}"
+    }
+  ],
+  "client/src/pages/LegalNoticePage.jsx": [
+    {
+      "file": "client/src/pages/LegalNoticePage.jsx",
+      "line": 9,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Legal Notice",
+      "raw": "<h1 className=\"text-4xl font-bold tracking-tight text-slate-900 md:text-5xl\">Legal Notice</h1>"
+    },
+    {
+      "file": "client/src/pages/LegalNoticePage.jsx",
+      "line": 17,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "section.text",
+      "raw": "{section.text}"
+    },
+    {
+      "file": "client/src/pages/LegalNoticePage.jsx",
+      "line": 37,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.label",
+      "raw": "<div key={`${section.id}-${item.label}`} className=\"flex flex-col gap-1 md:flex-row md:gap-3\">"
+    },
+    {
+      "file": "client/src/pages/LegalNoticePage.jsx",
+      "line": 38,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.label",
+      "raw": "<dt className=\"min-w-[120px] font-medium text-slate-900\">{item.label}:</dt>"
+    },
+    {
+      "file": "client/src/pages/LegalNoticePage.jsx",
+      "line": 54,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "section.text",
+      "raw": "<p className=\"text-base leading-7 text-slate-700\">{section.text}</p>"
+    }
+  ],
+  "client/src/pages/PrivacyPolicyPage.jsx": [
+    {
+      "file": "client/src/pages/PrivacyPolicyPage.jsx",
+      "line": 9,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Privacy Policy",
+      "raw": "<h1 className=\"text-4xl font-bold tracking-tight text-slate-900 md:text-5xl\">Privacy Policy</h1>"
+    },
+    {
+      "file": "client/src/pages/PrivacyPolicyPage.jsx",
+      "line": 17,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "section.text",
+      "raw": "{section.text}"
+    },
+    {
+      "file": "client/src/pages/PrivacyPolicyPage.jsx",
+      "line": 37,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.label",
+      "raw": "<div key={`${section.id}-${item.label}`} className=\"flex flex-col gap-1 md:flex-row md:gap-3\">"
+    },
+    {
+      "file": "client/src/pages/PrivacyPolicyPage.jsx",
+      "line": 38,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "item.label",
+      "raw": "<dt className=\"min-w-[120px] font-medium text-slate-900\">{item.label}:</dt>"
+    },
+    {
+      "file": "client/src/pages/PrivacyPolicyPage.jsx",
+      "line": 70,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "section.customLink.text",
+      "raw": "{section.customLink.text}"
+    }
+  ],
+  "client/src/pages/Profile.jsx": [
+    {
+      "file": "client/src/pages/Profile.jsx",
+      "line": 155,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Profile",
+      "raw": "<h1 className=\"text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight\">Profile</h1>"
+    },
+    {
+      "file": "client/src/pages/Profile.jsx",
+      "line": 156,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Manage your account details.",
+      "raw": "<p className=\"text-sm text-slate-500 font-normal mt-1\">Manage your account details.</p>"
+    },
+    {
+      "file": "client/src/pages/Profile.jsx",
+      "line": 160,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading profile details...",
+      "raw": "<div className=\"p-10 text-center text-slate-400 text-sm italic\">Loading profile details...</div>"
+    },
+    {
+      "file": "client/src/pages/Profile.jsx",
+      "line": 290,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Saving...",
+      "raw": "<span>Saving...</span>"
+    }
+  ],
+  "client/src/pages/ResetPasswordPage.jsx": [
+    {
+      "file": "client/src/pages/ResetPasswordPage.jsx",
+      "line": 190,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Verifying reset token...",
+      "raw": "<p className=\"text-sm font-semibold text-slate-600\">Verifying reset token...</p>"
+    },
+    {
+      "file": "client/src/pages/ResetPasswordPage.jsx",
+      "line": 226,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Invalid or Expired Link",
+      "raw": "<h2 className=\"text-2xl font-bold text-slate-900 tracking-tight\">Invalid or Expired Link</h2>"
+    },
+    {
+      "file": "client/src/pages/ResetPasswordPage.jsx",
+      "line": 340,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Security Requirements:",
+      "raw": "<p className=\"font-semibold text-slate-700 mb-1 text-[11px] uppercase tracking-wider\">Security Requirements:</p>"
+    },
+    {
+      "file": "client/src/pages/ResetPasswordPage.jsx",
+      "line": 374,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Updating Password...",
+      "raw": "<span>Updating Password...</span>"
+    }
+  ],
+  "client/src/pages/TeamLeadDashboard.jsx": [
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 496,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Technonex Team Portal",
+      "raw": "<p className=\"text-xs font-normal text-slate-400 tracking-normal mt-0.5\">Technonex Team Portal</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 572,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Curriculum Browser",
+      "raw": "<span>Curriculum Browser</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 745,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign Curriculum",
+      "raw": "<span>Assign Curriculum</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 756,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Active Squad Members",
+      "raw": "<span className=\"mt-1 inline-block text-xs font-medium text-emerald-600\">Active Squad Members</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 766,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Active Assignments",
+      "raw": "<p className=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Active Assignments</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 768,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Pending / In Progress",
+      "raw": "<span className=\"mt-1 inline-block text-xs font-medium text-blue-600\">Pending / In Progress</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 771,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Earned Certificates",
+      "raw": "<p className=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Earned Certificates</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 775,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Verified Credentials",
+      "raw": "<span className=\"mt-1 inline-block text-xs font-medium text-amber-600\">Verified Credentials</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 796,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Search squad engineers by name or email...",
+      "raw": "placeholder=\"Search squad engineers by name or email...\""
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 810,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Statuses",
+      "raw": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 811,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Active",
+      "raw": "<option value=\"active\" className=\"truncate\">Active</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 812,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Inactive",
+      "raw": "<option value=\"inactive\" className=\"truncate\">Inactive</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 835,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading squad engineers...",
+      "raw": "<p className=\"text-xs text-slate-500 font-medium\">Loading squad engineers...</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 844,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No squad engineers found",
+      "raw": "<p className=\"text-sm font-semibold text-slate-800\">No squad engineers found</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 857,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Track Progress",
+      "raw": "<th className=\"px-4 py-3.5\">Track Progress</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 858,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Active Assignments",
+      "raw": "<th className=\"px-4 py-3.5\">Active Assignments</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 859,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Earned Certificates",
+      "raw": "<th className=\"px-4 py-3.5\">Earned Certificates</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 860,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Avg Quiz Score",
+      "raw": "<th className=\"px-4 py-3.5\">Avg Quiz Score</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 861,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Primary Weak Concept",
+      "raw": "<th className=\"px-4 py-3.5\">Primary Weak Concept</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 931,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No quiz data",
+      "raw": ": <span className=\"text-slate-400 font-normal italic\">No quiz data</span>}"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 940,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "None",
+      "raw": "<span className=\"text-slate-400 italic\">None</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 994,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Search concept tags (e.g. FIBER, OTDR, SAFETY)...",
+      "raw": "placeholder=\"Search concept tags (e.g. FIBER, OTDR, SAFETY)...\""
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1008,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Proficiency Levels",
+      "raw": "<option value=\"all\" className=\"truncate\">All Proficiency Levels</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1009,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Critical Need (&lt; 60%)",
+      "raw": "<option value=\"critical\" className=\"truncate\">Critical Need (&lt; 60%)</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1010,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Needs Focus (60 - 79%)",
+      "raw": "<option value=\"needs_focus\" className=\"truncate\">Needs Focus (60 - 79%)</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1034,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Aggregating squad concept accuracy...",
+      "raw": "<p className=\"text-xs text-slate-500 font-medium\">Aggregating squad concept accuracy...</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1057,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Concept Tag",
+      "raw": "<th className=\"px-5 py-3.5\">Concept Tag</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1058,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Proficiency Status",
+      "raw": "<th className=\"px-4 py-3.5\">Proficiency Status</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1059,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Accuracy Rate",
+      "raw": "<th className=\"px-4 py-3.5\">Accuracy Rate</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1060,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Questions Correct / Total",
+      "raw": "<th className=\"px-4 py-3.5\">Questions Correct / Total</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1061,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Engineers Tested",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Engineers Tested</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1170,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No curriculum tracks available.",
+      "raw": "<p className=\"text-slate-400 text-sm\">No curriculum tracks available.</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1189,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.tier",
+      "raw": "{track.tier}"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1197,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No modules published in this track yet.",
+      "raw": "<p className=\"text-xs text-slate-400 italic\">No modules published in this track yet.</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1203,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "mod.title",
+      "raw": "<h5 className=\"text-xs font-bold text-slate-900\">{mod.title}</h5>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1241,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Search by engineer name, email, module, or track...",
+      "raw": "placeholder=\"Search by engineer name, email, module, or track...\""
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1255,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Statuses",
+      "raw": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1256,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Pending",
+      "raw": "<option value=\"pending\" className=\"truncate\">Pending</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1257,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "In Progress",
+      "raw": "<option value=\"in_progress\" className=\"truncate\">In Progress</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1258,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Completed",
+      "raw": "<option value=\"completed\" className=\"truncate\">Completed</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1259,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Overdue",
+      "raw": "<option value=\"overdue\" className=\"truncate\">Overdue</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1269,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading squad assignments...",
+      "raw": "<p className=\"text-xs font-semibold\">Loading squad assignments...</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1278,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No assignments found",
+      "raw": "<p className=\"text-sm font-semibold text-slate-800\">No assignments found</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1290,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Engineer",
+      "raw": "<th className=\"px-5 py-3.5\">Engineer</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1291,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assigned Module & Track",
+      "raw": "<th className=\"px-4 py-3.5\">Assigned Module & Track</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1292,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assigned By",
+      "raw": "<th className=\"px-4 py-3.5\">Assigned By</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1293,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assigned Date",
+      "raw": "<th className=\"px-4 py-3.5\">Assigned Date</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1294,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Deadline",
+      "raw": "<th className=\"px-4 py-3.5\">Deadline</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1295,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Status",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Status</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1327,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.tier",
+      "raw": "{track.title || track.name || 'Curriculum Track'} {track.tier ? `· ${track.tier}` : ''}"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1347,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No deadline",
+      "raw": "<span className=\"text-slate-400 italic\">No deadline</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1407,
+      "type": "hardcoded",
+      "context": "Input placeholder",
+      "text": "Search by engineer name, email, or certificate ID...",
+      "raw": "placeholder=\"Search by engineer name, email, or certificate ID...\""
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1421,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Tracks",
+      "raw": "<option value=\"all\" className=\"truncate\">All Tracks</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1437,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "All Statuses",
+      "raw": "<option value=\"all\" className=\"truncate\">All Statuses</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1438,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Active",
+      "raw": "<option value=\"active\" className=\"truncate\">Active</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1439,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Revoked",
+      "raw": "<option value=\"revoked\" className=\"truncate\">Revoked</option>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1449,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading squad certificates...",
+      "raw": "<p className=\"text-xs font-semibold\">Loading squad certificates...</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1458,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No certificates found",
+      "raw": "<p className=\"text-sm font-semibold text-slate-800\">No certificates found</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1470,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Recipient Engineer",
+      "raw": "<th className=\"px-5 py-3.5\">Recipient Engineer</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1471,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certificate ID",
+      "raw": "<th className=\"px-4 py-3.5\">Certificate ID</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1472,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Curriculum Track",
+      "raw": "<th className=\"px-4 py-3.5\">Curriculum Track</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1473,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Tier",
+      "raw": "<th className=\"px-4 py-3.5\">Tier</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1474,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Issued Date",
+      "raw": "<th className=\"px-4 py-3.5\">Issued Date</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1475,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Status",
+      "raw": "<th className=\"px-4 py-3.5\">Status</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1476,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Actions",
+      "raw": "<th className=\"px-5 py-3.5 text-right\">Actions</th>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1558,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Saving...",
+      "raw": "<span>Saving...</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1565,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "PDF",
+      "raw": "<span>PDF</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1604,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign Curriculum to Team",
+      "raw": "<span>Assign Curriculum to Team</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1606,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign a single module or entire certification track to your squad.",
+      "raw": "<p className=\"text-sm font-normal text-slate-500 mt-1\">Assign a single module or entire certification track to your squad.</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1656,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Single Module",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Single Module</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1657,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assign a specific topic",
+      "raw": "<p className=\"text-[10px] text-slate-500\">Assign a specific topic</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1677,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Entire Track",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Entire Track</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1678,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Sequential modules",
+      "raw": "<p className=\"text-[10px] text-slate-500\">Sequential modules</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1702,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "mod.title",
+      "raw": "[{mod.trackTitle}] {mod.title}"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1750,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Select Engineers",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Select Engineers</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1751,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Pick squad members",
+      "raw": "<p className=\"text-[10px] text-slate-500\">Pick squad members</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1771,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Entire Team",
+      "raw": "<p className=\"text-xs font-bold text-slate-900\">Entire Team</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1782,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Team Engineers",
+      "raw": "<label className=\"text-xs font-bold text-slate-700\">Team Engineers</label>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1793,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No engineers assigned to your team squad yet.",
+      "raw": "<p className=\"text-xs text-slate-400\">No engineers assigned to your team squad yet.</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1834,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Assigned engineers will receive an automated in-app bell notification and email.",
+      "raw": "<span>Assigned engineers will receive an automated in-app bell notification and email.</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1892,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No certificates issued yet",
+      "raw": "<p className=\"text-xs font-semibold text-slate-700\">No certificates issued yet</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1893,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "This engineer has not completed all modules required for a certificate.",
+      "raw": "<p className=\"text-[11px] text-slate-400\">This engineer has not completed all modules required for a certificate.</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1954,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Saving...",
+      "raw": "<span>Saving...</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 1961,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Download PDF",
+      "raw": "<span>Download PDF</span>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 2020,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "No active assignments found",
+      "raw": "<p className=\"text-xs font-semibold text-slate-700\">No active assignments found</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 2021,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "This engineer has not been assigned any modules yet.",
+      "raw": "<p className=\"text-[11px] text-slate-400\">This engineer has not been assigned any modules yet.</p>"
+    },
+    {
+      "file": "client/src/pages/TeamLeadDashboard.jsx",
+      "line": 2048,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.tier",
+      "raw": "{track.tier}"
+    }
+  ],
+  "client/src/pages/TermsPage.jsx": [
+    {
+      "file": "client/src/pages/TermsPage.jsx",
+      "line": 19,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "section.text",
+      "raw": "{section.text}"
+    }
+  ],
+  "client/src/pages/TrackDetail.jsx": [
+    {
+      "file": "client/src/pages/TrackDetail.jsx",
+      "line": 44,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading track details...",
+      "raw": "return <div className=\"p-6 text-gray-600\">Loading track details...</div>;"
+    },
+    {
+      "file": "client/src/pages/TrackDetail.jsx",
+      "line": 59,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Overall progress",
+      "raw": "<span>Overall progress</span>"
+    },
+    {
+      "file": "client/src/pages/TrackDetail.jsx",
+      "line": 78,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "moduleItem.title",
+      "raw": "<img src={thumb} alt={moduleItem.title} className=\"w-full h-full object-cover\" />"
+    },
+    {
+      "file": "client/src/pages/TrackDetail.jsx",
+      "line": 86,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "moduleItem.title",
+      "raw": "<h2 className=\"text-base font-bold text-gray-900 truncate\">{moduleItem.title}</h2>"
+    }
+  ],
+  "client/src/pages/TrackExplorer.jsx": [
+    {
+      "file": "client/src/pages/TrackExplorer.jsx",
+      "line": 26,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Loading tracks...",
+      "raw": "return <div className=\"p-6 text-gray-600\">Loading tracks...</div>;"
+    },
+    {
+      "file": "client/src/pages/TrackExplorer.jsx",
+      "line": 36,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Explore Tracks",
+      "raw": "<h1 className=\"text-3xl font-semibold text-gray-900\">Explore Tracks</h1>"
+    },
+    {
+      "file": "client/src/pages/TrackExplorer.jsx",
+      "line": 37,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Browse available learning paths and start your next module.",
+      "raw": "<p className=\"mt-2 text-gray-600\">Browse available learning paths and start your next module.</p>"
+    },
+    {
+      "file": "client/src/pages/TrackExplorer.jsx",
+      "line": 48,
+      "type": "backend-sourced",
+      "context": "Dynamic DB / API field",
+      "text": "track.title",
+      "raw": "<h2 className=\"text-xl font-semibold text-gray-900\">{track.title}</h2>"
+    }
+  ],
+  "client/src/pages/VerificationPage.jsx": [
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 88,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "NexAcademy Official Verification Portal",
+      "raw": "<span className=\"text-xs text-slate-500 border-l border-slate-200 pl-3 font-medium\">NexAcademy Official Verification Portal</span>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 100,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Verifying certificate authenticity...",
+      "raw": "<p className=\"text-sm font-semibold text-slate-600\">Verifying certificate authenticity...</p>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 109,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Certificate Verification Failed",
+      "raw": "<h2 className=\"text-2xl font-extrabold text-slate-900\">Certificate Verification Failed</h2>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 167,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Download PDF",
+      "raw": "<span>Download PDF</span>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 217,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "in recognition of successful completion and proficiency demonstrated within the",
+      "raw": "This certificate is proudly awarded to <strong>{recipientName}</strong> in recognition of successful completion and proficiency demonstrated within the <strong>{(tier === 'EDGE' || tier === 'L2_ADVANCED') ? 'EDGE' : 'CORE'}</strong> program. This achievement verifies the acquisition of skills and knowledge required for excellence in engineering and development."
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 219,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Issued by Technonex NexAcademy",
+      "raw": "<p className=\"text-xs font-semibold text-slate-900 font-sans\">Issued by Technonex NexAcademy</p>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 236,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Director, Technonex NexAcademy",
+      "raw": "<p className=\"text-[10px] text-slate-500 font-sans\">Director, Technonex NexAcademy</p>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 250,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "Lead Instructor",
+      "raw": "<p className=\"text-[10px] text-slate-500 font-sans\">Lead Instructor</p>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 277,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "TECHNONEX",
+      "raw": "<textPath href=\"#topArcModal\" startOffset=\"50%\" textAnchor=\"middle\">TECHNONEX</textPath>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 279,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "EDGE",
+      "raw": "<text x=\"80\" y=\"86\" fontFamily=\"'Inter', sans-serif\" fontSize=\"20\" fontWeight=\"900\" fill=\"#422903\" textAnchor=\"middle\" letterSpacing=\"1.5\">EDGE</text>"
+    },
+    {
+      "file": "client/src/pages/VerificationPage.jsx",
+      "line": 281,
+      "type": "hardcoded",
+      "context": "JSX text element",
+      "text": "CERTIFIED",
+      "raw": "<textPath href=\"#bottomArcModal\" startOffset=\"50%\" textAnchor=\"middle\">CERTIFIED</textPath>"
+    }
+  ]
+}

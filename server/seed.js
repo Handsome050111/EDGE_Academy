@@ -1,3 +1,6 @@
+const crypto = require('crypto');
+global.crypto = crypto;
+
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
@@ -55,7 +58,6 @@ const seedData = async () => {
       AuditLog.syncIndexes(),
     ]);
     console.log('✅ Schema indexes synchronized with database.');
-
 
     // 1. Seed Official Accounts & Teams
     const demoTeam = await Team.create({
@@ -238,7 +240,6 @@ const seedData = async () => {
       createdL2Modules.push(createdMod);
 
       // 6. Seed ModulePrerequisites as per Spec Section 4.6 & 5.5
-      // (L2 modules generally have their L1 counterparts as prerequisites)
       const correspondingL1Module = createdL1Modules[idx % createdL1Modules.length];
       if (correspondingL1Module) {
         await ModulePrerequisite.create({

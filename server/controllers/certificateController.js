@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const puppeteer = require('puppeteer');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const Certificate = require('../models/Certificate');
@@ -120,9 +119,6 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
     }
 
     // Load admin certificate template configuration.
-    // Upsert: if no config document exists yet (fresh deployment), create one
-    // using the schema's built-in defaults so issuance works without requiring
-    // a manual admin setup step first.
     let config = await CertificateConfig.findOneAndUpdate(
       {},
       {},
@@ -140,7 +136,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
     const certCount = await Certificate.countDocuments();
     let currentSeq = certCount + 1;
 
-    // Extract engineer initials safely (e.g. "Alex Lee Smith" -> "ALS", "John Doe" -> "JD", "alex.smith@email.com" -> "AS")
+    // Extract engineer initials safely
     const rawName = (user.fullName || user.full_name || user.name || (user.email ? user.email.split('@')[0] : 'ENG')).trim();
     const nameParts = rawName.split(/[\s._-]+/).filter(Boolean);
     let initials = '';
@@ -173,14 +169,13 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
 
     const recipientName = user.fullName || user.full_name || user.name || 'Technonex Engineer';
 
-    // Authoritative tier resolution: Track.tier is the source of truth, normalized to 'EDGE' or 'CORE'
     const tierDisplay = (track.tier === 'CORE' || passedTier === 'CORE' || passedTier === 'L2_ADVANCED')
       ? 'CORE'
       : 'EDGE';
 
     const dateFormatted = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-    // Load the two official certificate logos from the client public assets.
+    // Load the two official certificate logos from the client public assets
     const loadPngBase64 = (fileName) => {
       const filePath = path.join(__dirname, '../../client/public', fileName);
       if (!fs.existsSync(filePath)) return '';
@@ -194,7 +189,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
     const certLogo1Base64 = loadPngBase64('NexLogo-3.png') || loadPngBase64('certificate.png');
     const certLogo2Base64 = loadPngBase64('cert-logo-2.png');
 
-    // Convert signature images to Base64 data URLs for Puppeteer embedding
+    // Convert signature images to Base64 data URLs
     let directorSigBase64 = '';
     if (config.director_signature_url) {
       const sigFilePath = path.join(__dirname, '..', config.director_signature_url.replace(/^\//, ''));
@@ -223,7 +218,6 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
       }
     }
 
-    // Pixel-perfect HTML/CSS template matching VerificationPage.jsx specification
     const htmlContent = `
       <!DOCTYPE html>
       <html lang="en">
@@ -467,42 +461,30 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
         </style>
       </head>
       <body>
-        <!-- Decorative Vector Frame with Beveled Corner Accents -->
         <svg class="cert-frame-svg" viewBox="0 0 1122 794" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Outer Chamfered Border -->
           <path d="M 52,26 L 1070,26 L 1096,52 L 1096,742 L 1070,768 L 52,768 L 26,742 L 26,52 Z" stroke="#0A2540" stroke-width="2.5" />
-          <!-- Inner Chamfered Border -->
           <path d="M 56,34 L 1066,34 L 1088,56 L 1088,738 L 1066,760 L 56,760 L 34,738 L 34,56 Z" stroke="#0A2540" stroke-width="1" />
-          <!-- Corner Accent Brackets -->
-          <!-- Top Left -->
           <path d="M 26,52 L 44,52 M 52,26 L 52,44 M 34,56 L 48,48 L 56,34" stroke="#0A2540" stroke-width="1" />
-          <!-- Top Right -->
           <path d="M 1096,52 L 1078,52 M 1070,26 L 1070,44 M 1088,56 L 1074,48 L 1066,34" stroke="#0A2540" stroke-width="1" />
-          <!-- Bottom Left -->
           <path d="M 26,742 L 44,742 M 52,768 L 52,750 M 34,738 L 48,746 L 56,760" stroke="#0A2540" stroke-width="1" />
-          <!-- Bottom Right -->
           <path d="M 1096,742 L 1078,742 M 1070,768 L 1070,750 M 1088,738 L 1074,746 L 1066,760" stroke="#0A2540" stroke-width="1" />
         </svg>
 
         <div class="cert-container">
-          <!-- Top Left certificate branding -->
           <div class="header-row">
             ${certLogo1Base64 ? `<img src="${certLogo1Base64}" alt="NexAcademy logo" class="cert-logo-primary" />` : ''}
           </div>
 
-          <!-- Curriculum Track Title & Subtitle -->
           <div class="title-section">
             <h1 class="track-title">${track.title}</h1>
             <div class="ecosystem-subtitle">Engineering Development & Growth Ecosystem</div>
           </div>
 
-          <!-- Recipient Name & Divider -->
           <div class="recipient-section">
             <div class="recipient-name">${recipientName}</div>
             <div class="gold-divider"></div>
           </div>
 
-          <!-- Official Citation Text -->
           <div class="body-section">
             <p class="citation-text">
               This certificate is proudly awarded to <strong>${recipientName}</strong> in recognition of successful completion and proficiency demonstrated within the <strong>${tierDisplay}</strong> program. This achievement verifies the acquisition of skills and knowledge required for excellence in engineering and development.
@@ -510,7 +492,6 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             <div class="issued-by">Issued by Technonex NexAcademy</div>
           </div>
 
-          <!-- Signatures & Embossed Medallion -->
           <div class="bottom-section">
             <div class="signatures-group">
               <div class="signature-block">
@@ -538,7 +519,6 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
               </div>
             </div>
 
-            <!-- Embossed Gold Medallion Seal -->
             <div class="seal-wrapper">
               <svg viewBox="0 0 160 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -561,15 +541,12 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
                 <circle cx="80" cy="80" r="62" fill="url(#goldGrad)" stroke="#784F07" stroke-width="1.2" />
                 <circle cx="80" cy="80" r="58" fill="none" stroke="#FFF0B0" stroke-width="1" opacity="0.7" />
 
-                <!-- Text Around Top Arc -->
                 <text font-family="'Inter', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
                   <textPath href="#topArc" startOffset="50%" text-anchor="middle">TECHNONEX</textPath>
                 </text>
 
-                <!-- Center Large EDGE Text -->
                 <text x="80" y="86" font-family="'Inter', sans-serif" font-size="20" font-weight="900" fill="#422903" text-anchor="middle" letter-spacing="1.5">EDGE</text>
 
-                <!-- Text Around Bottom Arc -->
                 <text font-family="'Inter', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
                   <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">CERTIFIED</textPath>
                 </text>
@@ -577,7 +554,6 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
             </div>
           </div>
 
-          <!-- Footer Metadata Row with Date & ID in center, Technonex Logo below seal on right -->
           <div class="footer-meta-row">
             <div class="footer-meta-text">
               Date issued: ${dateFormatted} &nbsp;|&nbsp; Certificate ID: ${certificate_id}
@@ -592,6 +568,10 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
       </body>
       </html>
     `;
+
+    // Dynamically load Puppeteer to satisfy pure ESM package requirements
+    const puppeteerModule = await import('puppeteer');
+    const puppeteer = puppeteerModule.default || puppeteerModule;
 
     const browser = await puppeteer.launch({
       headless: 'new',
@@ -625,7 +605,6 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
       status: 'active',
     });
 
-    // Dispatch dual notifications (in-app + email with PDF attachment)
     await notifyCertificateIssued({ engineer: user, certificate, track }).catch((err) => {
       console.error('[Certificate] Failed to dispatch issuance notification:', err.message);
     });
@@ -668,8 +647,6 @@ const verifyCertificate = async (req, res) => {
     const engineerName = certificate.engineer_id?.full_name || certificate.engineer_id?.fullName || 'Technonex Engineer';
     const trackName = certificate.track_id?.name || certificate.track_id?.title || 'EDGE Track';
 
-    // Canonical public payload — explicit allow-list, no raw document dump.
-    // revocation_reason is intentionally omitted: it contains internal admin notes.
     return res.json({
       valid: certificate.status === 'active',
       certificate_id: certificate.certificate_id,
@@ -690,9 +667,6 @@ const verifyCertificate = async (req, res) => {
   }
 };
 
-// @desc    Render public certificate verification page HTML
-// @route   GET /verify/:certificate_id
-// @access  Public
 const renderPublicVerifyPage = async (req, res) => {
   try {
     const certIdParam = req.params.certificate_id || req.params.certificateId;
@@ -793,7 +767,6 @@ const renderPublicVerifyPage = async (req, res) => {
             <div class="info-row"><span class="info-label">Tier:</span><span class="info-value">${certificate.tier}</span></div>
             <div class="info-row"><span class="info-label">Issued Date:</span><span class="info-value">${issuedFormatted}</span></div>
             <div class="info-row"><span class="info-label">Status:</span><span class="info-value">${certificate.status.toUpperCase()}</span></div>
-
           </div>
         </div>
       </body>
@@ -804,9 +777,6 @@ const renderPublicVerifyPage = async (req, res) => {
   }
 };
 
-// @desc    Get certificates listing with squad scoping for TeamLead and full access for Admin
-// @route   GET /api/v1/admin/certificates or GET /api/v1/certificates
-// @access  Private (Admin, TeamLead)
 const getAdminCertificates = async (req, res) => {
   try {
     const requesterRole = (req.user?.role || '').toLowerCase().replace('_', '');
@@ -844,7 +814,6 @@ const getAdminCertificates = async (req, res) => {
       };
     }
 
-    // Optional query filters
     if (req.query.status) {
       filter.status = req.query.status;
     }
@@ -910,7 +879,6 @@ const getUserCertificates = async (req, res) => {
   try {
     const engineer_id = req.user._id;
 
-    // Auto-reconciliation / backfill: Check all published tracks to see if the engineer completed any track that hasn't received a certificate yet
     try {
       const tracks = await Track.find({
         $or: [{ is_published: true }, { isPublished: true }],
@@ -929,7 +897,6 @@ const getUserCertificates = async (req, res) => {
         const engineerObjId = mongoose.Types.ObjectId.isValid(engineer_id) ? new mongoose.Types.ObjectId(engineer_id) : engineer_id;
         const trackObjId = mongoose.Types.ObjectId.isValid(track._id) ? new mongoose.Types.ObjectId(track._id) : track._id;
 
-        // Check if active certificate already exists
         const existingCert = await Certificate.findOne({
           $and: [
             { $or: [{ engineer_id: engineerObjId }, { userId: engineerObjId }] },
@@ -978,9 +945,6 @@ const getUserCertificates = async (req, res) => {
   }
 };
 
-// @desc    Download Certificate PDF with Revocation Guard (Spec Section 8.4)
-// @route   GET /api/v1/certificates/:id/pdf
-// @access  Private
 const downloadCertificatePdf = async (req, res) => {
   try {
     const certParam = (req.params.id || req.params.certificateId || '').trim();
@@ -1001,7 +965,6 @@ const downloadCertificatePdf = async (req, res) => {
       return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Certificate not found' } });
     }
 
-    // Revoked certificate guard (Spec Section 8.4)
     if (certificate.status === 'revoked') {
       return res.status(403).json({
         error: {
@@ -1014,8 +977,6 @@ const downloadCertificatePdf = async (req, res) => {
       });
     }
 
-    // Ownership and role-based access control.
-    // req.user is always present — protect middleware runs before this handler.
     const requesterId = req.user._id.toString();
     const ownerId = (certificate.engineer_id || certificate.userId)?.toString();
     const requesterRole = (req.user.role || '').toLowerCase().replace('_', '');
@@ -1024,7 +985,6 @@ const downloadCertificatePdf = async (req, res) => {
     const isTeamLead = requesterRole === 'teamlead' || requesterRole === 'team_lead';
 
     if (!isOwner && !isAdmin && !isTeamLead) {
-      // Return 403, not 404, so we don't reveal whether the certificate exists
       return res.status(403).json({
         error: {
           code: 'FORBIDDEN',
@@ -1033,7 +993,6 @@ const downloadCertificatePdf = async (req, res) => {
       });
     }
 
-    // TeamLead scope check: the engineer must belong to this TeamLead's team
     if (isTeamLead && !isOwner) {
       const engineer = await User.findById(ownerId).select('team_id team_lead_id');
       const leadTeamId = req.user.team_id?.toString();
@@ -1054,7 +1013,6 @@ const downloadCertificatePdf = async (req, res) => {
 
     let pdfPath = path.join(__dirname, '..', certificate.pdf_storage_path);
     
-    // Auto re-generate if PDF file is missing on disk
     if (!fs.existsSync(pdfPath)) {
       try {
         await generateCertificate(certificate.engineer_id, certificate.track_id, certificate.tier);
@@ -1075,7 +1033,6 @@ const downloadCertificatePdf = async (req, res) => {
   }
 };
 
-// Admin Certificate Configuration APIs
 const getCertificateConfig = async (req, res) => {
   try {
     let config = await CertificateConfig.findOne();
@@ -1115,14 +1072,12 @@ const updateCertificateConfig = async (req, res) => {
     if (organization_name !== undefined) config.organization_name = organization_name.trim();
     if (seal_title !== undefined) config.seal_title = seal_title.trim();
 
-    // Handle Director Signature Upload / Removal
     if (req.files?.director_signature && req.files.director_signature.length > 0) {
       config.director_signature_url = `/uploads/signatures/${req.files.director_signature[0].filename}`;
     } else if (remove_director_signature === 'true' || remove_director_signature === true || director_signature_url === '') {
       config.director_signature_url = null;
     }
 
-    // Handle Instructor Signature Upload / Removal
     if (req.files?.instructor_signature && req.files.instructor_signature.length > 0) {
       config.instructor_signature_url = `/uploads/signatures/${req.files.instructor_signature[0].filename}`;
     } else if (remove_instructor_signature === 'true' || remove_instructor_signature === true || instructor_signature_url === '') {
@@ -1149,4 +1104,3 @@ module.exports = {
   updateCertificateConfig,
   uploadSignatures,
 };
-

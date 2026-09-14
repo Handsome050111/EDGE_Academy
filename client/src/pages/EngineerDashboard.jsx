@@ -901,8 +901,9 @@ const EngineerDashboard = () => {
                         <a
                           key={att._id || att.storage_path}
                           href={resolveVideoUrl(att.storage_path)}
+                          download={att.filename || true}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50/50 hover:border-blue-300 transition text-xs group"
                         >
                           <div className="flex items-center gap-2.5 truncate">

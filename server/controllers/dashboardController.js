@@ -81,7 +81,7 @@ const getLearnerDashboard = async (req, res) => {
     })
       .populate({
         path: 'modules',
-        match: { deleted_at: null },
+        match: { deleted_at: null, status: 'published' },
       })
       .sort({ display_order: 1, created_at: 1 });
 
@@ -137,14 +137,14 @@ const getLearnerDashboard = async (req, res) => {
     let activeModuleDoc = null;
 
     if (activeAssignment) {
-      activeModuleDoc = await Module.findById(activeAssignment.module_id || activeAssignment.moduleId).populate(
-        'trackId track_id',
-        'title name code slug'
-      );
-    } else if (enrolledTracks.length > 0 && enrolledTracks[0].modules.length > 0) {
+      activeModuleDoc = await Module.findOne({
+      _id: activeAssignment.module_id || activeAssignment.moduleId,
+      status: 'published',
+      }).populate('trackId track_id', 'title name code slug');
+     } else if (enrolledTracks.length > 0 && enrolledTracks[0].modules.length > 0){
       const firstModId = enrolledTracks[0].modules[0]._id;
-      activeModuleDoc = await Module.findById(firstModId).populate('trackId track_id', 'title name code slug');
-    }
+      activeModuleDoc = await Module.findOne({_id: firstModId,status: 'published' }).populate('trackId track_id', 'title name code slug');
+     }
 
     let activeModule = null;
     if (activeModuleDoc && activeModuleDoc.deleted_at == null) {
@@ -162,7 +162,7 @@ const getLearnerDashboard = async (req, res) => {
       if (activeModuleDoc.videoUrl) {
         signed_video_url = activeModuleDoc.videoUrl;
       } else if (activeModuleDoc.video_provider_id && (activeModuleDoc.video_provider_id.endsWith('.mp4') || activeModuleDoc.video_provider_id.startsWith('video_'))) {
-        signed_video_url = `/uploads/videos/${activeModuleDoc.video_provider_id}`;
+        signed_video_url = `/api/uploads/videos/${activeModuleDoc.video_provider_id}`;
       } else if (activeModuleDoc.cloudflareVideoId || (activeModuleDoc.video_provider_id && !activeModuleDoc.video_provider_id.startsWith('cf_stream_'))) {
         const providerId = activeModuleDoc.cloudflareVideoId || activeModuleDoc.video_provider_id;
         signed_video_url = `https://iframe.videodelivery.net/${providerId}?exp=${expiresAt}&token=signed_tnx_${expiresAt}`;

@@ -57,3 +57,18 @@ Thumbs.db
 # Temporary manual test artifacts
 temp_manual_test/
 landing-button-comparison.html
+
+# SSL/domain verification (regenerated automatically, environment-specific)
+.well-known/
+
+# Server runtime scratch folder
+tmp/
+
+# Stray backup files
+index.html.bak
+*.save
+
+# Local debug/test scripts (not part of the app)
+server/check_engineer_cert.js
+server/check_engineer_detail.js
+server/reconcile_all_certificates.js

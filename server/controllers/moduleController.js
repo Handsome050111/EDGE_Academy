@@ -94,18 +94,24 @@ const createModule = async (req, res) => {
 // @route   GET /api/modules
 // @access  Private
 const getModules = async (req, res) => {
-  try {
-    const filter = req.query.trackId
-      ? { $or: [{ track_id: req.query.trackId }, { trackId: req.query.trackId }] }
-      : {};
-    const modules = await Module.find(filter)
-      .populate('track_id', 'name title slug code')
-      .populate('trackId', 'name title slug code')
-      .sort({ display_order: 1, created_at: 1 });
+  try{
+     const trackFilter = req.query.trackId
+     ? { $or: [{ track_id: req.query.trackId }, {trackId: req.query.trackId }] }
+     : {};
+     
+     const isAdmin = req.user && req.user.role === 'Admin';
+     const statusFilter = isAdmin ? {} : { status: 'published'};
+
+     const filter = { ...trackFilter, ...statusFilter };
+     
+     const modules = await Module.find(filter)
+	.populate('track_id', 'name title slug code')
+	.populate('trackId', 'name title slug code')
+	.sort({ display_order: 1, created_at: 1 });
     res.json(modules);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+   } catch (error) {
+	res.status(500).json({message: error.message });
+   }
 };
 
 // @desc    Get single module by ID
@@ -120,7 +126,11 @@ const getModuleById = async (req, res) => {
     if (!moduleDoc) {
       return res.status(404).json({ message: 'Module not found' });
     }
-
+    
+    const isAdmin = req.user && req.user.role === 'Admin';
+    if (moduleDoc.status !== 'published' && !isAdmin) {
+	return res.status(404).json({ message: 'Module not found' });
+	}
     const moduleObj = moduleDoc.toObject();
 
     // Generate signed video / streaming URL (expires in 4h = 14400s)
@@ -131,7 +141,7 @@ const getModuleById = async (req, res) => {
       moduleObj.signed_video_url = moduleObj.videoUrl;
       moduleObj.streamUrl = moduleObj.videoUrl;
     } else if (moduleObj.video_provider_id && (moduleObj.video_provider_id.endsWith('.mp4') || moduleObj.video_provider_id.endsWith('.webm') || moduleObj.video_provider_id.startsWith('video_'))) {
-      const vidPath = `/uploads/videos/${moduleObj.video_provider_id}`;
+      const vidPath = `/api/uploads/videos/${moduleObj.video_provider_id}`;
       moduleObj.signed_video_url = vidPath;
       moduleObj.streamUrl = vidPath;
       moduleObj.videoUrl = vidPath;

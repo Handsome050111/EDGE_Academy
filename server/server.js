@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+global.crypto = crypto;
 const dns = require('dns');
 dns.setDefaultResultOrder('ipv4first');
 
@@ -51,7 +53,9 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 
 // Serve uploaded video, attachment static files, and public assets
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/uploads',express.static(path.join(__dirname, 'uploads')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Rate Limiting for Auth Routes as per Spec Section 10.1 (60 requests/minute per IP)

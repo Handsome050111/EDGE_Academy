@@ -7,6 +7,12 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'generateSW',
+      workbox: {
+	globPatterns: [`**/*.{js,css,html,ico,png,svg,webp}`],
+	cleanupOutdatedCaches: true,
+	navigateFallbackDenylist: [/^\/api\//,/^\/uploads\//],
+},
       includeAssets: ['NexLogo-2.png', 'NexLogo-3.png', 'NexLogo-4.png', 'favicon-32x32.png', 'favicon-16x16.png', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'NexAcademy',

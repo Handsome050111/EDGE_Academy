@@ -323,12 +323,12 @@ const submitQuizAttempt = async (req, res) => {
               $or: [{ engineer_id: attempt.engineer_id }, { userId: attempt.engineer_id }],
               passed: true,
               status: 'completed',
-            }).select('module_id moduleId');
+            }).select('module_id moduleId passed status');
 
             const completedAssignments = await Assignment.find({
               $or: [{ engineer_id: attempt.engineer_id }, { userId: attempt.engineer_id }],
               status: 'completed',
-            }).select('module_id moduleId');
+            }).select('module_id moduleId status');
 
             const passedModuleSet = new Set(
               getCompletedModuleIds({

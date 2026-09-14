@@ -34,7 +34,7 @@ const uploadModuleVideo = async (req, res) => {
 
     // 2. If video file was uploaded, set file path and parse exact duration
     if (req.file) {
-      videoUrl = `/uploads/videos/${req.file.filename}`;
+      videoUrl = `/api/uploads/videos/${req.file.filename}`;
       videoProviderId = req.file.filename;
 
       try {
@@ -108,7 +108,7 @@ const uploadModuleThumbnail = async (req, res) => {
 
     let thumbnailUrl = req.body?.thumbnail_url;
     if (req.file) {
-      thumbnailUrl = `/uploads/thumbnails/${req.file.filename}`;
+      thumbnailUrl = `/api/uploads/thumbnails/${req.file.filename}`;
     }
 
     module.thumbnail_url = thumbnailUrl;
@@ -168,7 +168,7 @@ const uploadModuleAttachment = async (req, res) => {
       return res.status(400).json({ message: 'Attachment file is required (PDF, DOCX, or Image)' });
     }
 
-    const storagePath = `/uploads/attachments/${req.file.filename}`;
+    const storagePath = `/api/uploads/attachments/${req.file.filename}`;
 
     const attachment = await ModuleAttachment.create({
       module_id: module._id,

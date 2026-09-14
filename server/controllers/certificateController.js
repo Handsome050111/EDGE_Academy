@@ -192,7 +192,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
     // Convert signature images to Base64 data URLs
     let directorSigBase64 = '';
     if (config.director_signature_url) {
-      const sigFilePath = path.join(__dirname, '..', config.director_signature_url.replace(/^\//, ''));
+      const sigFilePath = path.join(__dirname, '..', config.director_signature_url.replace(/^\?api/, '').replace(/^\//, ''));
       if (fs.existsSync(sigFilePath)) {
         try {
           const ext = path.extname(sigFilePath).toLowerCase().replace('.', '');
@@ -206,7 +206,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
 
     let instructorSigBase64 = '';
     if (config.instructor_signature_url) {
-      const sigFilePath = path.join(__dirname, '..', config.instructor_signature_url.replace(/^\//, ''));
+      const sigFilePath = path.join(__dirname, '..', config.instructor_signature_url.replace(/^\/?api/, '').replace(/^\//, ''));
       if (fs.existsSync(sigFilePath)) {
         try {
           const ext = path.extname(sigFilePath).toLowerCase().replace('.', '');
@@ -545,7 +545,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
                   <textPath href="#topArc" startOffset="50%" text-anchor="middle">TECHNONEX</textPath>
                 </text>
 
-                <text x="80" y="86" font-family="'Inter', sans-serif" font-size="20" font-weight="900" fill="#422903" text-anchor="middle" letter-spacing="1.5">EDGE</text>
+                <text x="80" y="86" font-family="'Inter', sans-serif" font-size="20" font-weight="900" fill="#422903" text-anchor="middle" letter-spacing="1.5">${tierDisplay}</text>
 
                 <text font-family="'Inter', sans-serif" font-size="8.5" font-weight="800" fill="#543605" letter-spacing="2">
                   <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">CERTIFIED</textPath>
@@ -597,7 +597,7 @@ const generateCertificate = async (engineer_id_or_req, track_id_or_res, tier_or_
       track_id,
       tier: tierDisplay,
       issued_at: new Date(),
-      pdf_storage_path: `/uploads/certificates/${certificate_id}.pdf`,
+      pdf_storage_path: `/api/uploads/certificates/${certificate_id}.pdf`,
       director_name: config.director_name.trim(),
       director_signature_url: config.director_signature_url || null,
       instructor_name: config.instructor_name ? config.instructor_name.trim() : null,
@@ -1010,8 +1010,8 @@ const downloadCertificatePdf = async (req, res) => {
         });
       }
     }
-
-    let pdfPath = path.join(__dirname, '..', certificate.pdf_storage_path);
+    const relativePath = (certificate.pdf_storage_path || '').replace(/^\/?api/,'');
+    let pdfPath = path.join(__dirname, '..', relativePath);
     
     if (!fs.existsSync(pdfPath)) {
       try {
@@ -1073,13 +1073,13 @@ const updateCertificateConfig = async (req, res) => {
     if (seal_title !== undefined) config.seal_title = seal_title.trim();
 
     if (req.files?.director_signature && req.files.director_signature.length > 0) {
-      config.director_signature_url = `/uploads/signatures/${req.files.director_signature[0].filename}`;
+      config.director_signature_url = `/api/uploads/signatures/${req.files.director_signature[0].filename}`;
     } else if (remove_director_signature === 'true' || remove_director_signature === true || director_signature_url === '') {
       config.director_signature_url = null;
     }
 
     if (req.files?.instructor_signature && req.files.instructor_signature.length > 0) {
-      config.instructor_signature_url = `/uploads/signatures/${req.files.instructor_signature[0].filename}`;
+      config.instructor_signature_url = `/api/uploads/signatures/${req.files.instructor_signature[0].filename}`;
     } else if (remove_instructor_signature === 'true' || remove_instructor_signature === true || instructor_signature_url === '') {
       config.instructor_signature_url = null;
     }

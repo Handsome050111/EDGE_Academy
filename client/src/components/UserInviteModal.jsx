@@ -128,26 +128,6 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="mt-4 flex rounded-xl bg-gray-100 p-1">
-          <button
-            onClick={() => { setActiveTab('create'); setError(''); setSuccess(''); setInviteResult(null); }}
-            className={`flex-1 rounded-lg py-2 text-xs font-bold transition ${
-              activeTab === 'create' ? 'bg-white text-[#092857] shadow-xs' : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Direct User Creation
-          </button>
-          <button
-            onClick={() => { setActiveTab('invite'); setError(''); setSuccess(''); setInviteResult(null); }}
-            className={`flex-1 rounded-lg py-2 text-xs font-bold transition ${
-              activeTab === 'invite' ? 'bg-white text-[#092857] shadow-xs' : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Send Email Invitation
-          </button>
-        </div>
-
         {error && (
           <div className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-medium text-red-600 border border-red-100">
             {error}
@@ -169,7 +149,7 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
           </div>
         )}
 
-        {activeTab === 'create' ? (
+        {false ? (
           <form onSubmit={handleCreateUser} className="mt-4 space-y-3.5">
             <div>
               <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
@@ -213,7 +193,7 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
                   Assign Role
@@ -230,20 +210,6 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                   <option value="engineer" className="truncate">Engineer</option>
                   <option value="team_lead" className="truncate">Team Lead</option>
                   <option value="admin" className="truncate">Admin</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
-                  Language
-                </label>
-                <select
-                  value={locale}
-                  onChange={(e) => setLocale(e.target.value)}
-                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
-                >
-                  <option value="en" className="truncate">English (EN)</option>
-                  <option value="de" className="truncate">German (DE)</option>
                 </select>
               </div>
             </div>
@@ -314,7 +280,7 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
                   Assign Role
@@ -334,19 +300,6 @@ const UserInviteModal = ({ isOpen, onClose, onUserAdded }) => {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
-                  Language
-                </label>
-                <select
-                  value={locale}
-                  onChange={(e) => setLocale(e.target.value)}
-                  className="w-full truncate rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#092857] focus:ring-1 focus:ring-[#092857]"
-                >
-                  <option value="en" className="truncate">English (EN)</option>
-                  <option value="de" className="truncate">German (DE)</option>
-                </select>
-              </div>
             </div>
 
             {role === 'engineer' && (

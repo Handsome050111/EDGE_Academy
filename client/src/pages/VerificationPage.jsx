@@ -38,25 +38,6 @@ const VerificationPage = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownloadPdf = async () => {
-    if (!certId) return;
-    try {
-      const res = await api.get(`/certificates/${certId}/pdf`, { responseType: 'blob' });
-      const blob = new Blob([res.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `${certId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Download failed, trying direct link:', err);
-      window.open(`/api/v1/certificates/${certId}/pdf`, '_blank');
-    }
-  };
-
   const isValid = certData?.valid === true || certData?.status === 'active';
   const certId = certData?.certificate_id || certData?.certificate?.certificate_id || certIdParam;
   const recipientName = certData?.engineer_name || certData?.certificate?.engineer_id?.fullName || certData?.certificate?.engineer_id?.full_name || certData?.certificate?.engineer_id?.name || 'Technonex Engineer';
@@ -156,17 +137,6 @@ const VerificationPage = () => {
                 >
                   {copied ? 'Link Copied' : 'Copy Link'}
                 </button>
-                {isValid && (
-                  <button
-                    onClick={handleDownloadPdf}
-                    className="flex-1 sm:flex-none bg-[#0A2540] hover:bg-[#071a2e] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    <span>Download PDF</span>
-                  </button>
-                )}
               </div>
             </div>
 

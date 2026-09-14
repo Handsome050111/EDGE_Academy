@@ -35,6 +35,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
             cd ${{ secrets.SERVER_PATH }} &&
             git pull origin main &&
-            cd server &&
+            cd client &&
+            npm install &&
+            npm run build &&
+            cp -r dist/* ../ &&
+            cd ../server &&
             LD_LIBRARY_PATH=/var/www/vhosts/app.technonex.de/local-libs/extracted/usr/lib/x86_64-linux-gnu /var/www/vhosts/app.technonex.de/.npm-global/lib/node_modules/pm2/bin/pm2 restart nexacademy-backend --update-env
           '

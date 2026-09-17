@@ -1389,9 +1389,15 @@ const EngineerDashboard = () => {
           <QuizModal
             moduleId={activeModule}
             onClose={() => setShowQuizModal(false)}
-            onComplete={() => {
+                       onComplete={() => {
               setShowQuizModal(false);
-              fetchDashboardData();
+              const currentIndex = allModulesList.findIndex((m) => m._id === activeModule);
+              fetchDashboardData().then(() => {
+                if (currentIndex !== -1 && currentIndex < allModulesList.length - 1) {
+                  const nextMod = allModulesList[currentIndex + 1];
+                  handleModuleSelect(nextMod._id);
+                }
+              });
             }}
           />
         )}
